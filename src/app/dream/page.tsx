@@ -2,15 +2,15 @@
 
 import { useState, useRef, useEffect } from 'react';
 
+import { Prediction } from 'replicate';
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 export default function DreamPage() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
 
-	const [snapshots, setSnapshots] = useState<string[]>([]);
-	const [theme, setTheme] = useState<string | null>('');
 	const [generatedMusic, setGeneratedMusic] = useState<string | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
-	const [generatedMusicLoaded, setGeneratedMusicLoaded] =
-		useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 	const [videoSrc, setVideoSrc] = useState<string | null>(null);
 
@@ -50,64 +50,105 @@ export default function DreamPage() {
 
 			let newSnapshots: string[] = [];
 			for (let time = 0; time < duration; time += 2) {
-				console.log(123);
 				const snapshot = await captureSnapshot(time);
 				newSnapshots.push(snapshot);
 			}
-			setSnapshots(newSnapshots);
+			return newSnapshots;
 		}
 	};
 
-	async function generateTheme(fileUrl: string) {
+	async function generateTheme(
+		imageURI: string
+	): Promise<Prediction | undefined> {
 		await new Promise((resolve) => setTimeout(resolve, 200));
-		setLoading(true);
-		const res = await fetch('/generate-theme', {
+		const res = await fetch('/api/generate-theme', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ imageUrl: fileUrl }),
+			body: JSON.stringify({ image: imageURI }),
 		});
 
-		let videoTheme = await res.json();
-		if (res.status !== 200) {
-			setError(videoTheme);
-		} else {
-			generateMusic(videoTheme);
+		let prediction = await res.json();
+
+		if (res.status !== 201) {
+			setError(prediction.detail);
+			return;
 		}
-		setTimeout(() => {
-			setLoading(false);
-		}, 1300);
+
+		while (
+			prediction.status !== 'succeeded' &&
+			prediction.status !== 'failed'
+		) {
+			await sleep(2500);
+			const response = await fetch(
+				'/api/generate-theme/' + prediction.id
+			);
+			prediction = await response.json();
+			if (response.status !== 200) {
+				setError(prediction.detail);
+				return;
+			}
+		}
+		return prediction;
 	}
 
-	async function generateMusic(theme: String) {
+	async function generateMusic(
+		theme: string
+	): Promise<Prediction | undefined> {
 		await new Promise((resolve) => setTimeout(resolve, 200));
-		setLoading(true);
-		const res = await fetch('/generate-music', {
+		const res = await fetch('/api/generate-music', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ theme }),
+			body: JSON.stringify({ prompt: theme }),
 		});
 
-		let videoTheme = await res.json();
-		if (res.status !== 200) {
-			setError(videoTheme);
-		} else {
-			setGeneratedMusic(videoTheme);
+		let prediction = await res.json();
+
+		if (res.status !== 201) {
+			setError(prediction.detail);
+			return;
 		}
-		setTimeout(() => {
-			setLoading(false);
-		}, 1300);
+
+		while (
+			prediction.status !== 'succeeded' &&
+			prediction.status !== 'failed'
+		) {
+			await sleep(2500);
+			const response = await fetch(
+				'/api/generate-music/' + prediction.id
+			);
+			prediction = await response.json();
+			if (response.status !== 200) {
+				setError(prediction.detail);
+				return;
+			}
+		}
+		return prediction;
 	}
 
-	const createMusic = () => {
+	const createMusic = async () => {
 		setLoading(true);
-		generateSnapshots();
-		generateTheme(snapshots[0]);
-		generateMusic(theme);
-		setLoading(false);
+		const snapshots = await generateSnapshots();
+		if (snapshots && snapshots.length > 0) {
+			generateTheme(snapshots[0])
+				.then((prediction) => {
+					if (prediction) {
+						generateMusic(prediction.output).then((music) => {
+							if (music) {
+								setGeneratedMusic(music?.output);
+								setLoading(false);
+							}
+						});
+					}
+				})
+				.catch((error) => {
+					setError(error);
+					setLoading(false);
+				});
+		}
 	};
 
 	return (
@@ -143,6 +184,11 @@ export default function DreamPage() {
 					</div>
 				)}
 				{loading && <p>Loading...</p>}
+				{generatedMusic && (
+					<audio controls>
+						<source src={generatedMusic} type="audio/mp3" />
+					</audio>
+				)}
 			</div>
 			<div
 				aria-hidden="true"

@@ -32,7 +32,7 @@ export async function POST(request) {
 	};
 
 	if (WEBHOOK_HOST) {
-		options.webhook = `${WEBHOOK_HOST}/api/webhooks`;
+		options.webhook = `${WEBHOOK_HOST}`;
 		options.webhook_events_filter = ['start', 'completed'];
 	}
 
