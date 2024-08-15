@@ -1,40 +1,62 @@
 'use client';
 
-import { useState } from 'react';
-
-import UploadWidget from '@/components/UploadWidget';
-
-import { UrlBuilder } from '@bytescale/sdk';
-import { UploadWidgetOnUpdateEvent } from '@bytescale/upload-widget';
+import { useState, useRef, useEffect } from 'react';
 
 export default function DreamPage() {
-	const [originalVideo, setOriginalVideo] = useState<string | null>(null);
+	const videoRef = useRef<HTMLVideoElement | null>(null);
+
+	const [snapshots, setSnapshots] = useState<string[]>([]);
+	const [theme, setTheme] = useState<string | null>(null);
 	const [generatedMusic, setGeneratedMusic] = useState<string | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [generatedMusicLoaded, setGeneratedMusicLoaded] =
 		useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
-	const [videoName, setVideoName] = useState<string | null>(null);
+	const [videoSrc, setVideoSrc] = useState<string | null>(null);
 
-	async function handleOnUpdate({
-		uploadedFiles,
-	}: UploadWidgetOnUpdateEvent) {
-		if (uploadedFiles.length !== 0) {
-			const video = uploadedFiles[0];
-			const videoName = video.originalFile.originalFileName;
-			const videoUrl = UrlBuilder.url({
-				accountId: video.accountId,
-				filePath: video.filePath,
-				options: {
-					transformation: 'preset',
-					transformationPreset: 'thumbnail',
-				},
-			});
-			setVideoName(videoName);
-			setOriginalVideo(videoUrl);
-			generateMusic(videoUrl);
+	const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file) {
+			const url = URL.createObjectURL(file);
+			setVideoSrc(url);
 		}
-	}
+	};
+
+	const captureSnapshot = (time: number): Promise<string> => {
+		return new Promise((resolve) => {
+			if (videoRef.current) {
+				const video = videoRef.current;
+				const canvas = document.createElement('canvas');
+				canvas.width = video.videoWidth;
+				canvas.height = video.videoHeight;
+				const ctx = canvas.getContext('2d');
+
+				if (ctx) {
+					video.currentTime = time;
+					video.onseeked = () => {
+						ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+						const snapshot = canvas.toDataURL('image/png');
+						resolve(snapshot);
+					};
+				}
+			}
+		});
+	};
+
+	const generateSnapshots = async () => {
+		if (videoRef.current) {
+			const video = videoRef.current;
+			const duration = video.duration;
+
+			let newSnapshots: string[] = [];
+			for (let time = 0; time < duration; time += 2) {
+				console.log(123);
+				const snapshot = await captureSnapshot(time);
+				newSnapshots.push(snapshot);
+			}
+			setSnapshots(newSnapshots);
+		}
+	};
 
 	async function generateTheme(fileUrl: string) {
 		await new Promise((resolve) => setTimeout(resolve, 200));
@@ -80,6 +102,13 @@ export default function DreamPage() {
 		}, 1300);
 	}
 
+	const createMusic = () => {
+		setLoading(true);
+		generateSnapshots();
+		generateTheme(snapshots[0]);
+		generateMusic(theme);
+	};
+
 	return (
 		<div className="h-screen bg-white isolate flex flex-col justify-evenly items-center">
 			<div
@@ -95,7 +124,27 @@ export default function DreamPage() {
 				/>
 			</div>
 			<div>
-				<UploadWidget handleOnUpdate={handleOnUpdate} />
+				<div>
+					<input
+						type="file"
+						accept="video/*"
+						onChange={handleVideoUpload}
+					/>
+					{videoSrc && (
+						<div>
+							<video
+								ref={videoRef}
+								src={videoSrc}
+								controls
+								style={{ maxWidth: '100%' }}
+								className="sr-only"
+							/>
+							<button onClick={generateMusic}>
+								Generate Music
+							</button>
+						</div>
+					)}
+				</div>
 			</div>
 			<div
 				aria-hidden="true"
