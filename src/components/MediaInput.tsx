@@ -33,14 +33,23 @@ const FileUploadField = ({
 				{label}
 			</label>
 			<div
-				className={`relative h-full w-full px-4 pt-4 border rounded-md border-gray-900/25 ${
-					file ? 'border-solid' : 'border-dashed'
+				className={`relative h-48 w-full p-1 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
+					file ? 'border-solid bg-gray-400/25' : 'border-dashed'
 				}`}
 			>
 				{file ? (
-					<div className="w-full grid grid-cols-[10%_80%_10%] grid-rows-2 items-center">
+					<>
+						<div className="place-self-start w-full px-2 flex justify-between items-center gap-2">
+							<span>
+								Uploaded video
+							</span>
+							<TrashIcon
+								className="p-1 size-8 cursor-pointer"
+								onClick={() => handleRemoveFile()}
+							/>
+						</div>
 						<video
-							className="size-24 object-cover rounded-md"
+							className="w-64 object-cover rounded-md"
 							src={
 								typeof file == 'string'
 									? file
@@ -48,27 +57,12 @@ const FileUploadField = ({
 							}
 							alt="Preview"
 						/>
-						<div className="flex flex-col">
-							<text className="text-sm">File_Name</text>
-							<text className="text-xs text-gray-400">6 MB</text>
-						</div>
-						<div className="flex justify-center items-center gap-2 text-gray-300">
-							{file ? (
-								<CheckIcon className="p-1 size-3 cursor-pointer rounded-full text-white bg-green-500" />
-							) : (
-								<PauseIcon className="p-1 size-3 cursor-pointer rounded-full" />
-							)}
-							<TrashIcon
-								className="p-1 size-4 cursor-pointer"
-								onClick={() => handleRemoveFile()}
-							/>
-						</div>
-					</div>
+					</>
 				) : (
 					<>
 						<div
 							htmlFor={name}
-							className={`h-full py-3 grid grid-rows-3 grid-cols-1 gap-2 place-items-center items-center text-gray-600 text-center ${
+							className={`grid grid-rows-2 grid-cols-1 gap-2 place-items-center text-gray-600 text-center ${
 								file && 'hidden'
 							} `}
 						>
