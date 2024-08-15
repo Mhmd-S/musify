@@ -6,7 +6,7 @@ export default function DreamPage() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
 
 	const [snapshots, setSnapshots] = useState<string[]>([]);
-	const [theme, setTheme] = useState<string | null>(null);
+	const [theme, setTheme] = useState<string | null>('');
 	const [generatedMusic, setGeneratedMusic] = useState<string | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [generatedMusicLoaded, setGeneratedMusicLoaded] =
@@ -107,6 +107,7 @@ export default function DreamPage() {
 		generateSnapshots();
 		generateTheme(snapshots[0]);
 		generateMusic(theme);
+		setLoading(false);
 	};
 
 	return (
@@ -124,27 +125,24 @@ export default function DreamPage() {
 				/>
 			</div>
 			<div>
-				<div>
-					<input
-						type="file"
-						accept="video/*"
-						onChange={handleVideoUpload}
-					/>
-					{videoSrc && (
-						<div>
-							<video
-								ref={videoRef}
-								src={videoSrc}
-								controls
-								style={{ maxWidth: '100%' }}
-								className="sr-only"
-							/>
-							<button onClick={generateMusic}>
-								Generate Music
-							</button>
-						</div>
-					)}
-				</div>
+				<input
+					type="file"
+					accept="video/*"
+					onChange={handleVideoUpload}
+				/>
+				{videoSrc && (
+					<div>
+						<video
+							ref={videoRef}
+							src={videoSrc}
+							controls
+							style={{ maxWidth: '100%' }}
+							className="sr-only"
+						/>
+						<button onClick={createMusic}>Generate Music</button>
+					</div>
+				)}
+				{loading && <p>Loading...</p>}
 			</div>
 			<div
 				aria-hidden="true"
