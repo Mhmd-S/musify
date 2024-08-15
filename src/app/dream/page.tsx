@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 
+import MediaInput from '@/components/MediaInput';
+
 import { Prediction } from 'replicate';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -166,10 +168,13 @@ export default function DreamPage() {
 				/>
 			</div>
 			<div>
-				<input
-					type="file"
+				<MediaInput
+					name="uploadedVideo"
+					label="Upload a video to add music to"
 					accept="video/*"
-					onChange={handleVideoUpload}
+					file={videoSrc}
+					handleFileChange={handleVideoUpload}
+					handleRemoveFile={() => setVideoSrc(null)}
 				/>
 				{videoSrc && (
 					<div>
