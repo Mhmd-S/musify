@@ -1,80 +1,79 @@
+'use client';
+
 import { useState } from 'react';
 
+import UploadWidget from '@/components/UploadWidget';
+
+import { UrlBuilder } from '@bytescale/sdk';
+import { UploadWidgetOnUpdateEvent } from '@bytescale/upload-widget';
 
 export default function DreamPage() {
-	const [originalPhoto, setOriginalPhoto] = useState<string | null>(null);
-	const [restoredImage, setRestoredImage] = useState<string | null>(null);
+	const [originalVideo, setOriginalVideo] = useState<string | null>(null);
+	const [generatedMusic, setGeneratedMusic] = useState<string | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
-	const [restoredLoaded, setRestoredLoaded] = useState<boolean>(false);
-	const [sideBySide, setSideBySide] = useState<boolean>(false);
+	const [generatedMusicLoaded, setGeneratedMusicLoaded] =
+		useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
-	const [photoName, setPhotoName] = useState<string | null>(null);
+	const [videoName, setVideoName] = useState<string | null>(null);
 
-	const options: UploadWidgetConfig = {
-		apiKey: !!process.env.NEXT_PUBLIC_UPLOAD_API_KEY
-			? process.env.NEXT_PUBLIC_UPLOAD_API_KEY
-			: 'free',
-		maxFileCount: 1,
-		mimeTypes: ['image/jpeg', 'image/png', 'image/jpg'],
-		editor: { images: { crop: false } },
-		styles: {
-			colors: {
-				primary: '#2563EB', // Primary buttons & links
-				error: '#d23f4d', // Error messages
-				shade100: '#fff', // Standard text
-				shade200: '#fffe', // Secondary button text
-				shade300: '#fffd', // Secondary button text (hover)
-				shade400: '#fffc', // Welcome text
-				shade500: '#fff9', // Modal close button
-				shade600: '#fff7', // Border
-				shade700: '#fff2', // Progress indicator background
-				shade800: '#fff1', // File item background
-				shade900: '#ffff', // Various (draggable crop buttons, etc.)
-			},
-		},
-	};
+	async function handleOnUpdate({
+		uploadedFiles,
+	}: UploadWidgetOnUpdateEvent) {
+		if (uploadedFiles.length !== 0) {
+			const video = uploadedFiles[0];
+			const videoName = video.originalFile.originalFileName;
+			const videoUrl = UrlBuilder.url({
+				accountId: video.accountId,
+				filePath: video.filePath,
+				options: {
+					transformation: 'preset',
+					transformationPreset: 'thumbnail',
+				},
+			});
+			setVideoName(videoName);
+			setOriginalVideo(videoUrl);
+			generateMusic(videoUrl);
+		}
+	}
 
-	const uploadWidget = () => (
-		<UploadDropzone
-			options={options}
-			onUpdate={({ uploadedFiles }) => {
-				if (uploadedFiles.length !== 0) {
-					const image = uploadedFiles[0];
-					const imageName = image.originalFile.originalFileName;
-					const imageUrl = UrlBuilder.url({
-						accountId: image.accountId,
-						filePath: image.filePath,
-						options: {
-							transformation: 'preset',
-							transformationPreset: 'thumbnail',
-						},
-					});
-					setPhotoName(imageName);
-					setOriginalPhoto(imageUrl);
-					generateMusic(imageUrl);
-				}
-			}}
-			width="670px"
-			height="250px"
-		/>
-	);
-
-	async function generateMusic(fileUrl: string) {
+	async function generateTheme(fileUrl: string) {
 		await new Promise((resolve) => setTimeout(resolve, 200));
 		setLoading(true);
-		const res = await fetch('/generate', {
+		const res = await fetch('/generate-theme', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ imageUrl: fileUrl, theme, room }),
+			body: JSON.stringify({ imageUrl: fileUrl }),
 		});
 
-		let newPhoto = await res.json();
+		let videoTheme = await res.json();
 		if (res.status !== 200) {
-			setError(newPhoto);
+			setError(videoTheme);
 		} else {
-			setRestoredImage(newPhoto[1]);
+			generateMusic(videoTheme);
+		}
+		setTimeout(() => {
+			setLoading(false);
+		}, 1300);
+	}
+
+	async function generateMusic(theme: String) {
+		await new Promise((resolve) => setTimeout(resolve, 200));
+		setLoading(true);
+		const res = await fetch('/generate-music', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ theme }),
+		});
+
+		let videoTheme = await res.json();
+		if (res.status !== 200) {
+			setError(videoTheme);
+		} else {
+			setGeneratedMusic(videoTheme);
 		}
 		setTimeout(() => {
 			setLoading(false);
@@ -96,7 +95,7 @@ export default function DreamPage() {
 				/>
 			</div>
 			<div>
-				<UploadWidget />
+				<UploadWidget handleOnUpdate={handleOnUpdate} />
 			</div>
 			<div
 				aria-hidden="true"
