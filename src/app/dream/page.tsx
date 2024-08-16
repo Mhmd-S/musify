@@ -2,7 +2,12 @@
 
 import { useState, useRef, useEffect } from 'react';
 
+import Link from 'next/link';
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { fetchFile, toBlobURL } from '@ffmpeg/util';
+
 import MediaInput from '@/components/MediaInput';
+import { MusicalNoteIcon } from '@heroicons/react/24/outline';
 
 import { Prediction } from 'replicate';
 
@@ -10,11 +15,32 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export default function DreamPage() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
+	const ffmpegRef = useRef(new FFmpeg());
 
+	const [newVideo, setNewVideo] = useState<string | null>(null);
 	const [generatedMusic, setGeneratedMusic] = useState<string | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 	const [videoSrc, setVideoSrc] = useState<string | null>(null);
+
+	useEffect(()=>{
+		load();
+	},[])
+
+	const load = async () => {
+		const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
+		const ffmpeg = ffmpegRef.current;
+		await ffmpeg.load({
+			coreURL: await toBlobURL(
+				`${baseURL}/ffmpeg-core.js`,
+				'text/javascript'
+			),
+			wasmURL: await toBlobURL(
+				`${baseURL}/ffmpeg-core.wasm`,
+				'application/wasm'
+			),
+		});
+	};
 
 	const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
@@ -140,7 +166,7 @@ export default function DreamPage() {
 					if (prediction) {
 						generateMusic(prediction.output).then((music) => {
 							if (music) {
-								setGeneratedMusic(music?.output);
+								replaceAudio(music.output);
 								setLoading(false);
 							}
 						});
@@ -153,8 +179,42 @@ export default function DreamPage() {
 		}
 	};
 
+	const replaceAudio = async (music: string) => {
+		const ffmpeg = ffmpegRef.current;
+
+		// Load video and audio files
+		await ffmpeg.writeFile('video.mp4', await fetchFile(videoSrc));
+		await ffmpeg.writeFile('audio.mp3', await fetchFile(music));
+
+		// Replace audio in the video
+		await ffmpeg.exec([
+			'-i',
+			'video.mp4',
+			'-i',
+			'audio.mp3',
+			'-c:v',
+			'copy',
+			'-map',
+			'0:v:0',
+			'-map',
+			'1:a:0',
+			'-shortest',
+			'output.mp4',
+		]);
+
+		// Get the resulting video
+		const data = await ffmpeg.readFile('output.mp4', "binary");
+
+		// Create a URL for the resulting video
+		const videoUrl = URL.createObjectURL(
+			new Blob([data], { type: 'video/mp4' })
+		);
+
+		setNewVideo(videoUrl);
+	};
+
 	return (
-		<div className="h-screen bg-white isolate flex flex-col justify-evenly items-center">
+		<div className="relative bg-white isolate flex flex-col items-center py-4 gap-12">
 			<div
 				aria-hidden="true"
 				className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
@@ -167,7 +227,19 @@ export default function DreamPage() {
 					className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
 				/>
 			</div>
-			<div>
+			<Link
+				href="#"
+				className="flex items-center gap-2 -m-1.5 p-1.5 font-bold text-3xl"
+			>
+				<MusicalNoteIcon
+					aria-hidden="true"
+					className="size-14 p-2 border-2 border-pink-600 rounded-full"
+				/>
+				<span className="text-6xl border-b-2 border-pink-600 pb-2">
+					Musify
+				</span>
+			</Link>
+			<div className="w-full p-12 grid grid-cols-[30%_70%] gap-12">
 				<MediaInput
 					name="uploadedVideo"
 					label="Upload a video to add music to"
@@ -176,24 +248,32 @@ export default function DreamPage() {
 					handleFileChange={handleVideoUpload}
 					handleRemoveFile={() => setVideoSrc(null)}
 				/>
-				{videoSrc && (
-					<div>
-						<video
-							ref={videoRef}
-							src={videoSrc}
-							controls
-							style={{ maxWidth: '100%' }}
-							className="sr-only"
-						/>
-						<button onClick={createMusic}>Generate Music</button>
-					</div>
-				)}
-				{loading && <p>Loading...</p>}
-				{generatedMusic && (
-					<audio controls>
-						<source src={generatedMusic} type="audio/mp3" />
-					</audio>
-				)}
+				<div className="flex flex-col items-center gap-8">
+					<h2 className="text-4xl font-bold text-center w-3/4">
+						Musify your <span className="text-pink-600">video</span>{' '}
+						with AI-generated music in seconds
+					</h2>
+					<h3 className="font-light text-2xl">
+						Upload a video and we will generate suitable music for
+						it
+					</h3>
+					{videoSrc && (
+						<div>
+							<video
+								ref={videoRef}
+								src={videoSrc}
+								controls
+								style={{ maxWidth: '100%' }}
+								className="sr-only"
+							/>
+							<button onClick={createMusic}>
+								Generate Music
+							</button>
+						</div>
+					)}
+					{loading && <p>Loading...</p>}
+					{generatedMusic && <video controls src={newVideo} />}
+				</div>
 			</div>
 			<div
 				aria-hidden="true"

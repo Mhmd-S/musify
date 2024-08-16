@@ -12,6 +12,8 @@
     "@bytescale/sdk": "^3.44.0",
     "@bytescale/upload-widget": "^4.27.0",
     "@bytescale/upload-widget-react": "^4.19.0",
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/util": "^0.12.1",
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.5",
     "next": "14.2.5",
