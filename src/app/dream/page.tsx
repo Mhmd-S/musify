@@ -11,48 +11,8 @@ import { Prediction } from 'replicate';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-interface VideoProps {
-	videoSrc: string | null;
-	handleVideoUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	handleRemoveVideo: () => void;
-}
-
-const Video: React.FC<VideoProps> = ({
-	videoSrc,
-	handleVideoUpload,
-	handleRemoveVideo,
-}) => {
-	const videoRef = useRef<HTMLVideoElement | null>(null);
-
-	useEffect(() => {
-		if (videoSrc && videoRef.current) {
-			videoRef.current.src = videoSrc;
-		}
-	}, [videoSrc]);
-
-	return (
-		<>
-			{videoSrc && (
-				<video
-					ref={videoRef}
-					src={videoSrc}
-					controls
-					style={{ maxWidth: '100%' }}
-					className="sr-only"
-				/>
-			)}
-			{!videoSrc && (
-				<div className="w-3/5 aspect-video bg-gray-600/35 rounded-2xl flex items-center justify-center">
-					<p className="font-light">Your new video will appear here</p>
-				</div>
-			)}
-		</>
-	);
-};
-
-
-
 export default function DreamPage() {
+	const videoRef = useRef<HTMLVideoElement>(null);
 	const ffmpegRef = useRef(new FFmpeg());
 
 	const [newVideo, setNewVideo] = useState<string | null>(null);
@@ -297,11 +257,6 @@ export default function DreamPage() {
 						Upload a video and we will generate suitable music for
 						it
 					</h3>
-					<Video
-						videoSrc={videoSrc}
-						handleVideoUpload={handleVideoUpload}
-						handleRemoveVideo={handleRemoveVideo}
-					/>
 					<GeneratedVideo
 						newVideo={newVideo}
 						downloadVideo={() => {}}
@@ -309,7 +264,6 @@ export default function DreamPage() {
 					/>
 				</div>
 			</div>
-			{/* ... */}
 		</div>
 	);
 }
