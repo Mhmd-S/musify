@@ -25,15 +25,15 @@ const FileUploadField = ({
 	handleRemoveFile,
 }: FileUploadFieldProps) => {
 	return (
-		<div className="h-fit">
+		<div className="h-fit w-full">
 			<label
 				htmlFor={name}
-				className="block mb-2 text-sm font-medium leading-6 text-gray-900"
+				className="block mb-6 text-lg font-medium leading-6 text-gray-900"
 			>
 				{label}
 			</label>
 			<div
-				className={`relative h-48 w-full p-1 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
+				className={`relative min-h-48 w-full p-1 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
 					file ? 'border-solid bg-gray-400/25' : 'border-dashed'
 				}`}
 			>
@@ -49,7 +49,7 @@ const FileUploadField = ({
 							/>
 						</div>
 						<video
-							className="w-64 object-cover rounded-md"
+							className="w-64 aspect-square object-center rounded-3xl"
 							src={
 								typeof file == 'string'
 									? file

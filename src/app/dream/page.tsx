@@ -1,31 +1,68 @@
-'use client';
+'use client'
 
 import { useState, useRef, useEffect } from 'react';
-
 import Link from 'next/link';
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
-
-import MediaInput from '@/components/MediaInput';
 import { MusicalNoteIcon } from '@heroicons/react/24/outline';
-
+import MediaInput from '@/components/MediaInput';
+import GeneratedVideo from '@/components/GeneratedVideo';
 import { Prediction } from 'replicate';
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+interface VideoProps {
+	videoSrc: string | null;
+	handleVideoUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	handleRemoveVideo: () => void;
+}
+
+const Video: React.FC<VideoProps> = ({
+	videoSrc,
+	handleVideoUpload,
+	handleRemoveVideo,
+}) => {
+	const videoRef = useRef<HTMLVideoElement | null>(null);
+
+	useEffect(() => {
+		if (videoSrc && videoRef.current) {
+			videoRef.current.src = videoSrc;
+		}
+	}, [videoSrc]);
+
+	return (
+		<>
+			{videoSrc && (
+				<video
+					ref={videoRef}
+					src={videoSrc}
+					controls
+					style={{ maxWidth: '100%' }}
+					className="sr-only"
+				/>
+			)}
+			{!videoSrc && (
+				<div className="w-3/5 aspect-video bg-gray-600/35 rounded-2xl flex items-center justify-center">
+					<p className="font-light">Your new video will appear here</p>
+				</div>
+			)}
+		</>
+	);
+};
+
+
 
 export default function DreamPage() {
-	const videoRef = useRef<HTMLVideoElement | null>(null);
 	const ffmpegRef = useRef(new FFmpeg());
 
 	const [newVideo, setNewVideo] = useState<string | null>(null);
-	const [generatedMusic, setGeneratedMusic] = useState<string | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 	const [videoSrc, setVideoSrc] = useState<string | null>(null);
 
-	useEffect(()=>{
+	useEffect(() => {
 		load();
-	},[])
+	}, []);
 
 	const load = async () => {
 		const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
@@ -50,10 +87,14 @@ export default function DreamPage() {
 		}
 	};
 
+	const handleRemoveVideo = () => {
+		setVideoSrc(null);
+	};
+
 	const captureSnapshot = (time: number): Promise<string> => {
 		return new Promise((resolve) => {
-			if (videoRef.current) {
-				const video = videoRef.current;
+			const video = videoRef.current;
+			if (video) {
 				const canvas = document.createElement('canvas');
 				canvas.width = video.videoWidth;
 				canvas.height = video.videoHeight;
@@ -72,8 +113,8 @@ export default function DreamPage() {
 	};
 
 	const generateSnapshots = async () => {
-		if (videoRef.current) {
-			const video = videoRef.current;
+		const video = videoRef.current;
+		if (video) {
 			const duration = video.duration;
 
 			let newSnapshots: string[] = [];
@@ -88,7 +129,7 @@ export default function DreamPage() {
 	async function generateTheme(
 		imageURI: string
 	): Promise<Prediction | undefined> {
-		await new Promise((resolve) => setTimeout(resolve, 200));
+		await sleep(200);
 		const res = await fetch('/api/generate-theme', {
 			method: 'POST',
 			headers: {
@@ -124,7 +165,7 @@ export default function DreamPage() {
 	async function generateMusic(
 		theme: string
 	): Promise<Prediction | undefined> {
-		await new Promise((resolve) => setTimeout(resolve, 200));
+		await sleep(200);
 		const res = await fetch('/api/generate-music', {
 			method: 'POST',
 			headers: {
@@ -158,6 +199,7 @@ export default function DreamPage() {
 	}
 
 	const createMusic = async () => {
+		setNewVideo(null);
 		setLoading(true);
 		const snapshots = await generateSnapshots();
 		if (snapshots && snapshots.length > 0) {
@@ -198,12 +240,12 @@ export default function DreamPage() {
 			'0:v:0',
 			'-map',
 			'1:a:0',
-			'-shortest',
+			'-longest',
 			'output.mp4',
 		]);
 
 		// Get the resulting video
-		const data = await ffmpeg.readFile('output.mp4', "binary");
+		const data = await ffmpeg.readFile('output.mp4', 'binary');
 
 		// Create a URL for the resulting video
 		const videoUrl = URL.createObjectURL(
@@ -215,18 +257,7 @@ export default function DreamPage() {
 
 	return (
 		<div className="relative bg-white isolate flex flex-col items-center py-4 gap-12">
-			<div
-				aria-hidden="true"
-				className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-			>
-				<div
-					style={{
-						clipPath:
-							'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-					}}
-					className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-				/>
-			</div>
+			{/* ... */}
 			<Link
 				href="#"
 				className="flex items-center gap-2 -m-1.5 p-1.5 font-bold text-3xl"
@@ -240,53 +271,45 @@ export default function DreamPage() {
 				</span>
 			</Link>
 			<div className="w-full p-12 grid grid-cols-[30%_70%] gap-12">
-				<MediaInput
-					name="uploadedVideo"
-					label="Upload a video to add music to"
-					accept="video/*"
-					file={videoSrc}
-					handleFileChange={handleVideoUpload}
-					handleRemoveFile={() => setVideoSrc(null)}
-				/>
+				<div className="flex flex-col items-center gap-y-12 pt-8">
+					<MediaInput
+						name="uploadedVideo"
+						label="Upload a video to add music to"
+						accept="video/*"
+						file={videoSrc}
+						handleFileChange={handleVideoUpload}
+						handleRemoveFile={handleRemoveVideo}
+					/>
+					<button
+						className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+						onClick={createMusic}
+					>
+						Generate Music
+					</button>
+				</div>
 				<div className="flex flex-col items-center gap-8">
-					<h2 className="text-4xl font-bold text-center w-3/4">
-						Musify your <span className="text-pink-600">video</span>{' '}
-						with AI-generated music in seconds
+					<h2 className="text-4xl font-bold text-center w-4/5">
+						Musify your{' '}
+						<span className="text-pink-600">video</span> with
+						AI-generated music in seconds
 					</h2>
 					<h3 className="font-light text-2xl">
 						Upload a video and we will generate suitable music for
 						it
 					</h3>
-					{videoSrc && (
-						<div>
-							<video
-								ref={videoRef}
-								src={videoSrc}
-								controls
-								style={{ maxWidth: '100%' }}
-								className="sr-only"
-							/>
-							<button onClick={createMusic}>
-								Generate Music
-							</button>
-						</div>
-					)}
-					{loading && <p>Loading...</p>}
-					{generatedMusic && <video controls src={newVideo} />}
+					<Video
+						videoSrc={videoSrc}
+						handleVideoUpload={handleVideoUpload}
+						handleRemoveVideo={handleRemoveVideo}
+					/>
+					<GeneratedVideo
+						newVideo={newVideo}
+						downloadVideo={() => {}}
+						loading={loading}
+					/>
 				</div>
 			</div>
-			<div
-				aria-hidden="true"
-				className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
-			>
-				<div
-					style={{
-						clipPath:
-							'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
-					}}
-					className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
-				/>
-			</div>
+			{/* ... */}
 		</div>
 	);
 }
