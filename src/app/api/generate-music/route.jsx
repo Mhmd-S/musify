@@ -18,13 +18,14 @@ export async function POST(request) {
 		);
 	}
 
-	const { prompt } = await request.json();
+	const { prompt, duration } = await request.json();
 
 	const options = {
 		version:
 			'671ac645ce5e552cc63a54a2bbff63fcf798043055d2dac5fc9e36a837eedcfb',
 		input: {
-			prompt: prompt,
+			prompt,
+			duration: parseInt(duration),
 			model_version: 'stereo-large',
 			output_format: 'mp3',
 			normalization_strategy: 'peak',
