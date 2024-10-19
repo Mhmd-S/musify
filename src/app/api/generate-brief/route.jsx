@@ -21,11 +21,16 @@ export async function POST(request) {
     );
   }
  
-  const { image } = await request.json();
+  const { theme } = await request.json();
  
   const options = {
-    version: '2e1dddc8621f72155f24cf2e0adbde548458d3cab9f00c0139eea840d0ac4746',
-    input: { image }
+    model: "meta/meta-llama-3-8b-instruct",
+    input: { 
+      "top_p": 0.9,
+      "prompt": `Make sense of the theme, context and location from the phrases which have been extracted from a video: \n\n "${theme}". \n\n Only return me a orchestral briefing for the video's music, and nothing else.`,
+      "min_tokens": 0,
+      "max_token": 30,
+     }
   }
  
   if (WEBHOOK_HOST) {
