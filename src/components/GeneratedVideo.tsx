@@ -11,7 +11,7 @@ const GeneratedVideo: React.FC<GeneratedVideoProps> = ({
 }) => {
 	return (
 		<div
-			className={`relative min-h-48 w-full md:w-3/4 px-4 py-8 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
+			className={`relative min-h-48 w-full md:w-3/4 px-4 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
 				newVideo ? 'border-solid bg-primary' : 'border-dashed bg-muted'
 			}`}
 		>

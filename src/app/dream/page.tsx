@@ -133,7 +133,7 @@ export default function DreamPage() {
 	};
 
 	return (
-		<div className="relative bg-white isolate flex flex-col items-center py-24 gap-8">
+		<div className="relative bg-white isolate flex flex-col items-center py-32 gap-8">
 			<div className="flex flex-col items-center gap-8">
 				<h2 className="text-4xl text-center w-4/5">
 					Musify your <strong>video</strong> with AI-generated music
@@ -146,7 +146,7 @@ export default function DreamPage() {
 				<div className="h-fit w-full flex flex-col items-center gap-8">
 					<label
 						htmlFor="video"
-						className="block text-lg font-medium leading-6 text-gray-900"
+						className="block text-lg font-bold leading-6 text-gray-900"
 					>
 						Upload a video
 					</label>
@@ -163,11 +163,10 @@ export default function DreamPage() {
 						<Button
 							variant="destructive"
 							className="w-fit flex justify-end"
+							onClick={handleRemoveVideo}
+							disabled={loading}
 						>
-							<TrashIcon
-								className="size-18 cursor-pointer"
-								onClick={() => handleRemoveVideo()}
-							/>
+							<TrashIcon className="size-18 cursor-pointer" />
 						</Button>
 						<Button
 							className="w-fit"
@@ -175,7 +174,7 @@ export default function DreamPage() {
 							onClick={createMusic}
 							disabled={loading}
 						>
-							{newVideo ? "Regenerate Music" : "Generate Music"}
+							{newVideo ? 'Regenerate Music' : 'Generate Music'}
 						</Button>
 					</div>
 				</div>
@@ -183,20 +182,24 @@ export default function DreamPage() {
 					<ArrowDownIcon className="size-14 text-primary md:-rotate-90" />
 				</div>
 				<div className="h-fit w-full flex flex-col items-center gap-8">
-					<h3 className="text-lg font-medium leading-6 text-primary">
+					<h3 className="text-lg font-bold leading-6 text-primary">
 						Your New Video
 					</h3>
 					<GeneratedVideo
 						newVideo={newVideo}
 						loading={loading || ffmpegLoading}
 					/>
-					<Button
-						onClick={() => {}}
-						variant="outline"
-						className="w-fit"
-					>
-						Download Video
-					</Button>
+					{newVideo && (
+						<Button
+							disabled={loading}
+							variant="outline"
+							className="w-fit"
+						>
+							<a href={newVideo} target="_blank" download>
+								Download Video
+							</a>
+						</Button>
+					)}
 				</div>
 			</div>
 		</div>

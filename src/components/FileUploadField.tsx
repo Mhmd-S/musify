@@ -25,7 +25,7 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 	) => {
 		return (
 				<div
-					className={`relative min-h-48 w-full md:w-3/4 px-4 py-8 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
+					className={`relative min-h-48 w-full md:w-3/4 px-4 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
 						file ? 'border-solid bg-primary' : 'border-dashed bg-muted'
 					}`}
 				>
@@ -40,6 +40,8 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 							<video
 								ref={ref}
 								className="w-48 aspect-square object-center rounded-3xl"
+								autoPlay
+								muted
 								src={
 									typeof file === 'string'
 										? file
