@@ -51,17 +51,6 @@ const Feature = () => (
 					</div>
 				</div>
 			</div>
-			<div className="w-full py-24 flex flex-col items-center gap-12">
-				<h3 className="text-3xl md:text-5xl tracking-tighter font-regular">
-					What are you waiting for? Get started now!
-				</h3>
-				<Link href="/dream">
-					<Button size="lg" className="gap-4" variant="default">
-						Musify your video!
-						<Wand2 className="w-4 h-4" />
-					</Button>
-				</Link>
-			</div>
 		</div>
 	</div>
 );

@@ -29,7 +29,7 @@ const Hero = () => {
 
 	return (
 		<div className="grid grid-cols-1 gap-8 px-10 py-10 mt-14 items-center lg:grid-cols-2">
-			<div className="flex gap-4 flex-col">
+			<div className="flex gap-4 flex-col items-center md:items-start">
 				<div className="flex gap-8 flex-col">
 					<h1 className="text-5xl md:text-6xl max-w-2xl tracking-tighter font-regular text-center md:text-left md:mr-20">
 						<span className="text-spektr-cyan-50">

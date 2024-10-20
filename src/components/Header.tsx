@@ -163,7 +163,7 @@ const Header = () => {
 					{/* <Button variant="outline">Sign in</Button> */}
 					<Link href="/dream">
 						<Button size="lg" className="gap-4" variant="default">
-							Musify your video!
+							Get Started!
 							<Wand2 className="w-4 h-4" />
 						</Button>
 					</Link>
