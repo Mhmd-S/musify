@@ -1,3 +1,5 @@
+import { Prediction } from "replicate";
+
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export const captureSnapshot = (
@@ -48,8 +50,8 @@ export const generateTheme = async (
 
 	if (res.status !== 201) {
 		setError(prediction.detail);
-		return;
-	}
+		return null;
+	} 
 
 	while (
 		prediction.status !== 'succeeded' &&
@@ -60,7 +62,7 @@ export const generateTheme = async (
 		prediction = await response.json();
 		if (response.status !== 200) {
 			setError(prediction.detail);
-			return;
+			return null;
 		}
 	}
 	return prediction;

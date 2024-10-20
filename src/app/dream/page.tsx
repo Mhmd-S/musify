@@ -16,6 +16,7 @@ import FileUploadField from '@/components/FileUploadField';
 import GeneratedVideo from '@/components/GeneratedVideo';
 
 import { Button } from '@/components/ui/button';
+import { Prediction } from 'replicate';
 
 export default function DreamPage() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -52,7 +53,7 @@ export default function DreamPage() {
 		const snapshots = await generateSnapshots(videoRef?.current);
 
 		if (snapshots && snapshots.length > 0) {
-			const snapshotsTheme: string[] | null = [];
+			const snapshotsTheme: Promise<Prediction>[] | null = [];
 
 			snapshots.forEach(async (snapshot) => {
 				const theme = generateTheme(snapshot, setError);
@@ -77,18 +78,16 @@ export default function DreamPage() {
 			);
 
 			// Combine
-			const brief = orchestralBrief.output.map((t) => t).join(' ');
+			const brief = orchestralBrief.output.map((t: string) => t).join(' ');
 
 			generateMusic(brief, videoRef.current.duration, setError)
 				.then((music) => {
-					replaceAudio(music.output)
-						.catch((err) => console.log(err))
-						.finally(() => {
-							setLoading(false);
-						});
+					replaceAudio(music.output);
 				})
-				.catch((error) => {
+				.catch((err) => {
 					setError('Failed to generate music');
+				})
+				.finally(() => {
 					setLoading(false);
 				});
 		}
@@ -157,7 +156,6 @@ export default function DreamPage() {
 						Upload a video
 					</label>
 					<FileUploadField
-						label="Upload a video"
 						accept="video/*"
 						ref={videoRef}
 						name="video"
