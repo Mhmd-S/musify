@@ -159,7 +159,7 @@ const Header = () => {
 						</h2>
 					</Link>
 				</div>
-				<div className="flex justify-end w-full gap-4">
+				<div className="hidden md:flex justify-end w-full gap-4">
 					{/* <Button variant="outline">Sign in</Button> */}
 					<Link href="/dream">
 						<Button size="lg" className="gap-4" variant="default">
