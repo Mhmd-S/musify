@@ -30,10 +30,6 @@ const config: Config = {
 					foreground: 'hsl(var(--footer-foreground))'
 				},
 				selection: 'hsl(var(--selection))',
-				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
-				},
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
