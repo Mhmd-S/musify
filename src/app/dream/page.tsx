@@ -78,7 +78,9 @@ export default function DreamPage() {
 			);
 
 			// Combine
-			const brief = orchestralBrief.output.map((t: string) => t).join(' ');
+			const brief = orchestralBrief.output
+				.map((t: string) => t)
+				.join(' ');
 
 			generateMusic(brief, videoRef.current.duration, setError)
 				.then((music) => {
@@ -193,17 +195,19 @@ export default function DreamPage() {
 						newVideo={newVideo}
 						loading={loading || ffmpegLoading}
 					/>
-					{newVideo && (
-						<Button
-							disabled={loading}
-							variant="outline"
-							className="w-fit"
+					<Button
+						disabled={loading || !newVideo}
+						variant="outline"
+						className="w-fit"
+					>
+						<a
+							href={newVideo ? newVideo : ''}
+							target="_blank"
+							download
 						>
-							<a href={newVideo} target="_blank" download>
-								Download Video
-							</a>
-						</Button>
-					)}
+							Download Video
+						</a>
+					</Button>
 				</div>
 			</div>
 		</div>

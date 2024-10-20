@@ -1,16 +1,21 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 
 import Link from 'next/link';
 
 import { motion } from 'framer-motion';
 
-import { Wand2 } from 'lucide-react';
+import { Wand2, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 const Hero = () => {
+	const videoRef = useRef<HTMLVideoElement>(null);
+
 	const [titleNumber, setTitleNumber] = useState(0);
+	const [isMuted, setIsMuted] = useState(true);
+
 	const titles = useMemo(
 		() => ['electrical', 'wonderful', 'beautiful', 'melodious'],
 		[]
@@ -26,6 +31,13 @@ const Hero = () => {
 		}, 2000);
 		return () => clearTimeout(timeoutId);
 	}, [titleNumber, titles]);
+
+	const toggleMute = () => {
+		if (videoRef.current) {
+			videoRef.current.muted = !videoRef.current.muted;
+			setIsMuted(videoRef.current.muted);
+		}
+	};
 
 	return (
 		<div className="grid grid-cols-1 gap-8 px-10 py-10 mt-14 items-center lg:grid-cols-2">
@@ -79,7 +91,29 @@ const Hero = () => {
 					</Button>
 				</Link>
 			</div>
-			<div className="bg-muted rounded-md aspect-square"></div>
+			<div className="h-96 relative bg-muted rounded-md overflow-hidden">
+				<Badge className="absolute top-4 left-4 text-white p-2 rounded-md">
+					We made this windmill video more captivating with our music
+				</Badge>
+				<video
+					ref={videoRef}
+					className="object-center w-full h-full"
+					src="/home.mp4"
+					muted={isMuted}
+					loop
+					autoPlay
+				/>
+				<Button
+					onClick={toggleMute}
+					className="absolute bottom-4 right-4 bg-black text-white p-4 rounded-full"
+				>
+					{isMuted ? (
+						<VolumeX className="w-6 h-6" />
+					) : (
+						<Volume2 className="w-6 h-6" />
+					)}
+				</Button>
+			</div>
 		</div>
 	);
 };
