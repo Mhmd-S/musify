@@ -66,10 +66,10 @@ const Footer = () => {
 								Transform Your Videos with Music!
 							</p>
 						</div>
-						<div className="grid grid-cols-2 gap-4 text-sm max-w-lg leading-relaxed tracking-tight text-background/75 text-left">
+						{/* <div className="grid grid-cols-2 gap-4 text-sm max-w-lg leading-relaxed tracking-tight text-background/75 text-left">
 							<Link href="/">Terms of service</Link>
 							<Link href="/">Privacy Policy</Link>
-						</div>
+						</div> */}
 					</div>
 					{/* <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 items-start">
 						{navigationItems.map((item) => (
