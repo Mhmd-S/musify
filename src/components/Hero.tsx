@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
+import Link from 'next/link';
+
 import { motion } from 'framer-motion';
 
 import { Wand2 } from 'lucide-react';
@@ -70,10 +72,12 @@ const Hero = () => {
 						create music that fits your video in seconds.
 					</p>
 				</div>
-				<Button size="lg" className="w-fit" variant="default">
-					Musify your video!
-					<Wand2 className="w-4 h-4" />
-				</Button>
+				<Link href="/dream">
+					<Button size="lg" className="gap-4" variant="default">
+						Musify your video!
+						<Wand2 className="w-4 h-4" />
+					</Button>
+				</Link>
 			</div>
 			<div className="bg-muted rounded-md aspect-square"></div>
 		</div>

@@ -1,4 +1,4 @@
-import { Check, Wand2 } from 'lucide-react';
+import { Check, Link, Wand2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
@@ -48,15 +48,6 @@ const Feature = () => (
 								</p>
 							</div>
 						</div>
-						<div className="flex flex-row gap-6 w-full items-start">
-							<Check className="w-4 h-4 mt-2 text-primary" />
-							<div className="flex flex-col gap-1">
-								<p>Fast Processing</p>
-								<p className="text-muted-foreground text-sm">
-									Experience quick video processing times.
-								</p>
-							</div>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -64,10 +55,12 @@ const Feature = () => (
 				<h3 className="text-3xl md:text-5xl tracking-tighter font-regular">
 					What are you waiting for? Get started now!
 				</h3>
-				<Button size="lg" className="gap-4" variant="default">
-					Musify your video!
-					<Wand2 className="w-4 h-4" />
-				</Button>
+				<Link href="/dream">
+					<Button size="lg" className="gap-4" variant="default">
+						Musify your video!
+						<Wand2 className="w-4 h-4" />
+					</Button>
+				</Link>
 			</div>
 		</div>
 	</div>

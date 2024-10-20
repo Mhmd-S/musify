@@ -5,6 +5,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
+
+import {Wand2} from 'lucide-react';
+
 import {
 	NavigationMenu,
 	NavigationMenuContent,
@@ -158,7 +161,12 @@ const Header = () => {
 				</div>
 				<div className="flex justify-end w-full gap-4">
 					{/* <Button variant="outline">Sign in</Button> */}
-					<Button>Get started</Button>
+					<Link href="/dream">
+						<Button size="lg" className="gap-4" variant="default">
+							Musify your video!
+							<Wand2 className="w-4 h-4" />
+						</Button>
+					</Link>
 				</div>
 				{/* <div className="flex w-12 shrink lg:hidden items-end justify-end">
 					<Button variant="ghost" onClick={() => setOpen(!isOpen)}>
