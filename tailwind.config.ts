@@ -21,6 +21,19 @@ const config: Config = {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
+				header:{
+					DEFAULT: 'hsl(var(--header))',
+					foreground: 'hsl(var(--header-foreground))'
+				},
+				footer: {
+					DEFAULT: 'hsl(var(--footer))',
+					foreground: 'hsl(var(--footer-foreground))'
+				},
+				selection: 'hsl(var(--selection))',
+				accent: {
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))'
+				},
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'

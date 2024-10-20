@@ -2,37 +2,37 @@ import Spinner from './Spinner';
 
 type GeneratedVideoProps = {
 	newVideo: string | null;
-	downloadVideo: () => void;
 	loading: boolean;
-}
+};
 
 const GeneratedVideo: React.FC<GeneratedVideoProps> = ({
 	newVideo,
-	downloadVideo,
 	loading,
 }) => {
-	if (newVideo) {
-		return (
-			<>
-				<video
-					className="w-3/5 aspect-video object-cover rounded-2xl"
-					controls
-					src={newVideo}
-				/>
-				<button onClick={downloadVideo} className="rounded-md bg-pink-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600">
-					Download Video
-				</button>
-			</>
-		);
-	}
-
-	if (loading) {
-		return <Spinner />;
-	}
-
 	return (
-		<div className="w-3/5 aspect-video bg-gray-600/35 rounded-2xl flex items-center justify-center">
-			<p className="font-light">Your new video will appear here</p>
+		<div
+			className={`relative min-h-48 w-full md:w-3/4 px-4 py-8 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
+				newVideo ? 'border-solid bg-primary' : 'border-dashed bg-muted'
+			}`}
+		>
+			{newVideo ? (
+				<>
+					<video
+						className="w-48 aspect-square object-center object-fit rounded-3xl"
+						controls
+						src={newVideo}
+					/>
+				</>
+			) : loading ? (
+				<Spinner />
+			) : (
+				<div className="grid grid-rows-2 grid-cols-1 gap-2 place-items-center text-gray-600 text-center">
+					<span className="text-sm">
+						Your <strong>new video </strong>
+						will appear here
+					</span>
+				</div>
+			)}
 		</div>
 	);
 };

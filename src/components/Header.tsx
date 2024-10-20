@@ -18,62 +18,62 @@ import { Menu, MoveRight, X } from 'lucide-react';
 
 const Header = () => {
 	const navigationItems = [
-		{
-			title: 'Home',
-			href: '/',
-			description: '',
-		},
-		{
-			title: 'Product',
-			description: 'Managing a small business today is already tough.',
-			items: [
-				{
-					title: 'Reports',
-					href: '/reports',
-				},
-				{
-					title: 'Statistics',
-					href: '/statistics',
-				},
-				{
-					title: 'Dashboards',
-					href: '/dashboards',
-				},
-				{
-					title: 'Recordings',
-					href: '/recordings',
-				},
-			],
-		},
-		{
-			title: 'Company',
-			description: 'Managing a small business today is already tough.',
-			items: [
-				{
-					title: 'About us',
-					href: '/about',
-				},
-				{
-					title: 'Fundraising',
-					href: '/fundraising',
-				},
-				{
-					title: 'Investors',
-					href: '/investors',
-				},
-				{
-					title: 'Contact us',
-					href: '/contact',
-				},
-			],
-		},
+		// {
+		// 	title: 'Home',
+		// 	href: '/',
+		// 	description: '',
+		// },
+		// {
+		// 	title: 'Product',
+		// 	description: 'Managing a small business today is already tough.',
+		// 	items: [
+		// 		{
+		// 			title: 'Reports',
+		// 			href: '/reports',
+		// 		},
+		// 		{
+		// 			title: 'Statistics',
+		// 			href: '/statistics',
+		// 		},
+		// 		{
+		// 			title: 'Dashboards',
+		// 			href: '/dashboards',
+		// 		},
+		// 		{
+		// 			title: 'Recordings',
+		// 			href: '/recordings',
+		// 		},
+		// 	],
+		// },
+		// {
+		// 	title: 'Company',
+		// 	description: 'Managing a small business today is already tough.',
+		// 	items: [
+		// 		{
+		// 			title: 'About us',
+		// 			href: '/about',
+		// 		},
+		// 		{
+		// 			title: 'Fundraising',
+		// 			href: '/fundraising',
+		// 		},
+		// 		{
+		// 			title: 'Investors',
+		// 			href: '/investors',
+		// 		},
+		// 		{
+		// 			title: 'Contact us',
+		// 			href: '/contact',
+		// 		},
+		// 	],
+		// },
 	];
 
 	const [isOpen, setOpen] = useState(false);
 	return (
 		<header className="w-full px-10 z-40 fixed top-0 left-0 bg-background">
-			<div className="container relative mx-auto min-h-20 flex gap-4 flex-row lg:grid lg:grid-cols-3 items-center">
-				<div className="justify-start items-center gap-4 lg:flex hidden flex-row">
+			<div className="container relative mx-auto min-h-20 flex gap-4 flex-row lg:grid lg:grid-cols-2 items-center">
+				{/* <div className="justify-start items-center gap-4 lg:flex hidden flex-row">
 					<NavigationMenu className="flex justify-start items-start">
 						<NavigationMenuList className="flex justify-start gap-4 flex-row">
 							{navigationItems.map((item) => (
@@ -141,19 +141,26 @@ const Header = () => {
 							))}
 						</NavigationMenuList>
 					</NavigationMenu>
-				</div>
-				<div className="flex lg:justify-center">
-					<Image src="/logo1.jpg" height={40} width={40} alt="Logo" className='rounded-md' />
+				</div> */}
+				<div className="flex items-center gap-2">
+					<Image
+						src="/logo1.jpg"
+						height={40}
+						width={40}
+						alt="Logo"
+						className="rounded-md"
+					/>
+					<Link href="/">
+						<h2 className="text-lg font-semibold text-primary">
+							Musify
+						</h2>
+					</Link>
 				</div>
 				<div className="flex justify-end w-full gap-4">
-					<Button variant="ghost" className="hidden md:inline">
-						Book a demo
-					</Button>
-					<div className="border-r hidden md:inline"></div>
-					<Button variant="outline">Sign in</Button>
+					{/* <Button variant="outline">Sign in</Button> */}
 					<Button>Get started</Button>
 				</div>
-				<div className="flex w-12 shrink lg:hidden items-end justify-end">
+				{/* <div className="flex w-12 shrink lg:hidden items-end justify-end">
 					<Button variant="ghost" onClick={() => setOpen(!isOpen)}>
 						{isOpen ? (
 							<X className="w-5 h-5" />
@@ -199,7 +206,7 @@ const Header = () => {
 							))}
 						</div>
 					)}
-				</div>
+				</div> */}
 			</div>
 		</header>
 	);

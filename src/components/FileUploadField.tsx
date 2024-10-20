@@ -20,21 +20,13 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 			accept,
 			loading,
 			handleFileChange,
-			handleRemoveFile,
 		},
 		ref
 	) => {
 		return (
-			<div className="h-fit w-full">
-				<label
-					htmlFor={name}
-					className="block mb-6 text-lg font-medium leading-6 text-gray-900"
-				>
-					{label}
-				</label>
 				<div
-					className={`relative min-h-48 w-full p-1 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
-						file ? 'border-solid bg-gray-400/25' : 'border-dashed'
+					className={`relative min-h-48 w-full md:w-3/4 px-4 py-8 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
+						file ? 'border-solid bg-primary' : 'border-dashed bg-muted'
 					}`}
 				>
 					{loading ? (
@@ -45,39 +37,30 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 						</>
 					) : file ? (
 						<>
-							<div className="place-self-start w-full px-2 flex justify-between items-center gap-2">
-								<span>Uploaded video</span>
-								<TrashIcon
-									className="p-1 size-8 cursor-pointer"
-									onClick={() => handleRemoveFile()}
-								/>
-							</div>
 							<video
 								ref={ref}
-								className="w-64 aspect-square object-center rounded-3xl"
+								className="w-48 aspect-square object-center rounded-3xl"
 								src={
 									typeof file === 'string'
 										? file
 										: URL.createObjectURL(file)
 								}
-								controls
 							/>
 						</>
 					) : (
 						<>
 							<div
-								className={`grid grid-rows-2 grid-cols-1 gap-2 place-items-center text-gray-600 text-center ${
-									file && 'hidden'
-								}`}
+								className="grid grid-rows-2 grid-cols-1 gap-2 place-items-center text-gray-600 text-center"
 							>
 								<span className="text-sm">
-									<span className="font-semibold text-pink-700 text-brand-700">
-										Upload a File{' '}
-									</span>
+									Click to {" "}
+									<strong>
+										upload a video{' '}
+									</strong>
 									or drag and drop
 								</span>
 								<span className="text-xs text-gray-400">
-									PNG, JPG, GIF up to 3MB
+									MP4 up to 50MB
 								</span>
 							</div>
 							<input
@@ -90,7 +73,6 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 						</>
 					)}
 				</div>
-			</div>
 		);
 	}
 );
