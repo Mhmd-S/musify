@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import useFFmpeg from '@/hooks/useFFmpeg';
 
 import {
@@ -15,12 +15,12 @@ import { ArrowDownIcon, TrashIcon } from '@heroicons/react/24/outline';
 import FileUploadField from '@/components/FileUploadField';
 import GeneratedVideo from '@/components/GeneratedVideo';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Prediction } from 'replicate';
 
 export default function DreamPage() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
-	const messageRef = useRef<HTMLParagraphElement | null>(null);
 
 	const [newVideo, setNewVideo] = useState<string | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -185,6 +185,7 @@ export default function DreamPage() {
 					</div>
 				</div>
 				<div>
+					{error && <Badge variant="destructive">{error}</Badge>}
 					<ArrowDownIcon className="size-14 text-primary md:-rotate-90" />
 				</div>
 				<div className="h-fit w-full flex flex-col items-center gap-8">
