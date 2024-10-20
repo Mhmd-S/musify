@@ -43,7 +43,13 @@ export default function DreamPage() {
 	const createMusic = async () => {
 		setNewVideo(null);
 		setLoading(true);
-		const snapshots = await generateSnapshots(videoRef.current);
+
+		if (!videoRef || !videoRef.current) {
+			setLoading(false);
+			return;
+		}
+
+		const snapshots = await generateSnapshots(videoRef?.current);
 
 		if (snapshots && snapshots.length > 0) {
 			const snapshotsTheme: string[] | null = [];

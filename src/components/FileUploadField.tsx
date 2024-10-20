@@ -41,6 +41,7 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 								ref={ref}
 								className="w-48 aspect-square object-center rounded-3xl"
 								autoPlay
+								loop
 								muted
 								src={
 									typeof file === 'string'

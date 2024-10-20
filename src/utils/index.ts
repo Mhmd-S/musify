@@ -22,7 +22,6 @@ export const captureSnapshot = (
 };
 
 export const generateSnapshots = async (video: HTMLVideoElement) => {
-	console.log(video);
 	const duration = video.duration;
 	let newSnapshots: string[] = [];
 	for (let time = 0; time < duration; time += 10) {
