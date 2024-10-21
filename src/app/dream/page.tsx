@@ -53,17 +53,17 @@ export default function DreamPage() {
 		const snapshots = await generateSnapshots(videoRef?.current);
 
 		if (snapshots && snapshots.length > 0) {
-			const snapshotsTheme: Promise<Prediction>[] | null = [];
+			const snapshotsTheme: Prediction[] = [];
 
 			for (const snapshot of snapshots) {
-				const theme = await generateTheme(snapshot, setError);
-				snapshotsTheme.push(theme);
+					const theme = await generateTheme(snapshot, setError);
+					if (theme) {
+							snapshotsTheme.push(theme);
+					}
 			}
 
-			const themes = snapshotsTheme;
-
 			// Remove duplicates themes and the string "Caption:" and then combining them.
-			const combinedThemes = themes
+			const combinedThemes = snapshotsTheme
 				.filter(
 					(item, index, self) =>
 						index ===
