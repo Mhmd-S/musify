@@ -13,8 +13,6 @@ const WEBHOOK_HOST = process.env.VERCEL_URL
  
 export async function POST(request) {
 
-  console.log("Fetch")
-
   if (!process.env.REPLICATE_API_TOKEN) {
     throw new Error(
       'The REPLICATE_API_TOKEN environment variable is not set.'

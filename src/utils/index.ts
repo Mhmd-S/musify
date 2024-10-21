@@ -42,6 +42,7 @@ export const generateTheme = async (
 	imageURI: string,
 	setError: (error: string) => void
 ) => {
+	sleep(250);
 	const res = await fetch('/api/generate-theme', {
 		method: 'POST',
 		headers: {
