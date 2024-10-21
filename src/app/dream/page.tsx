@@ -53,7 +53,7 @@ export default function DreamPage() {
 		const snapshots = await generateSnapshots(videoRef?.current);
 
 		if (snapshots && snapshots.length > 0) {
-			const snapshotsTheme: Promise<Prediction>[] | null = [];
+			const snapshotsTheme: Promise<Prediction | null>[] = [];
 
 			snapshots.forEach(async (snapshot) => {
 				const theme = generateTheme(snapshot, setError);
@@ -64,12 +64,13 @@ export default function DreamPage() {
 
 			// Remove duplicates themes and the string "Caption:" and then combining them.
 			const combinedThemes = themes
-				.filter(
-					(item, index, self) =>
-						index ===
-						self.findIndex((t) => t.output === item.output)
-				)
-				.map((t) => t.output.replace('Caption:', ''))
+				.filter((item, index, self) => {
+					if (!item) {
+						return "";
+					}
+					return index ===	self.findIndex((t) => t && t.output === item.output);
+				})
+				.map((t) => t && t.output.replace('Caption:', ''))
 				.join(', ');
 
 			const orchestralBrief = await generateOrchestralBrief(
@@ -77,6 +78,11 @@ export default function DreamPage() {
 				Math.floor(videoRef.current.duration),
 				setError
 			);
+
+			if (!orchestralBrief) {
+				setLoading(false);
+				return;
+			}
 
 			// Combine
 			const brief = orchestralBrief.output.map((t: string) => t).join('');
@@ -87,6 +93,7 @@ export default function DreamPage() {
 					videoRef.current.duration,
 					setError
 				);
+				if (!music) return;
 				replaceAudio(music.output);
 			} catch (err) {
 				setError('Failed to generate music');
