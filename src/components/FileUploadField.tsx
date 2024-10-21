@@ -18,17 +18,29 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 			setError(null);
 
 			const file = event.target.files?.[0];
-			const maxSize = 50 * 1024 * 1024; // 50 MB in bytes
+			const maxDuration = 190; // 190 seconds
 
 			if (file) {
-				if (file.size > maxSize) {
-					setError('File size exceeds 50 MB limit.');
-					event.target.value = ''; // Clear the input
-				} else if (file.type !== 'video/mp4') {
+				if (file.type !== 'video/mp4') {
 					setError('Only MP4 files are allowed.');
 					event.target.value = ''; // Clear the input
 				} else {
-					handleFileChange(event);
+					const video = document.createElement('video');
+					video.preload = 'metadata';
+
+					video.onloadedmetadata = () => {
+						window.URL.revokeObjectURL(video.src);
+						if (video.duration > maxDuration) {
+							setError(
+								'Video duration exceeds 190 seconds limit.'
+							);
+							event.target.value = ''; // Clear the input
+						} else {
+							handleFileChange(event);
+						}
+					};
+
+					video.src = URL.createObjectURL(file);
 				}
 			}
 		};
