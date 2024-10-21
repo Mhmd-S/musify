@@ -79,20 +79,20 @@ export default function DreamPage() {
 			);
 
 			// Combine
-			const brief = orchestralBrief.output
-				.map((t: string) => t)
-				.join('');
+			const brief = orchestralBrief.output.map((t: string) => t).join('');
 
-			generateMusic(brief, videoRef.current.duration, setError)
-				.then((music) => {
-					replaceAudio(music.output);
-				})
-				.catch((err) => {
-					setError('Failed to generate music');
-				})
-				.finally(() => {
-					setLoading(false);
-				});
+			try {
+				const music = await generateMusic(
+					brief,
+					videoRef.current.duration,
+					setError
+				);
+				replaceAudio(music.output);
+			} catch (err) {
+				setError('Failed to generate music');
+			} finally {
+				setLoading(false);
+			}
 		}
 	};
 

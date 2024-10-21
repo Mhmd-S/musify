@@ -26,7 +26,7 @@ export async function POST(request) {
 		input: {
 			prompt,
 			duration: parseInt(duration),
-			model_version: 'stereo-large',
+			model_version: 'stereo-melody-large',
 			output_format: 'mp3',
 			normalization_strategy: 'peak',
 		},
