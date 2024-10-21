@@ -60,7 +60,7 @@ export default function DreamPage() {
 				snapshotsTheme.push(theme);
 			});
 
-			const themes = await Promise.allSettled(snapshotsTheme);
+			const themes = await Promise.all(snapshotsTheme);
 
 			// Remove duplicates themes and the string "Caption:" and then combining them.
 			const combinedThemes = themes
