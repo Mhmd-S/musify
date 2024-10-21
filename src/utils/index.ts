@@ -97,7 +97,7 @@ export const generateOrchestralBrief = async (
 		prediction.status !== 'succeeded' &&
 		prediction.status !== 'failed'
 	) {
-		await sleep(2500);
+		await sleep(1000);
 		const response = await fetch('/api/generate-brief/' + prediction.id);
 		prediction = await response.json();
 		if (response.status !== 200) {
@@ -132,7 +132,7 @@ export const generateMusic = async (
 		prediction.status !== 'succeeded' &&
 		prediction.status !== 'failed'
 	) {
-		await sleep(5000);
+		await sleep(8000);
 		const response = await fetch('/api/generate-music/' + prediction.id);
 		prediction = await response.json();
 		if (response.status !== 200) {

@@ -4,8 +4,8 @@ import { kv } from '@vercel/kv';
 
 const ratelimit = new Ratelimit({
 	redis: kv,
-	// 5 requests from the same IP in 10 seconds
-	limiter: Ratelimit.slidingWindow(5, '10 s'),
+	// 5 requests from the same IP in 24 hours
+	limiter: Ratelimit.slidingWindow(5, '1440 m'),
 });
 
 // Define which routes you want to rate limit
@@ -21,7 +21,7 @@ export default async function middleware(request: NextRequest) {
 	);
 
 	if (remaining) {
-		return new Response(JSON.stringify({ error: 'Rate limit exceeded' }), {
+		return new Response(JSON.stringify({ error: 'Rate limit exceeded. Try again in 24 hours.' }), {
 			status: 429,
 			headers: {
 				'X-RateLimit-Limit': limit.toString(),
