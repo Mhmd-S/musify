@@ -88,7 +88,7 @@ export const generateOrchestralBrief = async (
     duration: number,
     setError: (error: string) => void
 ) => {
-    await sleep(250);
+    await sleep(1000);
 
     const res = await fetch('/api/generate-brief', {
         method: 'POST',
@@ -113,7 +113,7 @@ export const generateMusic = async (
     duration: number,
     setError: (error: string) => void
 ) => {
-    await sleep(250);
+    await sleep(1000);
 
     const res = await fetch('/api/generate-music', {
         method: 'POST',
