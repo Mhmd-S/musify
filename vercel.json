@@ -1,0 +1,12 @@
+{
+  "functions": {
+    "api/generate-brief.ts": {
+      "memory": 3009,
+      "maxDuration": 60
+    },
+    "api/generate-music.ts": {
+      "memory": 3009,
+      "maxDuration": 60
+    },
+  }
+}
