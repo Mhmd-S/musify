@@ -1,4 +1,4 @@
-import { Prediction } from "replicate";
+import { Prediction } from 'replicate';
 
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -8,15 +8,20 @@ export const captureSnapshot = (
 ): Promise<string> => {
 	return new Promise((resolve) => {
 		const canvas = document.createElement('canvas');
-		canvas.width = video.videoWidth;
-		canvas.height = video.videoHeight;
 		const ctx = canvas.getContext('2d');
 
 		if (ctx) {
 			video.currentTime = time;
 			video.onseeked = () => {
-				ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-				const snapshot = canvas.toDataURL('image/png');
+				// Set the desired dimensions for the resized image
+				const width = 800;
+				const height = (video.videoHeight / video.videoWidth) * width;
+
+				canvas.width = width;
+				canvas.height = height;
+
+				ctx.drawImage(video, 0, 0, width, height);
+				const snapshot = canvas.toDataURL('image/jpeg', 0.7); // Adjust quality as needed
 				resolve(snapshot);
 			};
 		}
@@ -26,7 +31,7 @@ export const captureSnapshot = (
 export const generateSnapshots = async (video: HTMLVideoElement) => {
 	const duration = video.duration;
 	let newSnapshots: string[] = [];
-	for (let time = 0; time < duration; time += 10) {
+	for (let time = 0; time < duration; time += 6) {
 		const snapshot = await captureSnapshot(video, time);
 		newSnapshots.push(snapshot);
 	}
@@ -37,7 +42,6 @@ export const generateTheme = async (
 	imageURI: string,
 	setError: (error: string) => void
 ) => {
-	await sleep(200);
 	const res = await fetch('/api/generate-theme', {
 		method: 'POST',
 		headers: {
@@ -51,7 +55,7 @@ export const generateTheme = async (
 	if (res.status !== 201) {
 		setError(prediction.detail);
 		return null;
-	} 
+	}
 
 	while (
 		prediction.status !== 'succeeded' &&
@@ -72,7 +76,6 @@ export const generateOrchestralBrief = async (
 	theme: string,
 	setError: (error: string) => void
 ) => {
-	await sleep(200);
 	const res = await fetch('/api/generate-brief', {
 		method: 'POST',
 		headers: {
@@ -108,7 +111,6 @@ export const generateMusic = async (
 	duration: number,
 	setError: (error: string) => void
 ) => {
-	await sleep(200);
 	const res = await fetch('/api/generate-music', {
 		method: 'POST',
 		headers: {
