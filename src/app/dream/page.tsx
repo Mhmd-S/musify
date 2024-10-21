@@ -55,12 +55,12 @@ export default function DreamPage() {
 		if (snapshots && snapshots.length > 0) {
 			const snapshotsTheme: Promise<Prediction>[] | null = [];
 
-			snapshots.forEach(async (snapshot) => {
-				const theme = generateTheme(snapshot, setError);
+			for (const snapshot of snapshots) {
+				const theme = await generateTheme(snapshot, setError);
 				snapshotsTheme.push(theme);
-			});
+			}
 
-			const themes = await Promise.all(snapshotsTheme);
+			const themes = snapshotsTheme;
 
 			// Remove duplicates themes and the string "Caption:" and then combining them.
 			const combinedThemes = themes
@@ -79,9 +79,7 @@ export default function DreamPage() {
 			);
 
 			// Combine
-			const brief = orchestralBrief.output
-				.map((t: string) => t)
-				.join('');
+			const brief = orchestralBrief.output.map((t: string) => t).join('');
 
 			generateMusic(brief, videoRef.current.duration, setError)
 				.then((music) => {
