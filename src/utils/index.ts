@@ -78,6 +78,9 @@ export const generateOrchestralBrief = async (
 	duration: number,
 	setError: (error: string) => void
 ) => {
+
+	sleep(250);
+
 	const res = await fetch('/api/generate-brief', {
 		method: 'POST',
 		headers: {
@@ -113,12 +116,15 @@ export const generateMusic = async (
 	duration: number,
 	setError: (error: string) => void
 ) => {
+
+	sleep(250);
+
 	const res = await fetch('/api/generate-music', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ prompt: theme, duration: duration }),
+		body: JSON.stringify({ prompt: theme, duration }),
 	});
 
 	let prediction = await res.json();
