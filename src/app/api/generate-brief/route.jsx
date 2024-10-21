@@ -21,13 +21,13 @@ export async function POST(request) {
     );
   }
  
-  const { theme } = await request.json();
+  const { theme, duration } = await request.json();
  
   const options = {
     model: "meta/meta-llama-3-8b-instruct",
     input: { 
       "top_p": 0.9,
-      "prompt": `Make sense of  phrases which have been extracted from a video: \n\n "${theme}". \n\n Only return me a orchestral briefing for the video's music, and nothing else.`,
+      "prompt": `Make sense of  phrases which have been extracted from a video's snippets and generate me an suitable orchestral breif for the video which has the duration of ${duration} seconds. The snippets are: \n\n "${theme}". \n\n Only return a concise orchestral brief, do not mention the contents of the video. Just give technical details for the orchestral brief.`,
       "min_tokens": 0,
       "max_token": 30,
      }

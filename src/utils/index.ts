@@ -75,6 +75,7 @@ export const generateTheme = async (
 
 export const generateOrchestralBrief = async (
 	theme: string,
+	duration: number,
 	setError: (error: string) => void
 ) => {
 	const res = await fetch('/api/generate-brief', {
@@ -82,7 +83,7 @@ export const generateOrchestralBrief = async (
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ theme }),
+		body: JSON.stringify({ theme, duration }),
 	});
 
 	let prediction = await res.json();
@@ -131,7 +132,7 @@ export const generateMusic = async (
 		prediction.status !== 'succeeded' &&
 		prediction.status !== 'failed'
 	) {
-		await sleep(2500);
+		await sleep(5000);
 		const response = await fetch('/api/generate-music/' + prediction.id);
 		prediction = await response.json();
 		if (response.status !== 200) {

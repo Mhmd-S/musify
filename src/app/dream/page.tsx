@@ -74,13 +74,14 @@ export default function DreamPage() {
 
 			const orchestralBrief = await generateOrchestralBrief(
 				combinedThemes,
+				Math.floor(videoRef.current.duration),
 				setError
 			);
 
 			// Combine
 			const brief = orchestralBrief.output
 				.map((t: string) => t)
-				.join(' ');
+				.join('');
 
 			generateMusic(brief, videoRef.current.duration, setError)
 				.then((music) => {
