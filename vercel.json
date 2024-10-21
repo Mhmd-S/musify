@@ -7,6 +7,6 @@
     "api/generate-music.ts": {
       "memory": 3009,
       "maxDuration": 60
-    },
+    }
   }
 }
