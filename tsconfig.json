@@ -2,10 +2,14 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -14,30 +18,81 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-		"baseUrl": "src",
-		"paths": {
-      "@components/*": ["components/*"],
-      "@lib/*": ["lib/*"],
-      "@assets/*": ["assets/*"],
-      "@styles/*": ["styles/*"],
-      "@utils/*": ["utils/*"],
-      "@services/*": ["services/*"],
-      "@hooks/*": ["hooks/*"],
-      "@context/*": ["context/*"],
-      "@pages/*": ["pages/*"],
-      "@layouts/*": ["layouts/*"],
-      "@constants/*": ["constants/*"],
-      "@types/*": ["types/*"],
-      "@api/*": ["api/*"],
-      "@config/*": ["config/*"],
-      "@modules/*": ["modules/*"],
-      "@forms/*": ["forms/*"],
-      "@request/*": ["request/*"],
-      "@apps/*": ["apps/*"],
-      "@routes/*": ["routes/*"],
-		}
+    "jsx": "preserve",
+    "baseUrl": "src",
+    "paths": {
+      "@components/*": [
+        "components/*"
+      ],
+      "@lib/*": [
+        "lib/*"
+      ],
+      "@assets/*": [
+        "assets/*"
+      ],
+      "@styles/*": [
+        "styles/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
+      "@services/*": [
+        "services/*"
+      ],
+      "@hooks/*": [
+        "hooks/*"
+      ],
+      "@context/*": [
+        "context/*"
+      ],
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@layouts/*": [
+        "layouts/*"
+      ],
+      "@constants/*": [
+        "constants/*"
+      ],
+      "@types/*": [
+        "types/*"
+      ],
+      "@api/*": [
+        "api/*"
+      ],
+      "@config/*": [
+        "config/*"
+      ],
+      "@modules/*": [
+        "modules/*"
+      ],
+      "@forms/*": [
+        "forms/*"
+      ],
+      "@request/*": [
+        "request/*"
+      ],
+      "@apps/*": [
+        "apps/*"
+      ],
+      "@routes/*": [
+        "routes/*"
+      ]
+    },
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["./src", "./dist/types/**/*.ts", "./next-env.d.ts"],
-  "exclude": ["./node_modules"],
+  "include": [
+    "./src",
+    "./dist/types/**/*.ts",
+    "./next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "./node_modules"
+  ]
 }

@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+import { toast } from "@hooks/use-toast";
 
 export interface ErrorResponse {
   response?: {
@@ -21,12 +21,15 @@ const errorHandler = (error: ErrorResponse): ErrorHandlerResult | any => {
   const { response } = error;
 
   if (!response) {
-    // Code to execute when there is no internet connection
-    toast.error('Problem connecting to server');
+    toast({
+      variant: "destructive",
+      title: "Connection Error",
+      description: "Unable to connect to server. Please check your connection.",
+    });
     return {
       success: false,
       result: null,
-      message: 'Cannot connect to the server, Contact your Account administrator',
+      message: 'Cannot connect to the server. Please contact your account administrator.',
     };
   }
 
@@ -43,24 +46,35 @@ const errorHandler = (error: ErrorResponse): ErrorHandlerResult | any => {
 
   if (response.status) {
     const { status } = response;
-    toast.error(`Request error ${status}`);
+    const errorMessage = response.data?.message || `Error ${status}: Request failed`;
+    toast({
+      variant: "destructive",
+      title: "Error",
+      description: errorMessage,
+    });
     return response.data;
   } else {
     if (navigator.onLine) {
-      // Code to execute when there is internet connection
-      toast.error('Problem connecting to server');
+      toast({
+        variant: "destructive",
+        title: "Server Error",
+        description: "Server connection failed. Please try again later.",
+      });
       return {
         success: false,
         result: null,
-        message: 'Cannot connect to the server, Contact your Account administrator',
+        message: 'Cannot connect to the server. Please contact your account administrator.',
       };
     } else {
-      // Code to execute when there is no internet connection
-      toast.error('No internet connection');
+      toast({
+        variant: "destructive",
+        title: "Network Error",
+        description: "No internet connection. Please check your network.",
+      });
       return {
         success: false,
         result: null,
-        message: 'Cannot connect to the server, Check your internet network',
+        message: 'Cannot connect to the server. Please check your internet connection.',
       };
     }
   }

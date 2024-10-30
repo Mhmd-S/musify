@@ -1,4 +1,4 @@
-import { toast } from 'react-toastify';
+import { toast } from "@hooks/use-toast";
 
 type Response = {
   data: {
@@ -14,12 +14,18 @@ const successHandler = (
   const { data } = response;
   if (data && data.success === true) {
     if (options.notifyOnSuccess) {
-      toast.success(`Request success`);
+      toast({
+        title: `Request success`,
+        variant: "default",
+      });
     }
   } else {
     const { status } = response;
     if (options.notifyOnFailed) {
-      toast.error(`Request error ${status}`);
+      toast({
+        title: `Request error ${status}`,
+        variant: "destructive"
+      });
     }
   }
 };

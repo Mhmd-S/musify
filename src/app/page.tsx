@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { Wand2 } from 'lucide-react';
 import Link from 'next/link';
