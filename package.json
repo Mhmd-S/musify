@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@bytescale/sdk": "^3.44.0",
@@ -30,6 +31,7 @@
     "framer-motion": "^11.11.9",
     "lucide-react": "^0.453.0",
     "next": "^14.2.15",
+    "next-sitemap": "^4.2.3",
     "react": "^18",
     "react-dom": "^18",
     "replicate": "^0.32.0",

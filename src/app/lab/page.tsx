@@ -14,6 +14,8 @@ import { generateMusic } from '@services/musicService';
 import { useToast } from '@hooks/use-toast';
 import { Button } from '@components/ui/button';
 
+import NoSSRWrapper from '@components/NoSSRWrapper';
+
 import { StyleVideoTypeSelect } from '@components/ui/StyleVideoTypeSelect';
 
 const Lab = () => {
@@ -233,8 +235,9 @@ const Lab = () => {
 	};
 
 	return (
-		<div className="relative px-4 bg-white isolate flex flex-col items-center py-32 gap-14">
-			<div className="flex flex-col items-center gap-12">
+		<NoSSRWrapper>
+			<div className="relative px-4 bg-white isolate flex flex-col items-center py-32 gap-14">
+				<div className="flex flex-col items-center gap-12">
 				<h2 className="text-xl md:text-4xl text-center w-4/5">
 					Elevate Your Video with Curated AI-Generated Music!
 				</h2>
@@ -316,7 +319,8 @@ const Lab = () => {
 					</Button>
 				</div>
 			</div>
-		</div>
+			</div>
+		</NoSSRWrapper>
 	);
 };
 

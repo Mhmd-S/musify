@@ -2,7 +2,7 @@ import axios from "axios";
 import { toast } from "@hooks/use-toast";
 
 export const api = axios.create({
-    baseURL: process.env.BACKEND_SERVER,
+    baseURL: process.env.NEXT_PUBLIC_BACKEND_SERVER,
     withCredentials: false,
 });
 

@@ -1,6 +1,7 @@
+'use client'
+
 import { useRef } from 'react';
 import VideoPlayer from '@components/VideoPlayer';
-
 import { motion, useInView } from 'framer-motion';
 
 const Samples = () => {
@@ -22,40 +23,78 @@ const Samples = () => {
     },
   };
 
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
-      variants={containerVariants}
-      className="w-full px-20 py-14"
+    <section 
+      aria-label="Sample Videos Section"
+      itemScope 
+      itemType="https://schema.org/VideoObject"
     >
-      <div className="container mx-auto">
-        <div className="grid grid-cols-1 gap-8 place-items-center md:items-center md:grid-cols-2">
-          <div className="flex gap-4 flex-col">
-            <h1 className="text-5xl md:text-7xl tracking-tighter text-center md:text-left font-regular">
-              Our AI can accommodate any style!
-            </h1>
-            <p className="text-xl leading-relaxed tracking-tight text-muted-foreground max-w-md text-center md:text-left">
-              From pop to rock, from classical to hip-hop, our AI can accommodate any style of video
-              you can imagine. In just a few clicks create your own music video free of charge!
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <VideoPlayer
-              src={carSample}
-              badgeText="Ambient for Vlogs"
-              background={false}
-            />
-            <VideoPlayer
-              src={promoSample}
-              badgeText="Indie Pop for Promos"
-              background={false}
-            />
+      <meta itemProp="name" content="AI Music Video Samples" />
+      <meta itemProp="description" content="Sample videos showing AI-generated music capabilities" />
+      <meta itemProp="uploadDate" content="2024-01-01" />
+      <meta itemProp="thumbnailUrl" content="/video-thumbnail.jpg" />
+      
+      <motion.div
+        ref={ref}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+        variants={containerVariants}
+        className="w-full px-20 py-14"
+      >
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 gap-8 place-items-center md:items-center md:grid-cols-2">
+            <motion.div 
+              variants={itemVariants} 
+              className="flex gap-4 flex-col"
+            >
+              <h2 
+                className="text-5xl md:text-7xl tracking-tighter text-center md:text-left font-regular"
+                itemProp="headline"
+              >
+                Our AI can accommodate any style!
+              </h2>
+              <p 
+                className="text-xl leading-relaxed tracking-tight text-muted-foreground max-w-md text-center md:text-left"
+                itemProp="description"
+              >
+                From pop to rock, from classical to hip-hop, our AI can accommodate any style of video
+                you can imagine. Create your own music video free of charge in just a few clicks!
+              </p>
+            </motion.div>
+            
+            <motion.div 
+              variants={itemVariants}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8"
+            >
+              <div itemScope itemType="https://schema.org/VideoObject">
+                <meta itemProp="name" content="Ambient Vlog Music Sample" />
+                <meta itemProp="description" content="Sample video showing AI-generated ambient music for vlogs" />
+                <VideoPlayer
+                  src={carSample}
+                  badgeText="Ambient for Vlogs"
+                  background={false}
+                />
+              </div>
+              
+              <div itemScope itemType="https://schema.org/VideoObject">
+                <meta itemProp="name" content="Indie Pop Promo Music Sample" />
+                <meta itemProp="description" content="Sample video showing AI-generated indie pop music for promos" />
+                <VideoPlayer
+                  src={promoSample}
+                  badgeText="Indie Pop for Promos"
+                  background={false}
+                />
+              </div>
+            </motion.div>
           </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </section>
   );
 };
 
