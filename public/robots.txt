@@ -1,3 +1,9 @@
+# *
 User-agent: *
 Allow: /
-Sitemap: https://yourwebsite.com/sitemap.xml 
+
+# Host
+Host: https://www.muzica.live
+
+# Sitemaps
+Sitemap: https://www.muzica.live/sitemap.xml

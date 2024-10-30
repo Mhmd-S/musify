@@ -324,4 +324,12 @@ const Lab = () => {
 	);
 };
 
-export default Lab;
+const LabPage = () => {
+	return (
+    <NoSSRWrapper>
+      <Lab />
+    </NoSSRWrapper>
+  );
+};
+
+export default LabPage;
