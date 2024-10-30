@@ -47,7 +47,7 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 
 		return (
 			<div
-				className={`relative min-h-48 w-full md:w-3/4 px-4 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
+				className={`relative min-h-60 w-full md:w-full px-4 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
 					file ? 'border-solid bg-primary' : 'border-dashed bg-muted'
 				}`}
 			>
@@ -76,7 +76,7 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 								or drag and drop
 							</span>
 							<span className="text-xs text-gray-400">
-								MP4 up to 50MB
+								Only MP4 files are allowed, and maximum 190 seconds.
 							</span>
 						</div>
 						<input

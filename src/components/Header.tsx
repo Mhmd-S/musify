@@ -1,82 +1,71 @@
-'use client';
-
-import { useState } from 'react';
+import { TwitterLogoIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
-import Image from 'next/image';
-
-import { Button } from '@/components/ui/button';
-
-import {Wand2} from 'lucide-react';
-
-import {
-	NavigationMenu,
-	NavigationMenuContent,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-	NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu';
-
-import { Menu, MoveRight, X } from 'lucide-react';
+import Image from 'next/image'
+import { Button } from '@components/ui/button';
 
 const Header = () => {
-	const navigationItems = [
-		// {
-		// 	title: 'Home',
-		// 	href: '/',
-		// 	description: '',
-		// },
-		// {
-		// 	title: 'Product',
-		// 	description: 'Managing a small business today is already tough.',
-		// 	items: [
-		// 		{
-		// 			title: 'Reports',
-		// 			href: '/reports',
-		// 		},
-		// 		{
-		// 			title: 'Statistics',
-		// 			href: '/statistics',
-		// 		},
-		// 		{
-		// 			title: 'Dashboards',
-		// 			href: '/dashboards',
-		// 		},
-		// 		{
-		// 			title: 'Recordings',
-		// 			href: '/recordings',
-		// 		},
-		// 	],
-		// },
-		// {
-		// 	title: 'Company',
-		// 	description: 'Managing a small business today is already tough.',
-		// 	items: [
-		// 		{
-		// 			title: 'About us',
-		// 			href: '/about',
-		// 		},
-		// 		{
-		// 			title: 'Fundraising',
-		// 			href: '/fundraising',
-		// 		},
-		// 		{
-		// 			title: 'Investors',
-		// 			href: '/investors',
-		// 		},
-		// 		{
-		// 			title: 'Contact us',
-		// 			href: '/contact',
-		// 		},
-		// 	],
-		// },
-	];
+  const logo = new URL('@assets/logo1.jpg', import.meta.url).href;
 
-	const [isOpen, setOpen] = useState(false);
-	return (
-		<header className="w-full px-10 z-40 fixed top-0 left-0 bg-background">
-			<div className="container relative mx-auto min-h-20 flex gap-4 flex-row lg:grid lg:grid-cols-2 items-center">
-				{/* <div className="justify-start items-center gap-4 lg:flex hidden flex-row">
+  const navigationItems = [
+    // {
+    // 	title: 'Home',
+    // 	href: '/',
+    // 	description: '',
+    // },
+    // {
+    // 	title: 'Product',
+    // 	description: 'Managing a small business today is already tough.',
+    // 	items: [
+    // 		{
+    // 			title: 'Reports',
+    // 			href: '/reports',
+    // 		},
+    // 		{
+    // 			title: 'Statistics',
+    // 			href: '/statistics',
+    // 		},
+    // 		{
+    // 			title: 'Dashboards',
+    // 			href: '/dashboards',
+    // 		},
+    // 		{
+    // 			title: 'Recordings',
+    // 			href: '/recordings',
+    // 		},
+    // 	],
+    // },
+    // {
+    // 	title: 'Company',
+    // 	description: 'Managing a small business today is already tough.',
+    // 	items: [
+    // 		{
+    // 			title: 'About us',
+    // 			href: '/about',
+    // 		},
+    // 		{
+    // 			title: 'Fundraising',
+    // 			href: '/fundraising',
+    // 		},
+    // 		{
+    // 			title: 'Investors',
+    // 			href: '/investors',
+    // 		},
+    // 		{
+    // 			title: 'Contact us',
+    // 			href: '/contact',
+    // 		},
+    // 	],
+    // },
+  ];
+
+
+
+  // const [isOpen, setOpen] = useState(false);
+
+  return (
+    <header className="w-full px-10 z-40 fixed top-0 left-0 bg-gray-100 bg-opacity-50 backdrop-blur-md">
+      <div className="container relative mx-auto min-h-20 flex justify-between">
+        {/* <div className="justify-start items-center gap-4 lg:flex hidden flex-row">
 					<NavigationMenu className="flex justify-start items-start">
 						<NavigationMenuList className="flex justify-start gap-4 flex-row">
 							{navigationItems.map((item) => (
@@ -133,7 +122,7 @@ const Header = () => {
 																	</span>
 																	<MoveRight className="w-4 h-4 text-muted-foreground" />
 																</NavigationMenuLink>
-															)
+															))
 														)}
 													</div>
 												</div>
@@ -145,30 +134,35 @@ const Header = () => {
 						</NavigationMenuList>
 					</NavigationMenu>
 				</div> */}
-				<div className="flex items-center gap-2">
-					<Image
-						src="/logo1.jpg"
-						height={40}
-						width={40}
-						alt="Logo"
-						className="rounded-md"
-					/>
-					<Link href="/">
-						<h2 className="text-lg font-semibold text-primary">
-							Musify
-						</h2>
-					</Link>
-				</div>
-				<div className="hidden md:flex justify-end w-full gap-4">
-					{/* <Button variant="outline">Sign in</Button> */}
-					<Link href="/dream">
-						<Button size="lg" className="gap-4" variant="default">
-							Get Started!
-							<Wand2 className="w-4 h-4" />
-						</Button>
-					</Link>
-				</div>
-				{/* <div className="flex w-12 shrink lg:hidden items-end justify-end">
+        <div className="flex items-center gap-2">
+          <Image src={logo} height={40} width={40} alt="Logo" className="rounded-md" />
+          <Link href="/">
+            <h2 className="text-xl tracking-tighter font-regular text-primary">Muzica</h2>
+          </Link>
+        </div>
+        <a
+          href="https://twitter.com/CaprYoung"
+          target="_blank"
+          rel="noreferrer"
+          className="hidden justify-end items-center gap-2 "
+        >
+          <Button className="flex items-center gap-2">
+            <TwitterLogoIcon className="s-6" />
+            <span>Follow me on X</span>
+          </Button>
+        </a>
+        {/* <div
+          className={`hidden md:flex justify-end w-full gap-4 ${location.pathname.includes('/dream') && 'hidden'}`}
+        > */}
+        {/* <Button variant="outline">Sign in</Button> */}
+        {/* <Link to="/dream">
+            <Button size="lg" className="gap-4" variant="default">
+              Get Started!
+              <Wand2 className="w-4 h-4" />
+            </Button>
+          </Link>
+        </div> */}
+        {/* <div className="flex w-12 shrink lg:hidden items-end justify-end">
 					<Button variant="ghost" onClick={() => setOpen(!isOpen)}>
 						{isOpen ? (
 							<X className="w-5 h-5" />
@@ -215,9 +209,9 @@ const Header = () => {
 						</div>
 					)}
 				</div> */}
-			</div>
-		</header>
-	);
+      </div>
+    </header>
+  );
 };
 
 export default Header;
