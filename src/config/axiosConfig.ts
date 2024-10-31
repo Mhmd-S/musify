@@ -2,7 +2,9 @@ import axios from "axios";
 import { toast } from "@hooks/use-toast";
 
 export const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BACKEND_SERVER,
+    baseURL: process.env.NODE_ENV === 'development' 
+        ? process.env.NEXT_PUBLIC_DEV_BACKEND_SERVER 
+        : process.env.NEXT_PUBLIC_BACKEND_SERVER,
     withCredentials: false,
 });
 

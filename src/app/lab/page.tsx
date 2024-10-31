@@ -41,7 +41,6 @@ const Lab = () => {
 		{ value: 'pop', label: 'Modern Pop' },
 		{ value: 'indie', label: 'Indie Pop' },
 		{ value: 'hip-hop', label: 'Hip Hop' },
-		{ value: 'trap', label: 'Trap' },
 		{ value: 'cinematic', label: 'Cinematic/Soundtrack' },
 	];
 
