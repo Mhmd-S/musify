@@ -35,13 +35,8 @@ const Lab = () => {
 		{ value: 'orchestral', label: 'Orchestral' },
 		{ value: 'chamber', label: 'Chamber Music' },
 		{ value: 'ambient', label: 'Ambient' },
-		{ value: 'house', label: 'House' },
-		{ value: 'techno', label: 'Techno' },
-		{ value: 'synthwave', label: 'Synthwave' },
 		{ value: 'pop', label: 'Modern Pop' },
-		{ value: 'indie', label: 'Indie Pop' },
 		{ value: 'hip-hop', label: 'Hip Hop' },
-		{ value: 'cinematic', label: 'Cinematic/Soundtrack' },
 	];
 
 	const videoTypeOptions = [
