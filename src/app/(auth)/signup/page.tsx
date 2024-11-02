@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 import { useAuth } from '@contexts/auth-context';
 
-import { useToast } from '@hooks/use-toast';
+import { toast } from 'react-toastify';
 import { Button } from '@components/ui/button';
 import {
 	Card,
@@ -26,6 +26,7 @@ import { Separator } from '@components/ui/separator';
 import FormError from '@components/FormError';
 
 const signupSchema = z.object({
+	name: z.string().min(1, 'Name is required'),
 	email: z.string().email('Invalid email address'),
 	password: z
 		.string()
@@ -39,8 +40,7 @@ type SignupForm = z.infer<typeof signupSchema>;
 
 export default function SignUp() {
 
-	const { signup } = useAuth();
-	const { toast } = useToast();
+	const { signup, googleAuth, isLoading } = useAuth();
 	
   const {
 		register,
@@ -52,20 +52,19 @@ export default function SignUp() {
 
 	const onSubmit = async (data: SignupForm) => {
 		try {
-			await signup(data.email, data.password);
+			await signup(data.email, data.password, data.name);
 		} catch (error) {
-			toast({
-				title: 'Error',
-				description: error instanceof Error ? error.message : 'Something went wrong',
-			});
+			toast.error('Something went wrong');
 		}
 	};
 
-	const handleGoogleSignup = () => {
-		// Handle Google OAuth signup logic here
-		console.log('Google signup');
-	};
+	const handleGoogleSignup = async() => {
+		const googleAuthResponse = await googleAuth();
 
+		console.log(googleAuthResponse)
+
+	};
+	
 	return (
 		<div className="flex items-center justify-center min-h-screen bg-gray-100">
 			<Card className="w-[350px]">
@@ -81,10 +80,20 @@ export default function SignUp() {
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<div className="grid w-full items-center gap-4">
 							<div className="flex flex-col space-y-1.5">
+								<Label htmlFor="name">Name</Label>
+								<Input
+									id="name"
+									placeholder="ex. John Doe"
+									{...register('name')}
+									aria-invalid={!!errors.name}
+								/>
+								<FormError errors={errors} errorName="name" />
+							</div>
+							<div className="flex flex-col space-y-1.5">
 								<Label htmlFor="email">Email</Label>
 								<Input
 									id="email"
-									placeholder="Enter your email"
+									placeholder="ex. johndoe@gmail.com"
 									{...register('email')}
 									aria-invalid={!!errors.email}
 								/>
@@ -95,7 +104,7 @@ export default function SignUp() {
 								<Input
 									id="password"
 									type="password"
-									placeholder="Enter your password"
+									placeholder="***************"
 									{...register('password')}
 									aria-invalid={!!errors.password}
 								/>

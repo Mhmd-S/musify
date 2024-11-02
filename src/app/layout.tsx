@@ -1,19 +1,24 @@
+import './globals.css';
+import 'react-toastify/dist/ReactToastify.css';
+
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
+import { ToastContainer } from 'react-toastify';
 
 import { Analytics } from '@vercel/analytics/react';
-import { AuthProvider } from "@contexts/auth-context"
+import { AuthProvider } from '@contexts/auth-context';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
 	title: 'Muzica - AI Music Creation for Videos',
-	description: 'Create perfect AI-generated music for your videos with Muzica. Professional quality, customizable music creation tool.',
+	description:
+		'Create perfect AI-generated music for your videos with Muzica. Professional quality, customizable music creation tool.',
 	metadataBase: new URL('https://www.muzica.live'),
 	openGraph: {
 		title: 'Muzica - AI Music Creation for Videos',
-		description: 'Create perfect AI-generated music for your videos with Muzica. Professional quality, customizable music creation tool.',
+		description:
+			'Create perfect AI-generated music for your videos with Muzica. Professional quality, customizable music creation tool.',
 		url: 'https://www.muzica.live',
 		siteName: 'Muzica',
 		images: [
@@ -30,7 +35,8 @@ export const metadata: Metadata = {
 	twitter: {
 		card: 'summary_large_image',
 		title: 'Muzica - AI Music Creation for Videos',
-		description: 'Create perfect AI-generated music for your videos with Muzica',
+		description:
+			'Create perfect AI-generated music for your videos with Muzica',
 		images: ['/logo1.jpg'],
 	},
 	robots: {
@@ -57,9 +63,12 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={inter.className}>
-					<AuthProvider>
+				<AuthProvider>
+					<div className="relative">
 						{children}
-					</AuthProvider>
+						<ToastContainer />
+					</div>
+				</AuthProvider>
 				<Analytics />
 			</body>
 		</html>
