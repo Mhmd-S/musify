@@ -58,12 +58,26 @@ export default function SignUp() {
 		}
 	};
 
-	const handleGoogleAuth = async() => {
-		const googleAuthResponse = await googleAuth();
+	const handleGoogleAuth = () => {
+    const width = 500;
+    const height = 600;
+    const left = window.screen.width / 2 - width / 2;
+    const top = window.screen.height / 2 - height / 2;
 
-		console.log(googleAuthResponse)
+    // Open popup window for Google OAuth
+    const popup = window.open(
+      'http://localhost:3000/api/v1/auth/google',
+      'Google Login',
+      `width=${width},height=${height},top=${top},left=${left}`
+    );
 
-	};
+    // Polling to check if the popup window has been closed
+    const timer = setInterval(() => {
+      if (popup.closed) {
+        clearInterval(timer);
+      }
+    }, 500);
+  };
 
 	return (
 		<div className="flex items-center justify-center min-h-screen bg-gray-100">
