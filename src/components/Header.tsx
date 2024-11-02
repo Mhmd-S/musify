@@ -1,17 +1,25 @@
-import { TwitterLogoIcon } from '@radix-ui/react-icons';
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image'
+
 import { Button } from '@components/ui/button';
+
+import { X, Menu, MoveRight } from 'lucide-react';
 
 const Header = () => {
   const logo = new URL('@assets/logo1.jpg', import.meta.url).href;
 
   const navigationItems = [
-    // {
-    // 	title: 'Home',
-    // 	href: '/',
-    // 	description: '',
-    // },
+		{
+			title: 'Sign in',
+			href: '/signin',
+		},
+		{
+			title: 'Sign up',
+			href: '/signup',
+		},
     // {
     // 	title: 'Product',
     // 	description: 'Managing a small business today is already tough.',
@@ -59,12 +67,11 @@ const Header = () => {
   ];
 
 
-
-  // const [isOpen, setOpen] = useState(false);
+  const [isOpen, setOpen] = useState(false);
 
   return (
-    <header className="w-full px-10 z-40 fixed top-0 left-0 bg-gray-100 bg-opacity-50 backdrop-blur-md">
-      <div className="container relative mx-auto min-h-20 flex justify-between">
+    <header className="w-full md:w-[95%] ml-4 px-10 z-40 fixed mx-auto top-0 left-0 md:top-7 md:left-1/2 md:-translate-x-1/2 bg-gray-200 bg-opacity-50 backdrop-blur-md rounded-lg">
+      <div className="container relative min-h-20 flex justify-between items-center">
         {/* <div className="justify-start items-center gap-4 lg:flex hidden flex-row">
 					<NavigationMenu className="flex justify-start items-start">
 						<NavigationMenuList className="flex justify-start gap-4 flex-row">
@@ -140,29 +147,17 @@ const Header = () => {
             <h2 className="text-xl tracking-tighter font-regular text-primary">Muzica</h2>
           </Link>
         </div>
-        <a
-          href="https://twitter.com/CaprYoung"
-          target="_blank"
-          rel="noreferrer"
-          className="hidden justify-end items-center gap-2 "
-        >
-          <Button className="flex items-center gap-2">
-            <TwitterLogoIcon className="s-6" />
-            <span>Follow me on X</span>
-          </Button>
-        </a>
-        {/* <div
-          className={`hidden md:flex justify-end w-full gap-4 ${location.pathname.includes('/dream') && 'hidden'}`}
-        > */}
-        {/* <Button variant="outline">Sign in</Button> */}
-        {/* <Link to="/dream">
-            <Button size="lg" className="gap-4" variant="default">
-              Get Started!
-              <Wand2 className="w-4 h-4" />
-            </Button>
-          </Link>
-        </div> */}
-        {/* <div className="flex w-12 shrink lg:hidden items-end justify-end">
+
+				<div className="hidden md:flex items-center gap-2">
+					<Button variant="default">
+						<Link href="/signin">Sign in</Link>
+					</Button>
+					<Button variant="outline">
+						<Link href="/signup">Sign up</Link>
+					</Button>
+				</div>
+
+        <div className="flex w-12 shrink lg:hidden items-end justify-end">
 					<Button variant="ghost" onClick={() => setOpen(!isOpen)}>
 						{isOpen ? (
 							<X className="w-5 h-5" />
@@ -171,7 +166,7 @@ const Header = () => {
 						)}
 					</Button>
 					{isOpen && (
-						<div className="absolute top-20 border-t flex flex-col w-full right-0 bg-background shadow-lg py-4 container gap-8">
+						<div className="absolute top-20 border-t flex flex-col w-full right-0 bg-background shadow-lg p-4 container gap-8">
 							{navigationItems.map((item) => (
 								<div key={item.title}>
 									<div className="flex flex-col gap-2">
@@ -208,7 +203,7 @@ const Header = () => {
 							))}
 						</div>
 					)}
-				</div> */}
+				</div>
       </div>
     </header>
   );

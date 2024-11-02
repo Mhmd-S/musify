@@ -54,7 +54,7 @@ const Hero = () => {
 
   return (
     <motion.div
-      className="grid grid-cols-1 gap-24 md:gap-8 px-10 py-36 items-center lg:py-24 lg:grid-cols-2"
+      className="grid grid-cols-1 gap-24 md:gap-8 px-10 py-36 items-center lg:py-30 lg:grid-cols-2"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -63,7 +63,7 @@ const Hero = () => {
         className="flex gap-32 md:gap-6 flex-col items-center md:items-start"
         variants={itemVariants}
       >
-        <motion.div className="flex gap-20 md:gap-8 flex-col" variants={itemVariants}>
+        <motion.div className="flex gap-16 md:gap-8 flex-col" variants={itemVariants}>
           <motion.h1
             className="text-5xl md:text-6xl max-w-2xl tracking-tighter font-regular text-center md:text-left md:mr-20"
             variants={itemVariants}
@@ -103,7 +103,7 @@ const Hero = () => {
             </motion.span>
           </motion.h1>
           <motion.p
-            className="text-xl text-center md:text-left leading-relaxed tracking-tight text-muted-foreground max-w-md"
+            className="text-lg text-center md:text-left leading-relaxed tracking-tight text-muted-foreground max-w-md"
             variants={itemVariants}
           >
             Transform your content by adding specially curated AI music that perfectly complements
