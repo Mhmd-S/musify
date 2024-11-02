@@ -2,11 +2,32 @@ import axios from "axios";
 import { toast } from "@hooks/use-toast";
 
 export const api = axios.create({
-    baseURL: process.env.NODE_ENV === 'development' 
-        ? process.env.NEXT_PUBLIC_DEV_BACKEND_SERVER 
-        : process.env.NEXT_PUBLIC_BACKEND_SERVER,
-    withCredentials: false,
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
 });
+
+// Add request interceptor to attach token
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token')
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+})
+
+// Add response interceptor to handle token expiration
+api.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        if (error.response?.status === 401) {
+            localStorage.removeItem('token')
+            window.location.href = '/signin'
+        }
+        return Promise.reject(error)
+    }
+)
 
 // Centralized error handler
 const errorHandler = (error: any) => {
