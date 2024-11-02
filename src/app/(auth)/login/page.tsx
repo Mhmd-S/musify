@@ -25,7 +25,7 @@ import { Label } from '@components/ui/label';
 import { Separator } from '@components/ui/separator';
 import FormError from '@components/FormError';
 
-const signupSchema = z.object({
+const loginSchema = z.object({
 	name: z.string().min(1, 'Name is required'),
 	email: z.string().email('Invalid email address'),
 	password: z
@@ -36,23 +36,23 @@ const signupSchema = z.object({
 		.regex(/[0-9]/, 'Password must contain at least one number'),
 });
 
-type SignupForm = z.infer<typeof signupSchema>;
+type LoginForm = z.infer<typeof loginSchema>;
 
 export default function SignUp() {
 
-	const { signup, googleAuth, isLoading } = useAuth();
+	const { login, googleAuth, isLoading } = useAuth();
 	
   const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
-	} = useForm<SignupForm>({
-		resolver: zodResolver(signupSchema),
+	} = useForm<LoginForm>({
+		resolver: zodResolver(loginSchema),
 	});
 
-	const onSubmit = async (data: SignupForm) => {
+	const onSubmit = async (data: LoginForm) => {
 		try {
-			await signup(data.email, data.password, data.name);
+			await login(data.email, data.password);
 		} catch (error) {
 			toast.error('Something went wrong');
 		}
@@ -64,31 +64,21 @@ export default function SignUp() {
 		console.log(googleAuthResponse)
 
 	};
-
+	
 	return (
 		<div className="flex items-center justify-center min-h-screen bg-gray-100">
 			<Card className="w-[350px]">
 				<CardHeader>
 					<CardTitle className="text-2xl font-bold">
-						Sign Up
+						Log n
 					</CardTitle>
 					<CardDescription>
-						Create an account to get started
+						Welcome back! Login in to your account
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<div className="grid w-full items-center gap-4">
-							<div className="flex flex-col space-y-1.5">
-								<Label htmlFor="name">Name</Label>
-								<Input
-									id="name"
-									placeholder="ex. John Doe"
-									{...register('name')}
-									aria-invalid={!!errors.name}
-								/>
-								<FormError errors={errors} errorName="name" />
-							</div>
 							<div className="flex flex-col space-y-1.5">
 								<Label htmlFor="email">Email</Label>
 								<Input
@@ -117,8 +107,8 @@ export default function SignUp() {
 							disabled={isSubmitting}
 						>
 							{isSubmitting
-								? 'Signing up...'
-								: 'Sign Up with Email'}
+								? 'Loging ing...'
+								: 'Login with Email'}
 						</Button>
 					</form>
 					<div className="grid grid-cols-[1fr_auto_1fr] items-center my-4">
@@ -150,17 +140,17 @@ export default function SignUp() {
 								d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
 							/>
 						</svg>
-						Sign Up with Google
+						Login with Google
 					</Button>
 				</CardContent>
 				<CardFooter className="flex justify-center">
 					<p className="text-sm text-gray-500">
-						Already have an account?{' '}
+						Don't have an account?{' '}
 						<Link
-							href="/signin"
+							href="/login"
 							className="text-black font-semibold hover:underline"
 						>
-							Log in
+							Sign up
 						</Link>
 					</p>
 				</CardFooter>

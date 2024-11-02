@@ -13,8 +13,8 @@ const Header = () => {
 
   const navigationItems = [
 		{
-			title: 'Sign in',
-			href: '/signin',
+			title: 'Login',
+			href: '/login',
 		},
 		{
 			title: 'Sign up',
