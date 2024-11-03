@@ -39,10 +39,9 @@ const signupSchema = z.object({
 type SignupForm = z.infer<typeof signupSchema>;
 
 export default function SignUp() {
+	const { signup, isLoading, user, checkAuth } = useAuth();
 
-	const { signup, googleAuth, isLoading } = useAuth();
-	
-  const {
+	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
@@ -58,26 +57,30 @@ export default function SignUp() {
 		}
 	};
 
-	const handleGoogleAuth = () => {
-    const width = 500;
-    const height = 600;
-    const left = window.screen.width / 2 - width / 2;
-    const top = window.screen.height / 2 - height / 2;
+	const handleGoogleAuth = async () => {
+		const width = 500;
+		const height = 600;
+		const left = window.screen.width / 2 - width / 2;
+		const top = window.screen.height / 2 - height / 2;
 
-    // Open popup window for Google OAuth
-    const popup = window.open(
-      'http://localhost:3000/api/v1/auth/google',
-      'Google Login',
-      `width=${width},height=${height},top=${top},left=${left}`
-    );
+		// Open popup window for Google OAuth
+		const popup = window.open(
+			'http://localhost:3000/api/v1/auth/google',
+			'Google Login',
+			`width=${width},height=${height},top=${top},left=${left}`
+		);
 
-    // Polling to check if the popup window has been closed
-    const timer = setInterval(() => {
-      if (popup.closed) {
-        clearInterval(timer);
-      }
-    }, 500);
-  };
+		// Polling to check if the popup window has been closed
+		while (!popup?.closed) {
+			if (user) {
+				popup?.close();
+				break;
+			}
+			setTimeout(async () => {
+				await checkAuth();
+			}, 1000);
+		}
+	};
 
 	return (
 		<div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -122,16 +125,19 @@ export default function SignUp() {
 									{...register('password')}
 									aria-invalid={!!errors.password}
 								/>
-								<FormError errors={errors} errorName="password" />
+								<FormError
+									errors={errors}
+									errorName="password"
+								/>
 							</div>
 						</div>
 						<Button
 							className="w-full mt-6"
 							type="submit"
-							disabled={isSubmitting}
+							disabled={isSubmitting || isLoading}
 						>
-							{isSubmitting
-								? 'Signing up...'
+							{isSubmitting || isLoading
+								? 'Loading...'
 								: 'Sign Up with Email'}
 						</Button>
 					</form>
@@ -171,10 +177,10 @@ export default function SignUp() {
 					<p className="text-sm text-gray-500">
 						Already have an account?{' '}
 						<Link
-							href="/signin"
+							href="/login"
 							className="text-black font-semibold hover:underline"
 						>
-							Log in
+							Login
 						</Link>
 					</p>
 				</CardFooter>

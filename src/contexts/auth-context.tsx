@@ -16,6 +16,7 @@ interface AuthContextType {
 	user: User | null;
 	isLoading: boolean;
 	isAuthenticated: boolean;
+	checkAuth: () => Promise<void>;
 	googleAuth: () => Promise<void>;
 	login: (email: string, password: string) => Promise<void>;
 	signup: (email: string, password: string, name: string) => Promise<void>;
@@ -36,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const checkAuth = async () => {
 		try {
 			const response = await authService.me();
-			setUser(response.user);
+			setUser(response.data.user);
 		} catch (error) {
 			setUser(null);
 		} finally {
@@ -99,6 +100,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				user,
 				isLoading,
 				isAuthenticated: !!user,
+				checkAuth,
 				googleAuth,
 				login,
 				signup,

@@ -39,10 +39,9 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function SignUp() {
+	const { login, isLoading, user, checkAuth } = useAuth();
 
-	const { login, googleAuth, isLoading } = useAuth();
-	
-  const {
+	const {
 		register,
 		handleSubmit,
 		formState: { errors, isSubmitting },
@@ -58,20 +57,36 @@ export default function SignUp() {
 		}
 	};
 
-	const handleGoogleAuth = async() => {
-		const googleAuthResponse = await googleAuth();
+	const handleGoogleAuth = async () => {
+		const width = 500;
+		const height = 600;
+		const left = window.screen.width / 2 - width / 2;
+		const top = window.screen.height / 2 - height / 2;
 
-		console.log(googleAuthResponse)
+		// Open popup window for Google OAuth
+		const popup = window.open(
+			'http://localhost:3000/api/v1/auth/google',
+			'Google Login',
+			`width=${width},height=${height},top=${top},left=${left}`
+		);
 
+		// Polling to check if the popup window has been closed
+		while (!popup?.closed) {
+			if (user) {
+				popup?.close();
+				break;
+			}
+			setTimeout(async () => {
+				await checkAuth();
+			}, 1000);
+		}
 	};
-	
+
 	return (
 		<div className="flex items-center justify-center min-h-screen bg-gray-100">
 			<Card className="w-[350px]">
 				<CardHeader>
-					<CardTitle className="text-2xl font-bold">
-						Log n
-					</CardTitle>
+					<CardTitle className="text-2xl font-bold">Login</CardTitle>
 					<CardDescription>
 						Welcome back! Login in to your account
 					</CardDescription>
@@ -98,16 +113,19 @@ export default function SignUp() {
 									{...register('password')}
 									aria-invalid={!!errors.password}
 								/>
-								<FormError errors={errors} errorName="password" />
+								<FormError
+									errors={errors}
+									errorName="password"
+								/>
 							</div>
 						</div>
 						<Button
 							className="w-full mt-6"
 							type="submit"
-							disabled={isSubmitting}
+							disabled={isSubmitting || isLoading}
 						>
-							{isSubmitting
-								? 'Loging ing...'
+							{isSubmitting || isLoading
+								? 'Loading ...'
 								: 'Login with Email'}
 						</Button>
 					</form>
