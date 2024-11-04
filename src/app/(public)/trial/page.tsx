@@ -18,7 +18,7 @@ import NoSSRWrapper from '@components/NoSSRWrapper';
 
 import { StyleVideoTypeSelect } from '@components/ui/StyleVideoTypeSelect';
 
-const Lab = () => {
+const Trial = () => {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
 
 	const [style, setStyle] = useState('');
@@ -307,12 +307,12 @@ const Lab = () => {
 	);
 };
 
-const LabPage = () => {
+const TrialPage = () => {
 	return (
 		<NoSSRWrapper>
-			<Lab />
+			<Trial />
 		</NoSSRWrapper>
 	);
 };
 
-export default LabPage;
+export default TrialPage;

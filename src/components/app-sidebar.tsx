@@ -5,7 +5,7 @@ import { useAuth } from '@contexts/auth-context';
 import Image from 'next/image';
 
 
-import { Calendar, Home, Inbox, Search, Settings, LogOut } from 'lucide-react';
+import { Home, TestTube2,FolderArchive, Settings, LogOut } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import {
@@ -31,7 +31,12 @@ const items = [
 	{
 		title: 'Lab',
 		url: '/lab',
-		icon: Home,
+		icon: TestTube2,
+	},
+	{
+		title: 'Projects',
+		url: '/projects',
+		icon: FolderArchive,
 	},
 	{
 		title: 'Settings',
