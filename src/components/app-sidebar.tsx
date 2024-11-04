@@ -4,6 +4,7 @@ import { useAuth } from '@contexts/auth-context';
 
 import Image from 'next/image';
 
+
 import { Calendar, Home, Inbox, Search, Settings, LogOut } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';

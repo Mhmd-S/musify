@@ -39,7 +39,7 @@ const signupSchema = z.object({
 type SignupForm = z.infer<typeof signupSchema>;
 
 export default function SignUp() {
-	const { signup, isLoading, user, checkAuth } = useAuth();
+	const { signup, handleGoogleAuth, isLoading } = useAuth();
 
 	const {
 		register,
@@ -54,31 +54,6 @@ export default function SignUp() {
 			await signup(data.email, data.password, data.name);
 		} catch (error) {
 			toast.error('Something went wrong');
-		}
-	};
-
-	const handleGoogleAuth = async () => {
-		const width = 500;
-		const height = 600;
-		const left = window.screen.width / 2 - width / 2;
-		const top = window.screen.height / 2 - height / 2;
-
-		// Open popup window for Google OAuth
-		const popup = window.open(
-			'http://localhost:3000/api/v1/auth/google',
-			'Google Login',
-			`width=${width},height=${height},top=${top},left=${left}`
-		);
-
-		// Polling to check if the popup window has been closed
-		while (!popup?.closed) {
-			if (user) {
-				popup?.close();
-				break;
-			}
-			setTimeout(async () => {
-				await checkAuth();
-			}, 1000);
 		}
 	};
 

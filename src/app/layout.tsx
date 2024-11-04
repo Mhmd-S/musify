@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ToastContainer } from 'react-toastify';
+import { CookiesProvider } from 'react-cookie';
 
 import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from '@contexts/auth-context';
@@ -67,7 +68,7 @@ export default function RootLayout({
 					<AuthProvider>
 						<div className="relative">
 						{children}
-						<ToastContainer />
+							<ToastContainer />
 						</div>
 					</AuthProvider>
 				<Analytics />

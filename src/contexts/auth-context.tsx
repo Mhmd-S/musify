@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';
 
 import * as authService from '@services/authService';
 import { api } from '@config/axiosConfig';
@@ -108,7 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			setIsLoading(true);
 			await api.post('/auth/logout');
 			setUser(null);
-			await Cookies.remove('connect.sid');
+			
 			router.push('/login');
 			setIsLoading(false);
 		} catch (error) {
