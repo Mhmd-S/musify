@@ -4,7 +4,7 @@ import { useAuth } from '@contexts/auth-context';
 
 import Image from 'next/image';
 
-import { Calendar, Home, Inbox, Search, Settings } from 'lucide-react';
+import { Calendar, Home, Inbox, Search, Settings, LogOut } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import {
@@ -47,8 +47,7 @@ const user = {
 };
 
 export function AppSidebar() {
-
-	const { user } = useAuth();
+	const { user, logout } = useAuth();
 
 	return (
 		<Sidebar>
@@ -56,7 +55,7 @@ export function AppSidebar() {
 				<div className="flex items-center space-x-4 p-4">
 					<Image
 						className="rounded-md"
-						src='/logo.jpg'
+						src="/logo.jpg"
 						alt="Muzica"
 						width={40}
 						height={40}
@@ -67,7 +66,6 @@ export function AppSidebar() {
 			</SidebarHeader>
 			<SidebarContent>
 				<SidebarGroup>
-					<SidebarGroupLabel>Application</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
 							{items.map((item) => (
@@ -91,17 +89,21 @@ export function AppSidebar() {
 				</SidebarGroup>
 			</SidebarContent>
 			<SidebarFooter className="border-t p-4">
-				<div className="flex items-center space-x-4">
-					<Avatar>
+				<div className="grid grid-cols-[auto_1fr_auto] items-center">
+					<Avatar className="size-10">
 						<AvatarImage src={''} alt={user?.name} />
 						<AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
 					</Avatar>
-					<div>
+					<div className="pl-4">
 						<p className="text-sm font-medium">{user?.name}</p>
-						<p className="text-xs text-muted-foreground">
+						<p className="text-[0.5rem] text-muted-foreground">
 							{user?.email}
 						</p>
 					</div>
+					<LogOut
+						className="h-fit p-1 cursor-pointer text-muted-foreground rounded-md hover:bg-red-500 hover:text-white "
+						onClick={logout}
+					/>
 				</div>
 			</SidebarFooter>
 		</Sidebar>

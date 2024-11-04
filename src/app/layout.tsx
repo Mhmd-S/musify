@@ -8,6 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from '@contexts/auth-context';
 
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -63,12 +64,12 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={inter.className}>
-				<AuthProvider>
-					<div className="relative">
+					<AuthProvider>
+						<div className="relative">
 						{children}
 						<ToastContainer />
-					</div>
-				</AuthProvider>
+						</div>
+					</AuthProvider>
 				<Analytics />
 			</body>
 		</html>

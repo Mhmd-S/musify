@@ -1,15 +1,28 @@
+'use client';
+
+import { useAuth } from '@contexts/auth-context';
 import { SidebarProvider, SidebarTrigger } from '@components/ui/sidebar';
 import { AppSidebar } from '@components/app-sidebar';
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+import Spinner from '@components/Spinner';
 
+export default function Layout({ children }: { children: React.ReactNode }) {
+	const { isLoading } = useAuth();
 	return (
 		<SidebarProvider>
-			<AppSidebar />
-			<main>
+			{isLoading ? (
+				<div className="w-screen h-screen flex items-center justify-center min-h-screen">
+					<Spinner />
+				</div>
+			) : (
+				<>
+					<AppSidebar />
+					<main>
 				<SidebarTrigger />
 				{children}
-			</main>
+					</main>
+				</>
+			)}
 		</SidebarProvider>
 	);
 }
