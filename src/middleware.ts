@@ -1,20 +1,28 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
-  const token = request.cookies.get('token')
+const protectedRoutes = ['/dashboard', '/settings'];
+const publicRoutes = ['/', '/login', '/signup'];
 
-  if (!token && !request.nextUrl.pathname.startsWith('/auth')) {
-    return NextResponse.redirect(new URL('/signin', request.url))
-  }
+export default async function middleware(request: NextRequest) {
+	const path = request.nextUrl.pathname;
+	const isProtectedRoute = protectedRoutes.includes(path);
+	const isPublicRoute = publicRoutes.includes(path);
 
-  if (token && request.nextUrl.pathname.startsWith('/auth')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
-  }
+	const cookie = (await cookies()).get('connect.sid')?.value;
 
-  return NextResponse.next()
+	if (!cookie && isProtectedRoute) {
+		return NextResponse.redirect(new URL('/login', request.url));
+	}
+
+	if (cookie && isPublicRoute) {
+		return NextResponse.redirect(new URL('/dashboard', request.url));
+	}
+
+	return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/auth/:path*']
-} 
+	matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+};

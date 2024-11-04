@@ -9,7 +9,6 @@ import { Button } from '@components/ui/button';
 import { X, Menu, MoveRight } from 'lucide-react';
 
 const Header = () => {
-  const logo = new URL('@assets/logo1.jpg', import.meta.url).href;
 
   const navigationItems = [
 		{
@@ -142,7 +141,7 @@ const Header = () => {
 					</NavigationMenu>
 				</div> */}
         <div className="flex items-center gap-2">
-          <Image src={logo} height={40} width={40} alt="Logo" className="rounded-md" />
+          <Image src='/logo.png' height={40} width={40} alt="Logo" className="rounded-md" />
           <Link href="/">
             <h2 className="text-xl tracking-tighter font-regular text-primary">Muzica</h2>
           </Link>
@@ -150,7 +149,7 @@ const Header = () => {
 
 				<div className="hidden md:flex items-center gap-2">
 					<Button variant="default">
-						<Link href="/signin">Sign in</Link>
+						<Link href="/login">Login</Link>
 					</Button>
 					<Button variant="outline">
 						<Link href="/signup">Sign up</Link>

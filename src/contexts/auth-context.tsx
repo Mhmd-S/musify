@@ -29,7 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [user, setUser] = useState<User | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const router = useRouter();
-
+	let isAuthenticated = false;
 	useEffect(() => {
 		checkAuth();
 	}, []);
@@ -38,6 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		try {
 			const response = await authService.me();
 			setUser(response.data.user);
+			isAuthenticated = true;
 		} catch (error) {
 			setUser(null);
 		} finally {
@@ -87,8 +88,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			setIsLoading(true);
 			await api.post('/auth/logout');
 			setUser(null);
+			isAuthenticated = false;
 			setIsLoading(false);
-			router.push('/signin');
+			router.push('/login');
 		} catch (error) {
 			console.error('Logout error:', error);
 		}

@@ -11,9 +11,6 @@ import VideoPlayer from '@components/VideoPlayer';
 const Hero = () => {
 
   const { screenSize, isMobile } = useResponsive();
-  console.log(screenSize, isMobile);
-  const homeVideo = new URL('@assets/home.mp4', import.meta.url).href;
-  const home2Video = new URL('@assets/home2.mp4', import.meta.url).href;
 
   const [titleNumber, setTitleNumber] = useState(0);
 
@@ -122,8 +119,8 @@ const Hero = () => {
       </motion.div>
       <motion.div variants={itemVariants}>
         <VideoPlayer
-          src={!isMobile ? homeVideo : home2Video}
-          badgeText="Have a listen and see the magic!"  
+          src={!isMobile ? '/home2.mp4' : '/home.mp4'}
+          badgeText="Have a listen and see the magic!"
         />
       </motion.div>
     </motion.div>

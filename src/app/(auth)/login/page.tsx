@@ -38,7 +38,7 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>;
 
-export default function SignUp() {
+export default function Login() {
 	const { login, isLoading, user, checkAuth } = useAuth();
 
 	const {
@@ -78,7 +78,7 @@ export default function SignUp() {
 			}
 			setTimeout(async () => {
 				await checkAuth();
-			}, 1000);
+			}, 5000);
 		}
 	};
 

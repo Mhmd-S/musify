@@ -3,11 +3,8 @@ import errorHandler, { ErrorResponse } from '@request/errorHandler';
 import successHandler from '@request/successHandler';
 import {
 	SignupFields,
-	SignupResponse,
 	SigninFields,
 	SigninResponse,
-	GoogleSignupResponse,
-	GoogleSigninResponse,
 	User,
 } from './types';
 

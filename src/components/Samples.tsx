@@ -5,8 +5,6 @@ import VideoPlayer from '@components/VideoPlayer';
 import { motion, useInView } from 'framer-motion';
 
 const Samples = () => {
-  const carSample = new URL('@assets/car-sample.mp4', import.meta.url).href;
-  const promoSample = new URL('@assets/promo-sample.mp4', import.meta.url).href;
 
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
@@ -75,7 +73,7 @@ const Samples = () => {
                 <meta itemProp="name" content="Ambient Vlog Music Sample" />
                 <meta itemProp="description" content="Sample video showing AI-generated ambient music for vlogs" />
                 <VideoPlayer
-                  src={carSample}
+                  src={'/ambient-sample.mp4'}
                   badgeText="Ambient for Vlogs"
                   background={false}
                 />
@@ -85,7 +83,7 @@ const Samples = () => {
                 <meta itemProp="name" content="Indie Pop Promo Music Sample" />
                 <meta itemProp="description" content="Sample video showing AI-generated indie pop music for promos" />
                 <VideoPlayer
-                  src={promoSample}
+                  src={'/promo-sample.mp4'}
                   badgeText="Indie Pop for Promos"
                   background={false}
                 />
