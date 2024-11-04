@@ -25,7 +25,7 @@ export const me = async (): Promise<User> => {
 			}
 		);
 
-		return data;
+		return data.data.user;
 	} catch (error) {
 		return errorHandler(error as ErrorResponse);
 	}

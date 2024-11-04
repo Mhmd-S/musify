@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const checkAuth = async () => {
 		try {
 			const response = await authService.me();
-			setUser(response.data.user);
+			setUser(response || null);
 		} catch (error) {
 			setUser(null);
 		} finally {
@@ -107,7 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			setIsLoading(true);
 			await api.post('/auth/logout');
 			setUser(null);
-			
+
 			router.push('/login');
 			setIsLoading(false);
 		} catch (error) {

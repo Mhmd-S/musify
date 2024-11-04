@@ -92,13 +92,13 @@ export function AppSidebar() {
 			<SidebarFooter className="border-t p-4">
 				<div className="grid grid-cols-[auto_1fr_auto] items-center">
 					<Avatar className="size-10">
-						<AvatarImage src={''} alt={user?.name} />
-						<AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+						<AvatarImage src={''} alt={user?.name ?? ''} />
+						<AvatarFallback>{user?.name?.charAt(0) ?? ''}</AvatarFallback>
 					</Avatar>
 					<div className="pl-4">
-						<p className="text-sm font-medium">{user?.name}</p>
+						<p className="text-sm font-medium">{user?.name ?? ''}</p>
 						<p className="text-[0.5rem] text-muted-foreground">
-							{user?.email}
+							{user?.email ?? ''}
 						</p>
 					</div>
 					<LogOut
