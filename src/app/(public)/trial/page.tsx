@@ -9,14 +9,14 @@ import { Badge } from '@components/ui/badge';
 import FileUploadField from '@components/FileUploadField';
 import GeneratedVideo from '@components/GeneratedVideo';
 
-import { generateMusic } from '@services/musicService';
+import { generateMusic } from '@services/promptService';
 
 import { toast } from 'react-toastify';
 import { Button } from '@components/ui/button';
 
 import NoSSRWrapper from '@components/NoSSRWrapper';
 
-import { StyleVideoTypeSelect } from '@components/ui/StyleVideoTypeSelect';
+import InputSelect from '@components/ui/InputSelect';
 
 const Trial = () => {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -245,7 +245,7 @@ const Trial = () => {
 							handleRemoveFile={handleRemoveVideo}
 						/>
 						<div className="grid grid-cols-1 gap-4">
-							<StyleVideoTypeSelect
+							<InputSelect
 								id="style"
 								label="Style"
 								value={style}
@@ -253,7 +253,7 @@ const Trial = () => {
 								options={styleOptions}
 								placeholder="Select a style"
 							/>
-							<StyleVideoTypeSelect
+							<InputSelect
 								id="videoType"
 								label="Video Type"
 								value={videoType}

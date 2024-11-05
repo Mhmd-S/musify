@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import Spinner from './Spinner';
+import { Button } from "./ui/button";
+import { Slider } from "./ui/slider";
+import { Play, Pause, RefreshCw, Clock, Volume2 } from "lucide-react";
 
 type GeneratedVideoProps = {
   newVideo: string | null;
@@ -8,6 +11,7 @@ type GeneratedVideoProps = {
 
 const GeneratedVideo: React.FC<GeneratedVideoProps> = ({ newVideo, loading }) => {
   const [loadingMessage, setLoadingMessage] = useState<string>('');
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const funLoadingMessages = [
     'Composing a symphony just for you...',
@@ -42,13 +46,46 @@ const GeneratedVideo: React.FC<GeneratedVideoProps> = ({ newVideo, loading }) =>
       }`}
     >
       {newVideo ? (
-        <>
+        <div className="space-y-4 w-full max-w-md">
           <video
             className="w-48 aspect-square object-center object-fit rounded-3xl"
             controls
             src={newVideo}
           />
-        </>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="space-x-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setIsPlaying(!isPlaying)}
+                >
+                  {isPlaying ? (
+                    <Pause className="h-4 w-4" />
+                  ) : (
+                    <Play className="h-4 w-4" />
+                  )}
+                </Button>
+                <Button variant="outline" size="icon">
+                  <RefreshCw className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <Clock className="h-4 w-4" />
+                <span>00:00 / 03:30</span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Volume2 className="h-4 w-4 text-muted-foreground" />
+              <Slider
+                defaultValue={[50]}
+                max={100}
+                step={1}
+                className="flex-1"
+              />
+            </div>
+          </div>
+        </div>
       ) : loading ? (
         <div className="w-full h-full flex flex-col items-center justify-center">
           <Spinner />

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { toast } from '@hooks/use-toast';
+import { toast } from 'react-toastify';
 
 export const api = axios.create({
 	baseURL:
@@ -11,7 +11,7 @@ export const api = axios.create({
 		Accept: 'application/json',
 	},
 	withCredentials: true,
-});	
+});
 
 // Centralized error handler
 const errorHandler = (error: any) => {
@@ -37,16 +37,10 @@ const errorHandler = (error: any) => {
 
 	// Display toast for all errors except 401 (Unauthorized)
 	if (statusCode !== 401) {
-		toast({
-			title: errorMessage,
-			variant: errorStatus as
-				| 'default'
-				| 'destructive'
-				| null
-				| undefined,
-		});
-		console.error('API Error:', error);
+		toast.error(errorMessage);
 	}
+
+	console.error('API Error:', error);
 
 	return Promise.reject(error);
 };

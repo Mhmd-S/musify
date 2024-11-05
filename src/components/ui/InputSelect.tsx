@@ -13,7 +13,7 @@ interface SelectOption {
   label: string;
 }
 
-interface StyleVideoTypeSelectProps {
+interface InputSelectProps {
   id: string;
   label: string;
   value: string;
@@ -22,14 +22,14 @@ interface StyleVideoTypeSelectProps {
   placeholder: string;
 }
 
-export function StyleVideoTypeSelect({
+export default function InputSelect({
   id,
   label,
   value,
   onValueChange,
   options,
   placeholder,
-}: StyleVideoTypeSelectProps) {
+}: InputSelectProps) {
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>

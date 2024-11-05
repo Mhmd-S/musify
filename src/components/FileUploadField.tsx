@@ -1,6 +1,10 @@
 import { useState, forwardRef } from 'react';
 
-import { Badge } from './ui/badge';
+import { Upload } from 'lucide-react';
+
+import { Label } from '@components/ui/label';
+import { Input } from '@components/ui/input';
+import { Badge } from '@components/ui/badge';
 
 type FileUploadFieldProps = {
 	name: string;
@@ -46,47 +50,47 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 		};
 
 		return (
-			<div
-				className={`relative min-h-60 w-full md:w-full px-4 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
-					file ? 'border-solid bg-primary' : 'border-dashed bg-muted'
-				}`}
-			>
+			<div className="flex items-center justify-center w-full">
 				{error && <Badge variant="destructive">{error}</Badge>}
 
 				{file ? (
-					<>
-						<video
-							ref={ref}
-							className="w-48 aspect-square object-center rounded-3xl"
-							autoPlay
-							loop
-							muted
-							src={
-								typeof file === 'string'
-									? file
-									: URL.createObjectURL(file)
-							}
-						/>
-					</>
+					<video
+						ref={ref}
+						className="w-48 aspect-square object-center rounded-3xl"
+						autoPlay
+						loop
+						muted
+						src={
+							typeof file === 'string'
+								? file
+								: URL.createObjectURL(file)
+						}
+					/>
 				) : (
-					<>
-						<div className="grid grid-rows-2 grid-cols-1 gap-2 place-items-center text-gray-600 text-center">
-							<span className="text-sm">
-								Click to <strong>upload a video </strong>
+					<Label
+						htmlFor={name}
+						className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50"
+					>
+						<div className="flex flex-col items-center justify-center pt-5 pb-6">
+							<Upload className="w-8 h-8 mb-4 text-muted-foreground" />
+							<p className="mb-2 text-sm text-muted-foreground">
+								<span className="font-semibold">
+									Click to upload
+								</span>{' '}
 								or drag and drop
-							</span>
-							<span className="text-xs text-gray-400">
+							</p>
+							<p className="px-3 text-center text-xs text-muted-foreground">
 								Only MP4 files are allowed, and maximum 190 seconds.
-							</span>
+							</p>
 						</div>
-						<input
+						<Input
+							id={name}
 							type="file"
 							accept={accept}
-							name={name}
-							onInput={handleInput}
-							className="opacity-0 absolute top-0 left-0 w-full h-full cursor-pointer"
+							className="hidden"
+							onChange={handleInput}
 						/>
-					</>
+					</Label>
 				)}
 			</div>
 		);

@@ -1,171 +1,366 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Music, Upload, Link, Play, Pause, RefreshCw, Download, Clock, Volume2 } from 'lucide-react'
-import { Button } from "@components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@components/ui/card"
-import { Input } from "@components/ui/input"
-import { Label } from "@components/ui/label"
-import { Slider } from "@components/ui/slider"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@components/ui/select"
-import { Switch } from "@components/ui/switch"
+import { useState, useRef } from 'react';
+import useFFmpeg from '@hooks/useFFmpeg';
+import { toast } from 'react-toastify';
+
+import { Music, RefreshCw, Download } from 'lucide-react';
+
+import { generateMusic } from '@services/promptService';
+
+import { Button } from '@components/ui/button';
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from '@components/ui/card';
+import { Input } from '@components/ui/input';
+import { Label } from '@components/ui/label';
+import { Slider } from '@components/ui/slider';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
+
+import FileUploadField from '@components/FileUploadField';
+import InputSelect from '@components/ui/InputSelect';
+import { Switch } from '@components/ui/switch';
+import GeneratedVideo from '@components/GeneratedVideo';
+
+const styleOptions = [
+	{ value: 'orchestral', label: 'Orchestral' },
+	{ value: 'chamber', label: 'Chamber Music' },
+	{ value: 'ambient', label: 'Ambient' },
+	{ value: 'pop', label: 'Modern Pop' },
+	{ value: 'hip-hop', label: 'Hip Hop' },
+];
+
+const videoTypeOptions = [
+	{ value: 'promotional', label: 'Promotional' },
+	{ value: 'tutorial', label: 'Tutorial' },
+	{ value: 'vlog', label: 'Vlog' },
+	{ value: 'product-showcase', label: 'Product Showcase' },
+	{ value: 'testimonial', label: 'Testimonial' },
+	{ value: 'teaser', label: 'Teaser/Preview' },
+	{ value: 'announcement', label: 'Announcement' },
+	{ value: 'event-highlight', label: 'Event Highlight' },
+];
 
 export default function VideoMusicGenerator() {
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [progress, setProgress] = useState(0)
+	const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  const handleGenerate = () => {
-    setIsGenerating(true)
-    // Simulating generation process
-    setTimeout(() => {
-      setIsGenerating(false)
-      setProgress(100)
-    }, 3000)
-  }
+	const [style, setStyle] = useState('');
+	const [videoType, setVideoType] = useState('');
+	const [newVideo, setNewVideo] = useState<string | null>(null);
+	const [loading, setLoading] = useState<boolean>(false);
+	const [videoSrc, setVideoSrc] = useState<string | null>(null);
 
-  return (
-    <div className="container mx-auto p-6 space-y-8">
-      <h1 className="text-3xl font-bold">Generate Music for Your Video</h1>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Video Input</CardTitle>
-          <CardDescription>Upload your video or provide a link</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Tabs defaultValue="upload">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="upload">Upload Video</TabsTrigger>
-              <TabsTrigger value="link">Video Link</TabsTrigger>
-            </TabsList>
-            <TabsContent value="upload" className="space-y-4">
-              <div className="flex items-center justify-center w-full">
-                <Label htmlFor="video-upload" className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50">
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="w-8 h-8 mb-4 text-muted-foreground" />
-                    <p className="mb-2 text-sm text-muted-foreground">
-                      <span className="font-semibold">Click to upload</span> or drag and drop
-                    </p>
-                    <p className="text-xs text-muted-foreground">MP4, AVI, MOV (MAX. 800MB)</p>
-                  </div>
-                  <Input id="video-upload" type="file" className="hidden" accept="video/*" />
-                </Label>
-              </div>
-            </TabsContent>
-            <TabsContent value="link" className="space-y-4">
-              <div className="flex space-x-2">
-                <Input type="url" placeholder="Paste video URL here" />
-                <Button>Load</Button>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+	const { ffmpeg, fetchFile, loadFFmpeg, closeFFmpeg } = useFFmpeg();
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Music Generation Settings</CardTitle>
-          <CardDescription>Customize the music for your video</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="genre">Genre</Label>
-            <Select>
-              <SelectTrigger id="genre">
-                <SelectValue placeholder="Select a genre" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="cinematic">Cinematic</SelectItem>
-                <SelectItem value="electronic">Electronic</SelectItem>
-                <SelectItem value="acoustic">Acoustic</SelectItem>
-                <SelectItem value="ambient">Ambient</SelectItem>
-                <SelectItem value="rock">Rock</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label>Mood</Label>
-            <Slider defaultValue={[50]} max={100} step={1} />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Calm</span>
-              <span>Neutral</span>
-              <span>Energetic</span>
-            </div>
-          </div>
-          
-          <div className="space-y-2">
-            <Label>Tempo (BPM)</Label>
-            <Slider defaultValue={[120]} min={60} max={200} step={1} />
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>60</span>
-              <span>120</span>
-              <span>200</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Switch id="sync-video" />
-            <Label htmlFor="sync-video">Sync music to video tempo</Label>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button onClick={handleGenerate} disabled={isGenerating} className="w-full">
-            {isGenerating ? (
-              <>
-                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Music className="mr-2 h-4 w-4" />
-                Generate Music
-              </>
-            )}
-          </Button>
-        </CardFooter>
-      </Card>
+	const validateInputs = () => {
+		if (!videoSrc) {
+			toast.error('Please upload a video first.');
+			return false;
+		}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Preview</CardTitle>
-          <CardDescription>Listen to your generated music with the video</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
-            <span className="text-muted-foreground">Video Preview</span>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="space-x-2">
-                <Button variant="outline" size="icon" onClick={() => setIsPlaying(!isPlaying)}>
-                  {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                </Button>
-                <Button variant="outline" size="icon">
-                  <RefreshCw className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" />
-                <span>00:00 / 03:30</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Volume2 className="h-4 w-4 text-muted-foreground" />
-              <Slider defaultValue={[50]} max={100} step={1} className="flex-1" />
-            </div>
-          </div>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline">Regenerate</Button>
-          <Button>
-            <Download className="mr-2 h-4 w-4" />
-            Download
-          </Button>
-        </CardFooter>
-      </Card>
-    </div>
-  )
+		if (!style) {
+			toast.error('Please select a music style.');
+			return false;
+		}
+
+		if (!videoType) {
+			toast.error('Please select a video type.');
+			return false;
+		}
+
+		return true;
+	};
+
+	const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file) {
+			const url = URL.createObjectURL(file);
+			setVideoSrc(url);
+		}
+	};
+
+	const handleRemoveVideo = () => {
+		setVideoSrc(null);
+	};
+
+	const createMusic = async () => {
+		setNewVideo(null);
+		setLoading(true);
+
+		if (!validateInputs()) {
+			setLoading(false);
+			return;
+		}
+
+		setNewVideo(null);
+
+		if (!videoRef || !videoRef.current) {
+			setLoading(false);
+			return;
+		}
+
+		const snapshots = await generateSnapshots(videoRef?.current);
+
+		try {
+			const musicUrl = await generateMusic({
+				snapshots,
+				duration: `${Math.floor(videoRef.current.duration)}`,
+				type: videoType,
+				style,
+			});
+
+			if (!musicUrl) return;
+
+			await replaceAudio(musicUrl);
+		} catch (err) {
+			toast.error('Please try again.');
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const captureSnapshot = (
+		video: HTMLVideoElement,
+		time: number
+	): Promise<string> => {
+		return new Promise((resolve) => {
+			const canvas = document.createElement('canvas');
+			const ctx = canvas.getContext('2d');
+
+			if (ctx) {
+				video.currentTime = time;
+				video.onseeked = () => {
+					// Set the desired dimensions for the resized image
+					const width = 800;
+					const height =
+						(video.videoHeight / video.videoWidth) * width;
+
+					canvas.width = width;
+					canvas.height = height;
+
+					ctx.drawImage(video, 0, 0, width, height);
+					const snapshot = canvas.toDataURL('image/jpeg', 0.7); // Adjust quality as needed
+					resolve(snapshot);
+				};
+			}
+		});
+	};
+
+	const generateSnapshots = async (video: HTMLVideoElement) => {
+		const duration = video.duration;
+		let newSnapshots: string[] = [];
+		for (let time = 0; time < duration; time += duration / 12) {
+			const snapshot = await captureSnapshot(video, time);
+			newSnapshots.push(snapshot);
+		}
+		return newSnapshots;
+	};
+
+	const replaceAudio = async (music: string) => {
+		try {
+			await loadFFmpeg();
+
+			if (!videoSrc) {
+				throw new Error('No video source provided');
+			}
+
+			// Load video and audio files
+			const videoFile = await fetchFile(videoSrc);
+
+			const audioFile = await fetchFile(music);
+
+			await ffmpeg.writeFile('video.mp4', videoFile);
+			await ffmpeg.writeFile('audio.mp3', audioFile);
+
+			// Replace audio in the video
+			await ffmpeg.exec([
+				'-i',
+				'video.mp4',
+				'-i',
+				'audio.mp3',
+				'-c:v',
+				'copy',
+				'-map',
+				'0:v:0',
+				'-map',
+				'1:a:0',
+				'-shortest',
+				'output.mp4',
+			]);
+
+			// Get the resulting video
+			const data = await ffmpeg.readFile('output.mp4', 'binary');
+
+			// Create a URL for the resulting video
+			const videoUrl = URL.createObjectURL(
+				new Blob([data], { type: 'video/mp4' })
+			);
+
+			setNewVideo(videoUrl);
+			closeFFmpeg();
+		} catch (error) {
+			console.error('Error in replaceAudio:', error);
+		}
+	};
+
+	const handleDownload = () => {
+		if (newVideo) {
+			const link = document.createElement('a');
+			link.href = newVideo;
+			link.download = 'generated-video.mp4';
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		}
+	};
+
+	return (
+		<div className="container mx-auto p-6 space-y-8">
+			<h1 className="text-3xl font-bold">
+				Generate Music for Your Video
+			</h1>
+
+			<Card>
+				<CardHeader>
+					<CardTitle>Video Input</CardTitle>
+					<CardDescription>
+						Upload your video or provide a link
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="space-y-4">
+					<Tabs defaultValue="upload">
+						<TabsList className="grid w-full grid-cols-2">
+							<TabsTrigger value="upload">
+								Upload Video
+							</TabsTrigger>
+							<TabsTrigger value="link">Video Link</TabsTrigger>
+						</TabsList>
+						<TabsContent value="upload" className="space-y-4">
+							<FileUploadField
+								accept="video/*"
+								ref={videoRef}
+								name="video"
+								handleFileChange={handleVideoUpload}
+								file={videoSrc}
+								handleRemoveFile={handleRemoveVideo}
+							/>
+						</TabsContent>
+						<TabsContent value="link" className="space-y-4">
+							<div className="flex space-x-2">
+								<Input
+									type="url"
+									placeholder="Paste video URL here"
+								/>
+								<Button>Load</Button>
+							</div>
+						</TabsContent>
+					</Tabs>
+				</CardContent>
+			</Card>
+
+			<Card>
+				<CardHeader>
+					<CardTitle>Music Generation Settings</CardTitle>
+					<CardDescription>
+						Customize the music for your video
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="space-y-6">
+					<div className="grid grid-cols-1 gap-4">
+						<InputSelect
+							id="style"
+							label="Style"
+							value={style}
+							onValueChange={setStyle}
+							options={styleOptions}
+							placeholder="Select a style"
+						/>
+						<InputSelect
+							id="videoType"
+							label="Video Type"
+							value={videoType}
+							onValueChange={setVideoType}
+							options={videoTypeOptions}
+							placeholder="Select video type"
+						/>
+					</div>
+
+					<div className="space-y-2">
+						<Label>Mood</Label>
+						<Slider defaultValue={[50]} max={100} step={1} />
+						<div className="flex justify-between text-xs text-muted-foreground">
+							<span>Calm</span>
+							<span>Neutral</span>
+							<span>Energetic</span>
+						</div>
+					</div>
+
+					<div className="space-y-2">
+						<Label>Tempo (BPM)</Label>
+						<Slider
+							defaultValue={[120]}
+							min={60}
+							max={200}
+							step={1}
+						/>
+						<div className="flex justify-between text-xs text-muted-foreground">
+							<span>60</span>
+							<span>120</span>
+							<span>200</span>
+						</div>
+					</div>
+
+					<div className="flex items-center space-x-2">
+						<Switch id="sync-video" />
+						<Label htmlFor="sync-video">
+							Sync music to video tempo
+						</Label>
+					</div>
+				</CardContent>
+				<CardFooter>
+					<Button
+						onClick={createMusic}
+						disabled={loading}
+						className="w-full"
+					>
+						{loading ? (
+							<>
+								<RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+								Generating...
+							</>
+						) : (
+							<>
+								<Music className="mr-2 h-4 w-4" />
+								Generate Music
+							</>
+						)}
+					</Button>
+				</CardFooter>
+			</Card>
+
+			<Card>
+				<CardHeader>
+					<CardTitle>Preview</CardTitle>
+					<CardDescription>
+						Listen to your generated music with the video
+					</CardDescription>
+				</CardHeader>
+				<CardContent className="space-y-4">
+					<GeneratedVideo newVideo={newVideo} loading={loading} />
+				</CardContent>
+				<CardFooter className="flex justify-between">
+					<Button variant="outline">Regenerate</Button>
+					<Button>
+						<Download className="mr-2 h-4 w-4" />
+						Download
+					</Button>
+				</CardFooter>
+			</Card>
+		</div>
+	);
 }
