@@ -4,47 +4,12 @@ import { useState, useRef } from 'react';
 import useFFmpeg from '@hooks/useFFmpeg';
 import { toast } from 'react-toastify';
 
-import { Music, RefreshCw, Download } from 'lucide-react';
-
 import { generateMusic } from '@services/promptService';
 
-import { Button } from '@components/ui/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from '@components/ui/card';
-import { Input } from '@components/ui/input';
-import { Label } from '@components/ui/label';
-import { Slider } from '@components/ui/slider';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs';
-
-import FileUploadField from '@components/FileUploadField';
-import InputSelect from '@components/ui/InputSelect';
-import { Switch } from '@components/ui/switch';
-import GeneratedVideo from '@components/GeneratedVideo';
-
-const styleOptions = [
-	{ value: 'orchestral', label: 'Orchestral' },
-	{ value: 'chamber', label: 'Chamber Music' },
-	{ value: 'ambient', label: 'Ambient' },
-	{ value: 'pop', label: 'Modern Pop' },
-	{ value: 'hip-hop', label: 'Hip Hop' },
-];
-
-const videoTypeOptions = [
-	{ value: 'promotional', label: 'Promotional' },
-	{ value: 'tutorial', label: 'Tutorial' },
-	{ value: 'vlog', label: 'Vlog' },
-	{ value: 'product-showcase', label: 'Product Showcase' },
-	{ value: 'testimonial', label: 'Testimonial' },
-	{ value: 'teaser', label: 'Teaser/Preview' },
-	{ value: 'announcement', label: 'Announcement' },
-	{ value: 'event-highlight', label: 'Event Highlight' },
-];
+import VideoInput from '@components/lab/VideoInput';
+import Controls from '@components/lab/Controls';
+import Preview from '@components/lab/Preview';
+import { Tabs, TabsContent } from '@components/ui/tabs';
 
 export default function VideoMusicGenerator() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -220,147 +185,33 @@ export default function VideoMusicGenerator() {
 	};
 
 	return (
-		<div className="container mx-auto p-6 space-y-8">
+		<div className="container p-6 space-y-8">
 			<h1 className="text-3xl font-bold">
 				Generate Music for Your Video
 			</h1>
 
-			<Card>
-				<CardHeader>
-					<CardTitle>Video Input</CardTitle>
-					<CardDescription>
-						Upload your video or provide a link
-					</CardDescription>
-				</CardHeader>
-				<CardContent className="space-y-4">
-					<Tabs defaultValue="upload">
-						<TabsList className="grid w-full grid-cols-2">
-							<TabsTrigger value="upload">
-								Upload Video
-							</TabsTrigger>
-							<TabsTrigger value="link">Video Link</TabsTrigger>
-						</TabsList>
-						<TabsContent value="upload" className="space-y-4">
-							<FileUploadField
-								accept="video/*"
-								ref={videoRef}
-								name="video"
-								handleFileChange={handleVideoUpload}
-								file={videoSrc}
-								handleRemoveFile={handleRemoveVideo}
-							/>
-						</TabsContent>
-						<TabsContent value="link" className="space-y-4">
-							<div className="flex space-x-2">
-								<Input
-									type="url"
-									placeholder="Paste video URL here"
-								/>
-								<Button>Load</Button>
-							</div>
-						</TabsContent>
-					</Tabs>
-				</CardContent>
-			</Card>
+			<Tabs defaultValue="videoUpload">
+				<TabsContent value="videoUpload" className="space-y-4">
+					<VideoInput
+						videoRef={videoRef}
+						videoSrc={videoSrc}
+						handleRemoveVideo={handleRemoveVideo}
+						handleVideoUpload={handleVideoUpload}
+					/>
+				</TabsContent>
+				<TabsContent value="controls" className="space-y-4">
+					<Controls
+						style={style}
+						videoType={videoType}
+						loading={loading}
+						createMusic={createMusic}
+						setStyle={setStyle}
+						setVideoType={setVideoType}
+					/>
+				</TabsContent>
+			</Tabs>
 
-			<Card>
-				<CardHeader>
-					<CardTitle>Music Generation Settings</CardTitle>
-					<CardDescription>
-						Customize the music for your video
-					</CardDescription>
-				</CardHeader>
-				<CardContent className="space-y-6">
-					<div className="grid grid-cols-1 gap-4">
-						<InputSelect
-							id="style"
-							label="Style"
-							value={style}
-							onValueChange={setStyle}
-							options={styleOptions}
-							placeholder="Select a style"
-						/>
-						<InputSelect
-							id="videoType"
-							label="Video Type"
-							value={videoType}
-							onValueChange={setVideoType}
-							options={videoTypeOptions}
-							placeholder="Select video type"
-						/>
-					</div>
-
-					<div className="space-y-2">
-						<Label>Mood</Label>
-						<Slider defaultValue={[50]} max={100} step={1} />
-						<div className="flex justify-between text-xs text-muted-foreground">
-							<span>Calm</span>
-							<span>Neutral</span>
-							<span>Energetic</span>
-						</div>
-					</div>
-
-					<div className="space-y-2">
-						<Label>Tempo (BPM)</Label>
-						<Slider
-							defaultValue={[120]}
-							min={60}
-							max={200}
-							step={1}
-						/>
-						<div className="flex justify-between text-xs text-muted-foreground">
-							<span>60</span>
-							<span>120</span>
-							<span>200</span>
-						</div>
-					</div>
-
-					<div className="flex items-center space-x-2">
-						<Switch id="sync-video" />
-						<Label htmlFor="sync-video">
-							Sync music to video tempo
-						</Label>
-					</div>
-				</CardContent>
-				<CardFooter>
-					<Button
-						onClick={createMusic}
-						disabled={loading}
-						className="w-full"
-					>
-						{loading ? (
-							<>
-								<RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-								Generating...
-							</>
-						) : (
-							<>
-								<Music className="mr-2 h-4 w-4" />
-								Generate Music
-							</>
-						)}
-					</Button>
-				</CardFooter>
-			</Card>
-
-			<Card>
-				<CardHeader>
-					<CardTitle>Preview</CardTitle>
-					<CardDescription>
-						Listen to your generated music with the video
-					</CardDescription>
-				</CardHeader>
-				<CardContent className="space-y-4">
-					<GeneratedVideo newVideo={newVideo} loading={loading} />
-				</CardContent>
-				<CardFooter className="flex justify-between">
-					<Button variant="outline">Regenerate</Button>
-					<Button>
-						<Download className="mr-2 h-4 w-4" />
-						Download
-					</Button>
-				</CardFooter>
-			</Card>
+			<Preview newVideo={newVideo} loading={loading} />
 		</div>
 	);
 }
