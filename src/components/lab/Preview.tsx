@@ -21,7 +21,7 @@ type PreviewProps = {
 
 const Preview = ({ newVideo, loading, handleDownload }: PreviewProps) => {
 	return (
-		<Card className="h-full">
+		<Card className="w-full">
 			<CardHeader>
 				<CardTitle>Preview</CardTitle>
 				<CardDescription>

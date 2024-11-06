@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
-import Spinner from './Spinner';
-import { Button } from "./ui/button";
-import { Slider } from "./ui/slider";
-import { Play, Pause, RefreshCw, Clock, Volume2 } from "lucide-react";
+import { useState, useEffect, useRef } from 'react';
+
+import Spinner from '@components/Spinner';
+import { Button } from "@components/ui/button";
+import { Slider } from "@components/ui/slider";
+
+import { Play, Pause, RefreshCw, Clock, Volume2, Download } from "lucide-react";
 
 type GeneratedVideoProps = {
   newVideo: string | null;
@@ -12,6 +14,10 @@ type GeneratedVideoProps = {
 const GeneratedVideo: React.FC<GeneratedVideoProps> = ({ newVideo, loading }) => {
   const [loadingMessage, setLoadingMessage] = useState<string>('');
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState([50]);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const funLoadingMessages = [
     'Composing a symphony just for you...',
@@ -39,26 +45,72 @@ const GeneratedVideo: React.FC<GeneratedVideoProps> = ({ newVideo, loading }) =>
     return () => clearInterval(interval);
   }, [loading]);
 
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleRestart = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      setCurrentTime(videoRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+    }
+  };
+
+  const handleVolumeChange = (value: number[]) => {
+    setVolume(value);
+    if (videoRef.current) {
+      videoRef.current.volume = value[0] / 100;
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
   return (
     <div
-      className={`relative min-h-60 w-full md:w-full px-4 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
+      className={`relative min-h-60 w-full px-4 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
         newVideo ? 'border-solid bg-primary' : 'border-dashed bg-muted'
       }`}
     >
       {newVideo ? (
-        <div className="space-y-4 w-full max-w-md">
+        <div className="w-full max-w-md flex flex-col items-center">
           <video
+            ref={videoRef}
             className="w-48 aspect-square object-center object-fit rounded-3xl"
-            controls
             src={newVideo}
+            onTimeUpdate={handleTimeUpdate}
+            onLoadedMetadata={handleLoadedMetadata}
           />
-          <div className="space-y-2">
+          <div className="w-full space-y-2 border-white border-2">
             <div className="flex items-center justify-between">
               <div className="space-x-2">
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => setIsPlaying(!isPlaying)}
+                  onClick={togglePlay}
                 >
                   {isPlaying ? (
                     <Pause className="h-4 w-4" />
@@ -66,19 +118,33 @@ const GeneratedVideo: React.FC<GeneratedVideoProps> = ({ newVideo, loading }) =>
                     <Play className="h-4 w-4" />
                   )}
                 </Button>
-                <Button variant="outline" size="icon">
+                <Button 
+                  variant="outline" 
+                  size="icon"
+                  onClick={handleRestart}
+                >
                   <RefreshCw className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  asChild
+                >
+                  <a href={newVideo} download="generated-video">
+                    <Download className="h-4 w-4" />
+                  </a>
                 </Button>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Clock className="h-4 w-4" />
-                <span>00:00 / 03:30</span>
+                <span>{formatTime(currentTime)} / {formatTime(duration)}</span>
               </div>
             </div>
             <div className="flex items-center space-x-2">
               <Volume2 className="h-4 w-4 text-muted-foreground" />
               <Slider
-                defaultValue={[50]}
+                value={volume}
+                onValueChange={handleVolumeChange}
                 max={100}
                 step={1}
                 className="flex-1"

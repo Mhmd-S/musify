@@ -7,15 +7,45 @@ import { MusicGenerationBody, MusicGenerationResponse } from "./types";
 //   return response.data.data;
 // };
 
-type MusicResponse = {
-  url: string;
+interface MusicGenerationResponse {
+  success: boolean;
+  message: string;
+  data: MusicGenerationData;
+}
+
+interface SnapshotPrompt {
+  originalImage: string;
+  generatedDescription: string;
+  _id: string;
+  timestamp: string;
+}
+
+interface GeneratedMusic {
   generatedAt: string;
+  url: string;
+}
+
+interface MusicGenerationData {
+  generatedMusic: GeneratedMusic;
+  _id: string;
+  user: string;
+  style: string;
+  type: string;
+  duration: number;
+  status: string;
+  snapshotPrompts: SnapshotPrompt[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  combinedContext: string;
+  musicBrief: string;
+  processingTime: number;
 }
 
 export const generateMusic = async ({snapshots,
   duration,
   type,
-  style}: MusicGenerationBody): Promise<MusicResponse> => {
+  style}: MusicGenerationBody): Promise<MusicGenerationData> => {
     try {
       const formData = new FormData();
       

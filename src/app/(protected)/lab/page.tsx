@@ -9,6 +9,8 @@ import { generateMusic } from '@services/promptService';
 import VideoInput from '@components/lab/VideoInput';
 import Controls from '@components/lab/Controls';
 import Preview from '@components/lab/Preview';
+import Context from '@components/lab/Context';
+
 import NoSSRWrapper from '@components/NoSSRWrapper';
 
 function VideoMusicGenerator() {
@@ -19,6 +21,9 @@ function VideoMusicGenerator() {
 	const [newVideo, setNewVideo] = useState<string | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [videoSrc, setVideoSrc] = useState<string | null>(null);
+	const [contextExtracted, setContextExtracted] = useState<string | null>(
+		null
+	);
 
 	const { ffmpeg, fetchFile, loadFFmpeg, closeFFmpeg } = useFFmpeg();
 
@@ -81,7 +86,8 @@ function VideoMusicGenerator() {
 
 			if (!musicGenerated) return;
 
-			await replaceAudio(musicGenerated.url);
+			await replaceAudio(musicGenerated.generatedMusic.url);
+			setContextExtracted(musicGenerated.combinedContext);
 		} catch (err) {
 			toast.error('Please try again.');
 		} finally {
@@ -185,33 +191,35 @@ function VideoMusicGenerator() {
 	};
 
 	return (
-			<div className="container p-6 space-y-8">
-				<h1 className="text-3xl font-bold">Lab</h1>
+		<div className="container p-6 space-y-8">
+			<h1 className="text-3xl font-bold">Lab</h1>
 
-				<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-2">
-					<VideoInput
-						videoRef={videoRef}
-						videoSrc={videoSrc}
-						handleRemoveVideo={handleRemoveVideo}
-						handleVideoUpload={handleVideoUpload}
-					/>
+			<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-2">
+				<VideoInput
+					videoRef={videoRef}
+					videoSrc={videoSrc}
+					handleRemoveVideo={handleRemoveVideo}
+					handleVideoUpload={handleVideoUpload}
+				/>
 
-					<Controls
-						style={style}
-						videoType={videoType}
-						loading={loading}
-						createMusic={createMusic}
-						setStyle={setStyle}
-						setVideoType={setVideoType}
-					/>
-				</div>
+				<Controls
+					style={style}
+					videoType={videoType}
+					loading={loading}
+					createMusic={createMusic}
+					setStyle={setStyle}
+					setVideoType={setVideoType}
+				/>
 
 				<Preview
 					newVideo={newVideo}
 					loading={loading}
 					handleDownload={handleDownload}
 				/>
+
+				<Context context={contextExtracted} />
 			</div>
+		</div>
 	);
 }
 
