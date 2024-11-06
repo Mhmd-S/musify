@@ -194,7 +194,7 @@ function VideoMusicGenerator() {
 		<div className="container p-6 space-y-8">
 			<h1 className="text-3xl font-bold">Lab</h1>
 
-			<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-2">
+			<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4">
 				<VideoInput
 					videoRef={videoRef}
 					videoSrc={videoSrc}

@@ -11,7 +11,6 @@ type FileUploadFieldProps = {
 	file: File | string | null;
 	accept: string;
 	handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	handleRemoveFile: () => void;
 };
 
 const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
@@ -50,7 +49,7 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 		};
 
 		return (
-			<div className="flex items-center justify-center w-full">
+			<div className={`h-full flex items-center justify-center rounded-md  ${file && "bg-black"}`}>
 				{error && <Badge variant="destructive">{error}</Badge>}
 
 				{file ? (
