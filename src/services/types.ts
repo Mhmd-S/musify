@@ -4,41 +4,88 @@ export interface User {
   name: string;
 }
 
-export interface MusicGenerationBody {
-	snapshots: string[];
-	duration: string;
-	type: string;
-	style: string;
-}
-
-export interface MusicGenerationResponse {
-	data: string;
-	// Add other response fields as needed
-}
-
 export interface SigninFields {
-	email: string;
-	password: string;
+  email: string;
+  password: string;
 }
 
 export interface SignupResponse {
-	message: string;
+  message: string;
 }
 
 export interface SignupFields {
-	email: string;
-	name: string;
-	password: string;
+  email: string;
+  name: string;
+  password: string;
 }
 
 export interface SigninResponse {
-	message: string;
+  message: string;
 }
 
 export interface GoogleSignupResponse {
-	message: string;
+  message: string;
 }
 
 export interface GoogleSigninResponse {
-	message: string;
+  message: string;
 }
+
+// PROMPT SERVICE
+
+export interface MusicGenerationResponse {
+  success: boolean;
+  message: string;
+  data: MusicGenerationData;
+}
+
+export interface SnapshotPrompt {
+  originalImage: string;
+  generatedDescription: string;
+  _id: string;
+  timestamp: string;
+}
+
+export interface GeneratedMusic {
+  generatedAt: string;
+  url: string;
+}
+
+export interface MusicGenerationBody {
+  snapshots: string[];
+  duration: string;
+  type: string;
+  style: string;
+}
+
+export interface MusicGenerationData {
+  generatedMusic: GeneratedMusic;
+	video: string;
+  _id: string;
+  user: string;
+  style: string;
+  type: string;
+  duration: number;
+  status: string;
+  snapshotPrompts: SnapshotPrompt[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  combinedContext: string;
+  musicBrief: string;
+  processingTime: number;
+}
+
+export interface UserPrompts {
+	prompts: MusicGenerationData[];
+	total: number;
+	page: number;
+	pages: number;
+}
+
+export interface UserPrompts {
+	success: boolean;
+	message: string;
+	data: UserPrompts;
+}
+// PROMPT SERVICE END
