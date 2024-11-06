@@ -20,7 +20,6 @@ import { MusicGenerationData } from '@services/types';
 import { getUserPrompts } from '@services/promptService';
 
 export default function ProjectsTab() {
-	const [isPlaying, setIsPlaying] = useState<{ [key: string]: boolean }>({});
 	const [prompts, setPrompts] = useState<MusicGenerationData[] | null>(null);
 	const [maxPage, setMaxPage] = useState(1);
 	const [loading, setLoading] = useState(true);
@@ -28,13 +27,14 @@ export default function ProjectsTab() {
 
 	useEffect(()=>{
 		const fetchPrompts = async () => {
+			setLoading(true);
 			const response = await getUserPrompts(page);
 			setPrompts(response.data.prompts);
 			setMaxPage(response.data.pages);
 			setLoading(false);
 		}
 		fetchPrompts();
-	},[])
+	},[page])
 
 	return (
 		<div className="container mx-auto p-6 space-y-8">
@@ -62,7 +62,7 @@ export default function ProjectsTab() {
 					<ProjectTable
 						prompts={prompts}
 					/>
-					
+
 				</CardContent>
 				<CardFooter>
 					<PageNavigation

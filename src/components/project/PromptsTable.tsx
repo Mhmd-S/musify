@@ -1,4 +1,4 @@
-import Router from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import {
 	Table,
@@ -22,6 +22,8 @@ type PromptTableProps = {
 const PromptTable: React.FC<PromptTableProps> = ({
 	prompts,
 }) => {
+
+	const Router = useRouter();
 
 	const handleClick = (id: string) => {
 		Router.push(`/lab/${id}`);

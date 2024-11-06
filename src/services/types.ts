@@ -52,6 +52,7 @@ export interface GeneratedMusic {
 }
 
 export interface MusicGenerationBody {
+	video: string;
   snapshots: string[];
   duration: string;
   type: string;

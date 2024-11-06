@@ -4,6 +4,8 @@ import { useState, useRef } from 'react';
 import useFFmpeg from '@hooks/useFFmpeg';
 import { toast } from 'react-toastify';
 
+import Spinnter from '@components/Spinner';
+
 import { generateMusic } from '@services/promptService';
 
 import VideoInput from '@components/lab/VideoInput';
@@ -19,10 +21,11 @@ function VideoMusicGenerator() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
   const params = useParams();
 
+  const [ initialLoading, setInitialLoading ] = useState(true);
 	const [style, setStyle] = useState('');
 	const [videoType, setVideoType] = useState('');
 	const [newVideo, setNewVideo] = useState<string | null>(null);
-	const [loading, setLoading] = useState<boolean>(true);
+	const [loading, setLoading] = useState<boolean>(false);
 	const [videoSrc, setVideoSrc] = useState<string | null>(null);
 	const [contextExtracted, setContextExtracted] = useState<string | null>(
 		null
@@ -41,12 +44,10 @@ function VideoMusicGenerator() {
       await loadFFmpeg();
       await replaceAudio(response.generatedMusic.url);
       closeFFmpeg();
+      setInitialLoading(false);
     }
 
     fetchPrompt();
-
-
-
   });
 
 	const { ffmpeg, fetchFile, loadFFmpeg, closeFFmpeg } = useFFmpeg();
@@ -216,9 +217,10 @@ function VideoMusicGenerator() {
 
 	return (
 		<div className="container p-6 space-y-8">
-			<h1 className="text-3xl font-bold">Lab</h1>
+			<h1 className="text-3xl font-bold">Prompt Lab</h1>
 
 			<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4">
+        {initialLoading ? <Spinnter/> : (<>
 				<VideoInput
 					videoRef={videoRef}
 					videoSrc={videoSrc}
@@ -242,6 +244,7 @@ function VideoMusicGenerator() {
 				/>
 
 				<Context context={contextExtracted} />
+        </>)}
 			</div>
 		</div>
 	);

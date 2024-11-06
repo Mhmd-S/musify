@@ -69,7 +69,7 @@ function VideoMusicGenerator() {
 
 		setNewVideo(null);
 
-		if (!videoRef || !videoRef.current) {
+		if (!videoRef || !videoRef.current || !videoSrc) {
 			setLoading(false);
 			return;
 		}
@@ -78,6 +78,7 @@ function VideoMusicGenerator() {
 
 		try {
 			const musicGenerated = await generateMusic({
+				video: videoSrc,
 				snapshots,
 				duration: `${Math.floor(videoRef.current.duration)}`,
 				type: videoType,

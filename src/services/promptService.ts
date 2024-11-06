@@ -15,15 +15,18 @@ export const getUserPrompts = async (page: number): Promise<UserPrompts> => {
 	return response.data;
 };
 
-export  const getPrompt = async (id: string|string[]): Promise<MusicGenerationData> => {
-  const response = await api.request<MusicGenerationData>({
-    method: 'GET',
-    url: `prompts/${id}`,
-  });
-  return response.data;
+export const getPrompt = async (
+	id: string | string[]
+): Promise<MusicGenerationData> => {
+	const response = await api.request<MusicGenerationData>({
+		method: 'GET',
+		url: `prompts/${id}`,
+	});
+	return response.data;
 };
 
 export const generateMusic = async ({
+	video,
 	snapshots,
 	duration,
 	type,
@@ -32,6 +35,7 @@ export const generateMusic = async ({
 	try {
 		const formData = new FormData();
 
+		// Snapshots file
 		snapshots.forEach((snapshot: string, index: number) => {
 			const byteCharacters = atob(snapshot.split(',')[1]);
 			const byteNumbers = new Array(byteCharacters.length);
@@ -43,6 +47,10 @@ export const generateMusic = async ({
 
 			formData.append(`snapshots`, blob, `snapshot_${index}.jpg`);
 		});
+
+		// Video file
+		const videoBlob = await fetch(video).then(response => response.blob());
+		formData.append('video', videoBlob, 'video.mp4');
 
 		formData.append('duration', duration);
 		formData.append('type', type);
@@ -59,6 +67,7 @@ export const generateMusic = async ({
 
 		return response.data.data;
 	} catch (error) {
+		console.log(error);
 		return errorHandler(error as ErrorResponse);
 	}
 };
