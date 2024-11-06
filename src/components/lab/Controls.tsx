@@ -53,7 +53,7 @@ const Controls = ({
 	setVideoType,
 }: ControlsProps) => {
 	return (
-		<Card>
+		<Card className="h-full">
 			<CardHeader>
 				<CardTitle>Music Generation Settings</CardTitle>
 

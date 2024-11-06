@@ -7,10 +7,15 @@ import { MusicGenerationBody, MusicGenerationResponse } from "./types";
 //   return response.data.data;
 // };
 
+type MusicResponse = {
+  url: string;
+  generatedAt: string;
+}
+
 export const generateMusic = async ({snapshots,
   duration,
   type,
-  style}: MusicGenerationBody): Promise<string> => {
+  style}: MusicGenerationBody): Promise<MusicResponse> => {
     try {
       const formData = new FormData();
       

@@ -9,9 +9,9 @@ import { generateMusic } from '@services/promptService';
 import VideoInput from '@components/lab/VideoInput';
 import Controls from '@components/lab/Controls';
 import Preview from '@components/lab/Preview';
-import { Tabs, TabsContent } from '@components/ui/tabs';
+import NoSSRWrapper from '@components/NoSSRWrapper';
 
-export default function VideoMusicGenerator() {
+function VideoMusicGenerator() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
 
 	const [style, setStyle] = useState('');
@@ -72,16 +72,16 @@ export default function VideoMusicGenerator() {
 		const snapshots = await generateSnapshots(videoRef?.current);
 
 		try {
-			const musicUrl = await generateMusic({
+			const musicGenerated = await generateMusic({
 				snapshots,
 				duration: `${Math.floor(videoRef.current.duration)}`,
 				type: videoType,
 				style,
 			});
 
-			if (!musicUrl) return;
+			if (!musicGenerated) return;
 
-			await replaceAudio(musicUrl);
+			await replaceAudio(musicGenerated.url);
 		} catch (err) {
 			toast.error('Please try again.');
 		} finally {
@@ -185,21 +185,17 @@ export default function VideoMusicGenerator() {
 	};
 
 	return (
-		<div className="container p-6 space-y-8">
-			<h1 className="text-3xl font-bold">
-				Generate Music for Your Video
-			</h1>
+			<div className="container p-6 space-y-8">
+				<h1 className="text-3xl font-bold">Lab</h1>
 
-			<Tabs defaultValue="videoUpload">
-				<TabsContent value="videoUpload" className="space-y-4">
+				<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-2">
 					<VideoInput
 						videoRef={videoRef}
 						videoSrc={videoSrc}
 						handleRemoveVideo={handleRemoveVideo}
 						handleVideoUpload={handleVideoUpload}
 					/>
-				</TabsContent>
-				<TabsContent value="controls" className="space-y-4">
+
 					<Controls
 						style={style}
 						videoType={videoType}
@@ -208,10 +204,21 @@ export default function VideoMusicGenerator() {
 						setStyle={setStyle}
 						setVideoType={setVideoType}
 					/>
-				</TabsContent>
-			</Tabs>
+				</div>
 
-			<Preview newVideo={newVideo} loading={loading} />
-		</div>
+				<Preview
+					newVideo={newVideo}
+					loading={loading}
+					handleDownload={handleDownload}
+				/>
+			</div>
+	);
+}
+
+export default function LabPage() {
+	return (
+		<NoSSRWrapper>
+			<VideoMusicGenerator />
+		</NoSSRWrapper>
 	);
 }
