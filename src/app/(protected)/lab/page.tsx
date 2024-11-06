@@ -86,8 +86,8 @@ function VideoMusicGenerator() {
 
 			if (!musicGenerated) return;
 
-			await replaceAudio(musicGenerated.generatedMusic.url);
 			setContextExtracted(musicGenerated.combinedContext);
+			await replaceAudio(musicGenerated.generatedMusic.url);
 		} catch (err) {
 			toast.error('Please try again.');
 		} finally {

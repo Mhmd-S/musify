@@ -1,22 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
 
 import Spinner from '@components/Spinner';
-import { Button } from "@components/ui/button";
-import { Slider } from "@components/ui/slider";
+import { Button } from '@components/ui/button';
+import { Slider } from '@components/ui/slider';
 
-import { Play, Pause, RefreshCw, Clock, Volume2, Download } from "lucide-react";
+import { Play, Pause, RefreshCw, Clock, Volume2, Download } from 'lucide-react';
 
 type GeneratedVideoProps = {
   newVideo: string | null;
   loading: boolean;
 };
 
-const GeneratedVideo: React.FC<GeneratedVideoProps> = ({ newVideo, loading }) => {
+const GeneratedVideo: React.FC<GeneratedVideoProps> = ({
+  newVideo,
+  loading,
+}) => {
   const [loadingMessage, setLoadingMessage] = useState<string>('');
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState([50]);
+  const [showControls, setShowControls] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const funLoadingMessages = [
@@ -35,10 +39,16 @@ const GeneratedVideo: React.FC<GeneratedVideoProps> = ({ newVideo, loading }) =>
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (loading) {
-      setLoadingMessage(funLoadingMessages[Math.floor(Math.random() * funLoadingMessages.length)]);
+      setLoadingMessage(
+        funLoadingMessages[
+          Math.floor(Math.random() * funLoadingMessages.length)
+        ]
+      );
       interval = setInterval(() => {
         setLoadingMessage(
-          funLoadingMessages[Math.floor(Math.random() * funLoadingMessages.length)]
+          funLoadingMessages[
+            Math.floor(Math.random() * funLoadingMessages.length)
+          ]
         );
       }, 3000);
     }
@@ -83,33 +93,69 @@ const GeneratedVideo: React.FC<GeneratedVideoProps> = ({ newVideo, loading }) =>
     }
   };
 
+  const handleSeek = (value: number[]) => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = value[0];
+      setCurrentTime(value[0]);
+    }
+  };
+
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes.toString().padStart(2, '0')}:${seconds
+      .toString()
+      .padStart(2, '0')}`;
   };
 
   return (
     <div
-      className={`relative min-h-60 w-full px-4 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
-        newVideo ? 'border-solid bg-primary' : 'border-dashed bg-muted'
+      className={`h-60 w-full rounded-lg ${
+        newVideo ? 'bg-primary/5' : 'bg-muted border-2 border-dashed'
       }`}
     >
       {newVideo ? (
-        <div className="w-full max-w-md flex flex-col items-center">
-          <video
-            ref={videoRef}
-            className="w-48 aspect-square object-center object-fit rounded-3xl"
-            src={newVideo}
-            onTimeUpdate={handleTimeUpdate}
-            onLoadedMetadata={handleLoadedMetadata}
-          />
-          <div className="w-full space-y-2 border-white border-2">
-            <div className="flex items-center justify-between">
-              <div className="space-x-2">
+        <div className="relative w-full h-full group">
+          {/* Video */}
+          <div className="w-full h-full bg-black rounded-lg overflow-hidden">
+            <video
+              ref={videoRef}
+              className="w-full h-full object-contain"
+              src={newVideo}
+              onTimeUpdate={handleTimeUpdate}
+              onLoadedMetadata={handleLoadedMetadata}
+              onMouseEnter={() => setShowControls(true)}
+              onMouseLeave={() => setShowControls(false)}
+            />
+          </div>
+
+          {/* Controls Overlay */}
+          <div
+            className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 transition-opacity duration-300 ${
+              showControls ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+            }`}
+            onMouseEnter={() => setShowControls(true)}
+            onMouseLeave={() => setShowControls(false)}
+          >
+            {/* Progress Bar */}
+            <div className="absolute top-0 left-0 right-0 -translate-y-full px-4">
+              <Slider
+                className="h-1 cursor-pointer"
+                value={[currentTime]}
+                max={duration}
+                step={0.1}
+                onValueChange={handleSeek}
+              />
+            </div>
+
+            {/* Controls Container */}
+            <div className="flex items-center gap-4 text-white">
+              {/* Left Controls */}
+              <div className="flex items-center gap-2">
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="icon"
+                  className="hover:bg-white/20"
                   onClick={togglePlay}
                 >
                   {isPlaying ? (
@@ -118,50 +164,46 @@ const GeneratedVideo: React.FC<GeneratedVideoProps> = ({ newVideo, loading }) =>
                     <Play className="h-4 w-4" />
                   )}
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="ghost"
                   size="icon"
+                  className="hover:bg-white/20"
                   onClick={handleRestart}
                 >
                   <RefreshCw className="h-4 w-4" />
                 </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  asChild
-                >
-                  <a href={newVideo} download="generated-video">
-                    <Download className="h-4 w-4" />
-                  </a>
-                </Button>
+                
+                {/* Time Display */}
+                <span className="text-sm">
+                  {formatTime(currentTime)} / {formatTime(duration)}
+                </span>
               </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" />
-                <span>{formatTime(currentTime)} / {formatTime(duration)}</span>
+
+              {/* Right Controls */}
+              <div className="flex items-center gap-3 ml-auto">
+                <Volume2 className="h-4 w-4" />
+                <Slider
+                  value={volume}
+                  onValueChange={handleVolumeChange}
+                  max={100}
+                  step={1}
+                  className="w-24"
+                />
               </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Volume2 className="h-4 w-4 text-muted-foreground" />
-              <Slider
-                value={volume}
-                onValueChange={handleVolumeChange}
-                max={100}
-                step={1}
-                className="flex-1"
-              />
             </div>
           </div>
         </div>
       ) : loading ? (
-        <div className="w-full h-full flex flex-col items-center justify-center">
+        <div className="w-full h-full flex flex-col items-center justify-center gap-4">
           <Spinner />
-          {loading && <p className="text-center text-primary animate-pulse">{loadingMessage}</p>}
+          <p className="text-center text-primary animate-pulse">
+            {loadingMessage}
+          </p>
         </div>
       ) : (
-        <div className="grid grid-rows-2 grid-cols-1 gap-2 place-items-center text-gray-600 text-center">
+        <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground">
           <span className="text-sm">
-            Your <strong>new video </strong>
-            will appear here
+            Your <strong>new video</strong> will appear here
           </span>
         </div>
       )}
