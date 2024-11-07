@@ -38,10 +38,10 @@ const videoTypeOptions = [
 type ControlsProps = {
 	style: string;
 	videoType: string;
-	loading: boolean;
-	createMusic: () => Promise<void>;
-	setStyle: Dispatch<SetStateAction<string>>;
-	setVideoType: Dispatch<SetStateAction<string>>;
+	loading?: boolean;
+	createMusic?: () => Promise<void>;
+	setStyle?: Dispatch<SetStateAction<string>>;
+	setVideoType?: Dispatch<SetStateAction<string>>;
 };
 
 const Controls = ({

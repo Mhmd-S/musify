@@ -9,6 +9,10 @@ export interface SigninFields {
   password: string;
 }
 
+export interface VideoResponse {
+	data: Blob;
+}
+
 export interface SignupResponse {
   message: string;
 }
@@ -77,6 +81,12 @@ export interface MusicGenerationData {
   processingTime: number;
 }
 
+export interface MusicGeneratedResponse {
+  success: boolean;
+  message: string;
+  data: MusicGenerationData;
+}
+
 export interface UserPrompts {
 	prompts: MusicGenerationData[];
 	total: number;
@@ -84,7 +94,7 @@ export interface UserPrompts {
 	pages: number;
 }
 
-export interface UserPrompts {
+export interface UserPromptsResponse {
 	success: boolean;
 	message: string;
 	data: UserPrompts;

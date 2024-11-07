@@ -5,25 +5,44 @@ import {
 	MusicGenerationResponse,
 	MusicGenerationData,
 	UserPrompts,
+	UserPromptsResponse,
+	VideoResponse,
 } from './types';
 
 export const getUserPrompts = async (page: number): Promise<UserPrompts> => {
-	const response = await api.request<UserPrompts>({
+	const response = await api.request<UserPromptsResponse>({
 		method: 'GET',
 		url: `prompts/?page=${page}`,
 	});
-	return response.data;
+	return response.data.data;
 };
 
 export const getPrompt = async (
 	id: string | string[]
 ): Promise<MusicGenerationData> => {
-	const response = await api.request<MusicGenerationData>({
+	const response = await api.request<MusicGenerationResponse>({
 		method: 'GET',
 		url: `prompts/${id}`,
 	});
-	return response.data;
+	return response.data.data;
 };
+
+export const getPromptVideo = async (id: string | string[]): Promise<Blob> => {
+	const response = await api.request<VideoResponse>({
+			method: 'GET',
+			url: `prompts/video/${id}`,
+			responseType: 'blob',  // Essential for binary data
+			headers: {
+					Accept: 'video/mp4',  // Specify accepted content type
+			},
+	});
+	
+	if (!response) {
+			throw new Error('No video data received');
+	}
+	console.log(response)
+	return response.data;
+}
 
 export const generateMusic = async ({
 	video,
@@ -49,7 +68,9 @@ export const generateMusic = async ({
 		});
 
 		// Video file
-		const videoBlob = await fetch(video).then(response => response.blob());
+		const videoBlob = await fetch(video).then((response) =>
+			response.blob()
+		);
 		formData.append('video', videoBlob, 'video.mp4');
 
 		formData.append('duration', duration);

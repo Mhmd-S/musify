@@ -45,7 +45,7 @@ const VideoInput = ({
 			</CardContent>
 			<CardFooter className="flex items-center justify-center">
 				<Button
-					disabled={!videoSrc}
+					disabled={!videoSrc || handleRemoveVideo === undefined}
 					variant="destructive"
 					onClick={handleRemoveVideo}
 				>

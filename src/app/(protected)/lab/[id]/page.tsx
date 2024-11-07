@@ -1,12 +1,11 @@
 'use client';
 import { useParams } from 'next/navigation';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import useFFmpeg from '@hooks/useFFmpeg';
-import { toast } from 'react-toastify';
 
 import Spinnter from '@components/Spinner';
 
-import { generateMusic } from '@services/promptService';
+import { getPromptVideo } from '@services/promptService';
 
 import VideoInput from '@components/lab/VideoInput';
 import Controls from '@components/lab/Controls';
@@ -16,157 +15,47 @@ import Context from '@components/lab/Context';
 import NoSSRWrapper from '@components/NoSSRWrapper';
 
 import { getPrompt } from '@services/promptService';
+import { MusicGenerationData } from '@services/types';
 
 function VideoMusicGenerator() {
-	const videoRef = useRef<HTMLVideoElement | null>(null);
-  const params = useParams();
-
-  const [ initialLoading, setInitialLoading ] = useState(true);
-	const [style, setStyle] = useState('');
-	const [videoType, setVideoType] = useState('');
-	const [newVideo, setNewVideo] = useState<string | null>(null);
-	const [loading, setLoading] = useState<boolean>(false);
-	const [videoSrc, setVideoSrc] = useState<string | null>(null);
-	const [contextExtracted, setContextExtracted] = useState<string | null>(
-		null
-	);
-
-  useState(() => {
-    const { id } = params;
-    
-    const fetchPrompt = async () => {
-      const response = await getPrompt(id);
-      setVideoSrc(response.video);
-    
-      setContextExtracted(response.combinedContext);
-      setStyle(response.style);
-      setVideoType(response.type);
-      await loadFFmpeg();
-      await replaceAudio(response.generatedMusic.url);
-      closeFFmpeg();
-      setInitialLoading(false);
-    }
-
-    fetchPrompt();
-  });
-
 	const { ffmpeg, fetchFile, loadFFmpeg, closeFFmpeg } = useFFmpeg();
 
-	const validateInputs = () => {
-		if (!videoSrc) {
-			toast.error('Please upload a video first.');
-			return false;
-		}
+	const videoRef = useRef<HTMLVideoElement | null>(null);
+	const params = useParams();
 
-		if (!style) {
-			toast.error('Please select a music style.');
-			return false;
-		}
+	const [initialLoading, setInitialLoading] = useState(true);
+	const [newVideo, setNewVideo] = useState<string | null>(null);
+	const [fetchedPrompt, setFetchedPrompt] =
+		useState<MusicGenerationData | null>(null);
 
-		if (!videoType) {
-			toast.error('Please select a video type.');
-			return false;
-		}
+	useEffect(() => {
+		const { id } = params;
 
-		return true;
-	};
+		const fetchPrompt = async () => {
+			const response = await getPrompt(id);
+			setFetchedPrompt(response);
 
-	const handleVideoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0];
-		if (file) {
-			const url = URL.createObjectURL(file);
-			setVideoSrc(url);
-		}
-	};
+			const video = await getPromptVideo(id);
 
-	const handleRemoveVideo = () => {
-		setVideoSrc(null);
-	};
+			await loadFFmpeg();
+			await replaceAudio(response.generatedMusic.url, video);
 
-	const createMusic = async () => {
-		setNewVideo(null);
-		setLoading(true);
+			setInitialLoading(false);
+		};
 
-		if (!validateInputs()) {
-			setLoading(false);
-			return;
-		}
+		fetchPrompt();
+	}, []);
 
-		setNewVideo(null);
-
-		if (!videoRef || !videoRef.current) {
-			setLoading(false);
-			return;
-		}
-
-		const snapshots = await generateSnapshots(videoRef?.current);
-
-		try {
-			const musicGenerated = await generateMusic({
-				snapshots,
-				duration: `${Math.floor(videoRef.current.duration)}`,
-				type: videoType,
-				style,
-			});
-
-			if (!musicGenerated) return;
-
-			setContextExtracted(musicGenerated.combinedContext);
-			await replaceAudio(musicGenerated.generatedMusic.url);
-		} catch (err) {
-			toast.error('Please try again.');
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const captureSnapshot = (
-		video: HTMLVideoElement,
-		time: number
-	): Promise<string> => {
-		return new Promise((resolve) => {
-			const canvas = document.createElement('canvas');
-			const ctx = canvas.getContext('2d');
-
-			if (ctx) {
-				video.currentTime = time;
-				video.onseeked = () => {
-					// Set the desired dimensions for the resized image
-					const width = 800;
-					const height =
-						(video.videoHeight / video.videoWidth) * width;
-
-					canvas.width = width;
-					canvas.height = height;
-
-					ctx.drawImage(video, 0, 0, width, height);
-					const snapshot = canvas.toDataURL('image/jpeg', 0.7); // Adjust quality as needed
-					resolve(snapshot);
-				};
-			}
-		});
-	};
-
-	const generateSnapshots = async (video: HTMLVideoElement) => {
-		const duration = video.duration;
-		let newSnapshots: string[] = [];
-		for (let time = 0; time < duration; time += duration / 12) {
-			const snapshot = await captureSnapshot(video, time);
-			newSnapshots.push(snapshot);
-		}
-		return newSnapshots;
-	};
-
-	const replaceAudio = async (music: string) => {
+	const replaceAudio = async (music: string, video: Blob) => {
 		try {
 			await loadFFmpeg();
-
-			if (!videoSrc) {
-				throw new Error('No video source provided');
+			console.log(music, video);
+			if (!video || !music) {
+				throw new Error('No video or music source provided');
 			}
 
 			// Load video and audio files
-			const videoFile = await fetchFile(videoSrc);
+			const videoFile = await fetchFile(video);
 
 			const audioFile = await fetchFile(music);
 
@@ -200,6 +89,7 @@ function VideoMusicGenerator() {
 			setNewVideo(videoUrl);
 			closeFFmpeg();
 		} catch (error) {
+			console.log(error)
 			console.error('Error in replaceAudio:', error);
 		}
 	};
@@ -215,36 +105,45 @@ function VideoMusicGenerator() {
 		}
 	};
 
+	const renderNotFound = () => {
+		return (
+			<div className="flex items-center justify-center h-full">
+				<p className="text-lg font-bold">Prompt not found</p>
+			</div>
+		);
+	};
+
 	return (
 		<div className="container p-6 space-y-8">
 			<h1 className="text-3xl font-bold">Prompt Lab</h1>
 
 			<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4">
-        {initialLoading ? <Spinnter/> : (<>
-				<VideoInput
-					videoRef={videoRef}
-					videoSrc={videoSrc}
-					handleRemoveVideo={handleRemoveVideo}
-					handleVideoUpload={handleVideoUpload}
-				/>
+				{initialLoading ? (
+					<Spinnter />
+				) : fetchedPrompt ? (
+					<>
+						<VideoInput
+							videoRef={videoRef}
+							videoSrc={fetchedPrompt?.video}
+							handleRemoveVideo={() => {}}
+							handleVideoUpload={() => {}}
+						/>
 
-				<Controls
-					style={style}
-					videoType={videoType}
-					loading={loading}
-					createMusic={createMusic}
-					setStyle={setStyle}
-					setVideoType={setVideoType}
-				/>
+						<Controls
+							style={fetchedPrompt?.style}
+							videoType={fetchedPrompt?.type}
+						/>
 
-				<Preview
-					newVideo={newVideo}
-					loading={loading}
-					handleDownload={handleDownload}
-				/>
+						<Preview
+							newVideo={newVideo}
+							handleDownload={handleDownload}
+						/>
 
-				<Context context={contextExtracted} />
-        </>)}
+						<Context context={fetchedPrompt?.combinedContext} />
+					</>
+				) : (
+					renderNotFound()
+				)}
 			</div>
 		</div>
 	);

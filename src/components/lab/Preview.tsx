@@ -15,8 +15,8 @@ import {
 
 type PreviewProps = {
 	newVideo: string | null;
-	loading: boolean;
-	handleDownload: () => void;
+	loading?: boolean;
+	handleDownload?: () => void;
 };
 
 const Preview = ({ newVideo, loading, handleDownload }: PreviewProps) => {

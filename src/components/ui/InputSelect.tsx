@@ -17,9 +17,9 @@ interface InputSelectProps {
   id: string;
   label: string;
   value: string;
-  onValueChange: (value: string) => void;
+  onValueChange?: (value: string) => void;
   options: SelectOption[];
-  placeholder: string;
+  placeholder?: string;
 }
 
 export default function InputSelect({

@@ -8,7 +8,7 @@ import { Play, Pause, RefreshCw, Clock, Volume2, Download } from 'lucide-react';
 
 type GeneratedVideoProps = {
   newVideo: string | null;
-  loading: boolean;
+  loading?: boolean;
 };
 
 const GeneratedVideo: React.FC<GeneratedVideoProps> = ({
