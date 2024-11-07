@@ -27,7 +27,7 @@ export const getPrompt = async (
 	return response.data.data;
 };
 
-export const getPromptVideo = async (id: string | string[]): Promise<Blob> => {
+export const getPromptVideo = async (id: string | string[]): Promise<VideoResponse> => {
 	const response = await api.request<VideoResponse>({
 			method: 'GET',
 			url: `prompts/video/${id}`,
@@ -40,7 +40,7 @@ export const getPromptVideo = async (id: string | string[]): Promise<Blob> => {
 	if (!response) {
 			throw new Error('No video data received');
 	}
-	console.log(response)
+
 	return response.data;
 }
 

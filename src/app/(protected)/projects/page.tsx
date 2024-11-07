@@ -25,49 +25,50 @@ export default function ProjectsTab() {
 	const [loading, setLoading] = useState(true);
 	const [page, setPage] = useState(1);
 
-	useEffect(()=>{
+	useEffect(() => {
 		const fetchPrompts = async () => {
 			setLoading(true);
 			const response = await getUserPrompts(page);
-			setPrompts(response.data.prompts);
-			setMaxPage(response.data.pages);
+			setPrompts(response.prompts);
+			setMaxPage(response.pages);
 			setLoading(false);
-		}
+		};
 		fetchPrompts();
-	},[page])
+	}, [page]);
 
 	return (
 		<div className="container mx-auto p-6 space-y-8">
 			<div className="flex justify-between items-center">
 				<h1 className="text-3xl font-bold">Your Projects</h1>
-				<Button>
+				{/* <Button>
 					<Plus className="mr-2 h-4 w-4" /> New Project
-				</Button>
+				</Button> */}
 			</div>
 
-			<Card className='h-full'>
+			<Card className="h-full">
 				<CardHeader>
-					<CardTitle>Project Management</CardTitle>
+					<CardTitle>Prompt History</CardTitle>
 					<CardDescription>
 						View and manage all your music generation projects
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4 h-full">
-						<ProjectFilters
-							onSearch={() => {}}
-							onFilterStatusChange={() => {}}
-							onSortChange={() => {}}
-						/>
+					{/* <ProjectFilters
+						onSearch={() => {}}
+						onFilterStatusChange={() => {}}
+						onSortChange={() => {}}
+					/> */}
 
-					<ProjectTable
-						prompts={prompts}
-					/>
-
+					<ProjectTable prompts={prompts} />
 				</CardContent>
-				<CardFooter>
+				<CardFooter className="w-full">
 					<PageNavigation
-						onPreviousPage={() => {page !== 0 && setPage(page-1)}}
-						onNextPage={() => {page < maxPage && setPage(page+1)}}
+						onPreviousPage={() => {
+							page !== 0 && setPage(page - 1);
+						}}
+						onNextPage={() => {
+							page < maxPage && setPage(page + 1);
+						}}
 					/>
 				</CardFooter>
 			</Card>

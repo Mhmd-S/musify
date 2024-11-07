@@ -32,7 +32,6 @@ const Preview = ({ newVideo, loading, handleDownload }: PreviewProps) => {
 				<GeneratedVideo newVideo={newVideo} loading={loading} />
 			</CardContent>
 			<CardFooter className="flex justify-between">
-				<Button variant="outline">Regenerate</Button>
 				<Button onClick={handleDownload}>
 					<Download className="mr-2 h-4 w-4" />
 					Download

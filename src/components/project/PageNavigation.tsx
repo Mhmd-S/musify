@@ -10,7 +10,7 @@ const PageNavigation: React.FC<PageNavigationProps> = ({
   onNextPage,
 }) => {
   return (
-    <div className="flex justify-between">
+    <div className="w-full flex justify-between">
       <Button variant="outline" onClick={onPreviousPage}>
         Previous
       </Button>

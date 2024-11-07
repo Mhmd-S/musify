@@ -122,18 +122,6 @@ function VideoMusicGenerator() {
 					<Spinnter />
 				) : fetchedPrompt ? (
 					<>
-						<VideoInput
-							videoRef={videoRef}
-							videoSrc={fetchedPrompt?.video}
-							handleRemoveVideo={() => {}}
-							handleVideoUpload={() => {}}
-						/>
-
-						<Controls
-							style={fetchedPrompt?.style}
-							videoType={fetchedPrompt?.type}
-						/>
-
 						<Preview
 							newVideo={newVideo}
 							handleDownload={handleDownload}

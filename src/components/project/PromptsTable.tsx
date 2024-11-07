@@ -14,9 +14,21 @@ import { Button } from '@components/ui/button';
 import { FlaskConical } from 'lucide-react';
 
 import { MusicGenerationData } from '@services/types';
+import { EyeOpenIcon } from '@radix-ui/react-icons';
 
 type PromptTableProps = {
 	prompts: MusicGenerationData[] | null;
+};
+
+const formatDate = (dateString: string) => {
+	const options: Intl.DateTimeFormatOptions = {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+		hour: '2-digit',
+		minute: '2-digit',
+	};
+	return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
 const PromptTable: React.FC<PromptTableProps> = ({
@@ -45,7 +57,7 @@ const PromptTable: React.FC<PromptTableProps> = ({
 						<TableCell>{prompt.style}</TableCell>
 						<TableCell>{prompt.type}</TableCell>
 						<TableCell>{prompt.duration}</TableCell>
-						<TableCell>{prompt.createdAt}</TableCell>
+						<TableCell>{formatDate(prompt.createdAt)}</TableCell>
 						<TableCell className="text-right">
 							<div className="flex justify-end space-x-2">
 								<Button
@@ -53,7 +65,7 @@ const PromptTable: React.FC<PromptTableProps> = ({
 									size="icon"
 									onClick={() => handleClick(prompt._id)}
 								>
-									<FlaskConical
+									<EyeOpenIcon
 										className="size-4"
 										/>
 								</Button>
