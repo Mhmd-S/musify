@@ -79,7 +79,7 @@ export default function SignUp() {
 									{...register('name')}
 									aria-invalid={!!errors.name}
 								/>
-								<FormError errors={errors} errorName="name" />
+								<FormError errors={errors} name="name" />
 							</div>
 							<div className="flex flex-col space-y-1.5">
 								<Label htmlFor="email">Email</Label>
@@ -89,7 +89,7 @@ export default function SignUp() {
 									{...register('email')}
 									aria-invalid={!!errors.email}
 								/>
-								<FormError errors={errors} errorName="email" />
+								<FormError errors={errors} name="email" />
 							</div>
 							<div className="flex flex-col space-y-1.5">
 								<Label htmlFor="password">Password</Label>
@@ -102,7 +102,7 @@ export default function SignUp() {
 								/>
 								<FormError
 									errors={errors}
-									errorName="password"
+									name="password"
 								/>
 							</div>
 						</div>

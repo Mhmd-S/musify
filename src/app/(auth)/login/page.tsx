@@ -76,7 +76,7 @@ export default function Login() {
 									{...register('email')}
 									aria-invalid={!!errors.email}
 								/>
-								<FormError errors={errors} errorName="email" />
+								<FormError errors={errors} name="email" />
 							</div>
 							<div className="flex flex-col space-y-1.5">
 								<Label htmlFor="password">Password</Label>
@@ -89,7 +89,7 @@ export default function Login() {
 								/>
 								<FormError
 									errors={errors}
-									errorName="password"
+									name="password"
 								/>
 							</div>
 						</div>
