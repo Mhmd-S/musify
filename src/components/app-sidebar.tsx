@@ -5,7 +5,7 @@ import { useAuth } from '@contexts/auth-context';
 import Image from 'next/image';
 
 
-import { Home, TestTube2,FolderArchive, Settings, LogOut } from 'lucide-react';
+import { Home, TestTube2,FolderArchive, LogOut, User } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import {
@@ -39,18 +39,11 @@ const items = [
 		icon: FolderArchive,
 	},
 	{
-		title: 'Settings',
-		url: '/settings',
-		icon: Settings,
+		title: 'Account',
+		url: '/account',
+		icon: User,
 	},
 ];
-
-// User information (this could be fetched from an API or context in a real application)
-const user = {
-	name: 'John Doe',
-	email: 'john.doe@example.com',
-	avatarUrl: '/placeholder.svg?height=40&width=40',
-};
 
 export function AppSidebar() {
 	const { user, logout } = useAuth();
