@@ -2,7 +2,9 @@ import { api } from '@config/axiosConfig';
 
 import successHandler from '@request/successHandler';
 
-export const submitPayment = async (token: string) => {
+import { PaymentFields } from './types';
+
+export const submitPayment = async (paymentDetails: PaymentFields) => {
   const response = await api.request({
     method: 'POST',
     url: 'payments',
@@ -10,7 +12,7 @@ export const submitPayment = async (token: string) => {
       'Content-Type': 'application/json',
     },
     data: { 
-      sourceId: token,
+      ...paymentDetails,
     },
   });
 

@@ -2,23 +2,29 @@ import { CreditCard, Package } from "lucide-react"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@components/ui/card"
 import { Separator } from "@components/ui/separator"
 
-interface OrderSummaryProps {
-  packageName: string
-  credits: number
-  price: number
-  taxRate?: number
-  processingFee: number
-}
+const plans = [
+	{
+		name: 'Basic',
+		price: 10,
+		credits: 100,
+	},
+	{
+		name: 'Pro',
+		price: 20,
+		credits: 100,
+	},
+	{
+		name: 'Enterprise',
+		price: 30,
+		credits: 100,
+	},
+];
 
 export default function OrderSummaryCard({
-  packageName,
-  credits,
-  price,
-  taxRate,
-  processingFee
-}: OrderSummaryProps) {
-  // const taxAmount = price * taxRate
-  const total = price + processingFee
+  planId
+}: { planId: number }) {
+
+  const total = plans[planId].price + 1;
 
   return (
     <Card className="w-full">
@@ -29,18 +35,18 @@ export default function OrderSummaryCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Package className="h-5 w-5 text-muted-foreground" />
-            <span className="font-medium">{packageName} Package</span>
+            <span className="font-medium">{plans[planId].name} Package</span>
           </div>
-          <span className="font-medium">${price.toFixed(2)}</span>
+          <span className="font-medium">${plans[planId].price.toFixed(2)}</span>
         </div>
         <div className="text-sm text-muted-foreground">
-          {credits.toLocaleString()} AI Credits
+          {plans[planId].credits} AI Credits
         </div>
         <Separator />
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span>Subtotal</span>
-            <span>${price.toFixed(2)}</span>
+            <span>${plans[planId].price.toFixed(2)}</span>
           </div>
           {/* <div className="flex justify-between text-sm">
             <span>Tax ({(taxRate * 100).toFixed(2)}%)</span>
@@ -48,7 +54,7 @@ export default function OrderSummaryCard({
           </div> */}
           <div className="flex justify-between text-sm">
             <span>Processing Fee</span>
-            <span>${processingFee.toFixed(2)}</span>
+            <span>$1.00</span>
           </div>
         </div>
         <Separator />

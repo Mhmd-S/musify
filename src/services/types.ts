@@ -100,3 +100,12 @@ export interface UserPromptsResponse {
 	data: UserPrompts;
 }
 // PROMPT SERVICE END
+
+export interface PaymentFields {
+  address: string,
+  name: string,
+  token: string,
+  country: string;
+  city: string;
+  zipCode: string;
+}

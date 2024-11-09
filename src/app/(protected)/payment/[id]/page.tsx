@@ -1,46 +1,21 @@
-import React from 'react'
+'use client';
 
-import { useParams } from 'next/navigation'
+import React from 'react';
 
-import PaymentForm from "@components/payment/PaymentForm"
-import OrderSummaryCard from '@components/payment/OrderSummary'
+import { useParams } from 'next/navigation';
 
-const plans = [
-  {
-    id: 1,
-    name: 'Basic',
-    price: 10,
-    credits: 100,
-  },
-  {
-    id: 2,
-    name: 'Pro',
-    price: 20,
-    credits: 100,
-  },
-  {
-    id: 3,
-    name: 'Enterprise',
-    price: 30,
-    credits: 100,
-  }
-]
+import OrderSummaryCard from '@components/payment/OrderSummary';
+import PaymentFormComp from '@components/payment/PaymentFormComp';
 
 const Payment = () => {
+	const { id } = useParams<{ id: string }>();
 
-  const { id } = useParams<{ id: string }>()
-
-  return (
-    <div className='pb-4 px-12 flex flex-col md:grid md:grid-cols-[60%_40%] gap-8 items-center justify-center'>
-      <PaymentForm />
-      <OrderSummaryCard
-        packageName={plans[id].name}
-        credits={plans[id].credits}
-        price={plans[id].price}
-        processingFee={1}
-        />
-    </div>
-  )
-}
+	return (
+		<div className="p-12 flex flex-col-reverse md:grid md:grid-cols-[60%_40%] gap-8 items-center justify-center">
+			<PaymentFormComp planId={parseInt(id)} />
+			<OrderSummaryCard planId={parseInt(id)} />
+		</div>
+	);
+};
 
 export default Payment;

@@ -2,13 +2,13 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const protectedRoutes = ['/dashboard', '/lab', '/projects', '/settings'];
+const protectedRoutes = ['dashboard', 'lab', 'projects', 'settings', 'payment'];
 const publicRoutes = ['/', '/login', '/signup', '/trial'];
 
 export default async function middleware(request: NextRequest) {
 	const path = request.nextUrl.pathname;
 
-	const isProtectedRoute = protectedRoutes.includes(path);
+	const isProtectedRoute = protectedRoutes.includes(path.split('/')[1]);
 	const isPublicRoute = publicRoutes.includes(path);
 
 	const cookie = (await cookies()).get('connect.sid')?.value;
