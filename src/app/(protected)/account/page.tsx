@@ -4,7 +4,7 @@ import { useAuth } from '@contexts/auth-context';
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { CreditCard, Download, User, Mail, Coins } from 'lucide-react';
+import { Download, User, Mail, Coins } from 'lucide-react';
 import { Button } from '@components/ui/button';
 import {
 	Card,
@@ -23,9 +23,9 @@ import {
 	TableHeader,
 	TableRow,
 } from '@components/ui/table';
-import { Badge } from '@components/ui/badge';
 
 import Spinner from '@components/Spinner';
+import Invoices from './Invoices';
 
 interface Invoice {
 	id: string;
@@ -112,8 +112,7 @@ export default function AccountPage() {
 								</div>
 								<p className="text-sm text-muted-foreground">
 									Credits are used for generating music. Each
-									credit allows you to create one minute of
-									music.
+									credit allows you to generate one music.
 								</p>
 							</CardContent>
 						</Card>
@@ -127,35 +126,7 @@ export default function AccountPage() {
 					<CardDescription>View your invoices</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Invoice</TableHead>
-								<TableHead>Date</TableHead>
-								<TableHead>Amount</TableHead>
-								<TableHead className="text-right">
-									Actions
-								</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{invoices.map((invoice) => (
-								<TableRow key={invoice.id}>
-									<TableCell>{invoice.id}</TableCell>
-									<TableCell>{invoice.date}</TableCell>
-									<TableCell>
-										${invoice.amount.toFixed(2)}
-									</TableCell>
-									<TableCell className="text-right">
-										<Button variant="ghost" size="sm">
-											<Download className="mr-2 h-4 w-4" />
-											Download
-										</Button>
-									</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
+					<Invoices />
 				</CardContent>
 				<CardFooter>
 					<p className="text-sm text-muted-foreground">

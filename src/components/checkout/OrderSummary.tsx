@@ -17,12 +17,13 @@ const plans = [
 	{
 		name: 'Pro',
 		price: 20,
-		credits: 100,
+		credits: 250,
 	},
 	{
 		name: 'Enterprise',
-		price: 30,
-		credits: 100,
+		price: 50,
+		credits: 500,
+		isBestValue: true,
 	},
 ];
 
@@ -41,7 +42,7 @@ export default function OrderSummaryCard({ planId }: { planId: number }) {
 					<div className="flex items-center space-x-2">
 						<Package className="h-5 w-5 text-muted-foreground" />
 						<span className="font-medium">
-							{plans[planId].name} Package
+							{plans[planId].name} Plan
 						</span>
 					</div>
 					<span className="font-medium">
@@ -49,7 +50,7 @@ export default function OrderSummaryCard({ planId }: { planId: number }) {
 					</span>
 				</div>
 				<div className="text-sm text-muted-foreground">
-					{plans[planId].credits} AI Credits
+					{plans[planId].credits} AI Credits (${(plans[planId].price / plans[planId].credits).toFixed(2)}/credit)
 				</div>
 				<Separator />
 				<div className="space-y-2">

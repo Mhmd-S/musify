@@ -1,5 +1,6 @@
 import { Zap, Sparkles, Rocket, Check } from 'lucide-react';
 import { Button } from '@components/ui/button';
+import { Badge } from '@components/ui/badge';
 import {
 	Card,
 	CardContent,
@@ -15,21 +16,18 @@ const plans = [
 		name: 'Basic',
 		price: 10,
 		credits: 100,
-		perCreditPrice: 0.1,
 		icon: <Sparkles />,
 	},
 	{
 		name: 'Pro',
 		price: 20,
-		credits: 200,
-		perCreditPrice: 0.1,
+		credits: 250,
 		icon: <Rocket />,
 	},
 	{
 		name: 'Enterprise',
-		price: 30,
-		credits: 300,
-		perCreditPrice: 0.1,
+		price: 50,
+		credits: 500,
 		icon: <Zap />,
 		isBestValue: true,
 	},
@@ -55,10 +53,13 @@ const CreditPackage: React.FC<CreditPackageProps> = ({
 	isBestValue,
 }) => (
 	<Card
-		className={`w-full max-w-sm transition-all duration-300 hover:shadow-lg ${
+		className={`relative w-full max-w-sm transition-all duration-300 hover:shadow-lg ${
 			isBestValue ? 'border-primary border-2' : ''
 		}`}
 	>
+		<Badge className={`${!isBestValue && 'hidden'} px-2 absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground p-2 rounded-full`}>
+			Best Value
+		</Badge>
 		<CardHeader className="text-center">
 			<div className="flex justify-center mb-4">
 				<div
@@ -91,7 +92,7 @@ const CreditPackage: React.FC<CreditPackageProps> = ({
 					variant={isBestValue ? 'default' : 'outline'}
 				>
 					<Zap className="w-5 h-5 mr-2" />
-					Add to Cart
+					Buy Now
 				</Button>
 			</Link>
 		</CardFooter>
@@ -109,6 +110,12 @@ const CreditPackages = () => {
 					Power up your AI projects with our flexible credit packages.
 					More credits mean more possibilities!
 				</p>
+				<p className="text-sm text-muted-foreground max-w-2xl mx-auto px-4">
+					*All prices are in USD and exclusive of applicable taxes.
+				</p>
+				<p className="text-sm text-muted-foreground max-w-2xl mx-auto px-4">
+					* All credits are valid for 1 year from the date of purchase.
+				</p>
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto place-items-center">
 				{plans.map((plan, index) => (
@@ -118,7 +125,7 @@ const CreditPackages = () => {
 						name={plan.name}
 						credits={plan.credits}
 						price={plan.price}
-						perCreditPrice={plan.perCreditPrice}
+						perCreditPrice={plan.price / plan.credits}
 						icon={plan.icon}
 						isBestValue={plan.isBestValue}
 					/>

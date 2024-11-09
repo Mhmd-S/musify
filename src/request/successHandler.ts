@@ -20,7 +20,7 @@ const successHandler = (
 	} else {
 		const { status } = response;
 		if (options.notifyOnFailed) {
-			toast.success(`Request error ${status}`);
+			toast.error(`Request error ${status}`);
 		}
 	}
 };

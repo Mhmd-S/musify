@@ -20,13 +20,13 @@ export const getReciept = async (receiptId: string) => {
 		}
 	);
 
-	return data;
+	return data.data;
 };
 
 export const getReciepts = async () => {
 	const response = await api.request({
 		method: 'GET',
-		url: `receipt/user`,
+		url: `receipts/user`,
 		headers: {
 			'Content-Type': 'application/json',
 		},
@@ -42,5 +42,5 @@ export const getReciepts = async () => {
 		}
 	);
 
-	return data;
+	return data.data;
 };
