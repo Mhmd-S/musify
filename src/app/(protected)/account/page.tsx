@@ -15,35 +15,12 @@ import {
 	CardTitle,
 } from '@components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from '@components/ui/table';
 
 import Spinner from '@components/Spinner';
 import Invoices from './Invoices';
 
-interface Invoice {
-	id: string;
-	date: string;
-	amount: number;
-}
-
-interface User {
-	name: string;
-	email: string;
-	credits: number;
-}
-
 export default function AccountPage() {
 	const { user, isLoading } = useAuth();
-
-	const [invoices, setInvoices] = useState<Invoice[]>([]);
-
 	return (
 		<div className="container mx-auto p-6 space-y-8">
 			<h1 className="text-3xl font-bold">Account</h1>

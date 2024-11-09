@@ -7,10 +7,18 @@ import * as authService from '@services/authService';
 import { api } from '@config/axiosConfig';
 
 interface User {
-	id: string;
+	_id: string;        // MongoDB ObjectId as string
 	email: string;
-	name?: string;
-	// add other user properties
+	name: string;
+	isActive: boolean;
+	role: 'user' | 'admin' | string;  // You might want to add other possible role values
+	credits: number;
+	googleId: string;
+	isEmailVerified: boolean;
+	lastLogin: string;  // ISO 8601 date string
+	createdAt: string;  // ISO 8601 date string
+	updatedAt: string;  // ISO 8601 date string
+	__v: number;        // MongoDB version key
 }
 
 interface AuthContextType {
@@ -40,7 +48,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const checkAuth = async () => {
 		try {
 			const response = await authService.me();
-			setUser(response || null);
+
+			if (!response) {
+				setUser(null);
+				return;
+			}
+
+			setUser(response);
 		} catch (error) {
 			setUser(null);
 		} finally {
