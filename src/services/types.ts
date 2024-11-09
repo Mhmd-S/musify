@@ -102,10 +102,12 @@ export interface UserPromptsResponse {
 // PROMPT SERVICE END
 
 export interface PaymentFields {
-  address: string,
-  name: string,
-  token: string,
-  country: string;
-  city: string;
-  zipCode: string;
+	name: string;
+	address: string;
+	city: string;
+	zipCode: string;
+	country: string;
+	token: string;
+	planId: number;
+	email: string;
 }
