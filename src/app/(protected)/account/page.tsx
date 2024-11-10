@@ -22,10 +22,8 @@ import Invoices from './Invoices';
 export default function AccountPage() {
 	const { user, isLoading } = useAuth();
 	return (
-		<div className="container mx-auto p-6 space-y-8">
-			<h1 className="text-3xl font-bold">Account</h1>
-
-			<div className="grid gap-6 md:grid-cols-2">
+		<div className="container mx-auto p-6">
+			<div className="grid gap-6 md:grid-cols-2 pb-6">
 				{isLoading ? (
 					<Spinner />
 				) : (

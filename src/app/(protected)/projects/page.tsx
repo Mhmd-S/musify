@@ -37,9 +37,8 @@ export default function ProjectsTab() {
 	}, [page]);
 
 	return (
-		<div className="container mx-auto p-6 space-y-8">
+		<div className="container mx-auto">
 			<div className="flex justify-between items-center">
-				<h1 className="text-3xl font-bold">Your Projects</h1>
 				{/* <Button>
 					<Plus className="mr-2 h-4 w-4" /> New Project
 				</Button> */}
