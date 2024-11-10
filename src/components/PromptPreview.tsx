@@ -1,7 +1,9 @@
 'use client';
-import { useParams } from 'next/navigation';
+
 import { useState, useEffect } from 'react';
 import useFFmpeg from '@hooks/useFFmpeg';
+
+import NoSSRWrapper from '@components/NoSSRWrapper';
 
 import Spinnter from '@components/Spinner';
 
@@ -13,7 +15,7 @@ import Context from '@components/lab/Context';
 import { getPrompt } from '@services/promptService';
 import { MusicGenerationData } from '@services/types';
 
-const PromptPreview = ({ id } : { id: string }) => {
+const PromptPreviewComp = ({ id }: { id: string }) => {
 	const { ffmpeg, fetchFile, loadFFmpeg, closeFFmpeg } = useFFmpeg();
 
 	const [initialLoading, setInitialLoading] = useState(true);
@@ -80,7 +82,7 @@ const PromptPreview = ({ id } : { id: string }) => {
 			setNewVideo(videoUrl);
 			closeFFmpeg();
 		} catch (error) {
-			console.log(error)
+			console.log(error);
 			console.error('Error in replaceAudio:', error);
 		}
 	};
@@ -126,6 +128,14 @@ const PromptPreview = ({ id } : { id: string }) => {
 			</div>
 		</div>
 	);
-}
+};
+
+const PromptPreview = ({ id }: { id: string }) => {
+	return (
+		<NoSSRWrapper>
+			<PromptPreviewComp id={id} />
+		</NoSSRWrapper>
+	);
+};
 
 export default PromptPreview;

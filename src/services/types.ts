@@ -1,7 +1,44 @@
+import { Url } from "url";
+
 export interface User {
-  id: string;
-  email: string;
+	_id: string;        // MongoDB ObjectId as string
+	email: string;
+	name: string;
+	isActive: boolean;
+	role: 'user' | 'admin' | string;  // You might want to add other possible role values
+	credits: number;
+	googleId: string;
+	isEmailVerified: boolean;
+	lastLogin: string;  // ISO 8601 date string
+	createdAt: string;  // ISO 8601 date string
+	updatedAt: string;  // ISO 8601 date string
+	__v: number;        // MongoDB version key
+}
+
+export interface Plan {
+  id: number;
   name: string;
+  price: Float32Array
+  credits: number;
+}
+
+export interface Receipt {
+	userId: string;
+	receiptNumber?: string;
+	amount?: number;
+	currency: string;
+	status: string;
+	paymentMethod: string;
+	orderId?: string;
+	receiptUrl?: Url;
+	billingAddress: string;
+	country: string;
+	zipcode: string;
+	city: string;
+	name: string;
+	plan: Plan; // Adjust as needed for the specific structure of `plan`
+	createdAt?: Date;
+	updatedAt?: Date;
 }
 
 export interface SigninFields {
@@ -36,7 +73,6 @@ export interface GoogleSigninResponse {
 }
 
 // PROMPT SERVICE
-
 export interface MusicGenerationResponse {
   success: boolean;
   message: string;

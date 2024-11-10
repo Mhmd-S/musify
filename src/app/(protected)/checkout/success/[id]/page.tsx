@@ -21,11 +21,13 @@ import Spinner from '@components/Spinner';
 
 import { getReciept } from '@services/receiptsService';
 
+import { Receipt } from '@services/types';
+
 const PaymentSuccessPage = () => {
 	const { id } = useParams();
 
 	const [loading, setLoading] = useState(true);
-	const [receipt, setReceipt] = useState(null);
+	const [receipt, setReceipt] = useState<Receipt | null>(null);
 
 	useEffect(() => {
 		const fetchReceipt = async () => {
@@ -70,25 +72,25 @@ const PaymentSuccessPage = () => {
 									Receipt Number:
 								</span>
 								<span className="font-medium">
-									{receipt.receiptNumber}
+									{receipt?.receiptNumber}
 								</span>
 								<span className="text-muted-foreground">
 									Plan:
 								</span>
 								<span className="font-medium">
-									{receipt.plan.name}
+									{receipt?.plan?.name}
 								</span>
 								<span className="text-muted-foreground">
 									AI Credits:
 								</span>
 								<span className="font-medium">
-									{receipt.plan.credits}
+									{receipt?.plan?.credits}
 								</span>
 								<span className="text-muted-foreground">
 									Amount Paid:
 								</span>
 								<span className="font-medium">
-									${receipt.amount}
+									${receipt?.amount}
 								</span>
 							</div>
 						</div>
@@ -105,7 +107,14 @@ const PaymentSuccessPage = () => {
 									You can start using your credits immediately
 									in your projects.
 								</li>
-								<li><Link href={receipt.url}>Square up receipt</Link>.</li>
+								{receipt?.receiptUrl && (
+									<li>
+										<Link href={receipt?.receiptUrl}>
+											Square up receipt
+										</Link>
+										.
+									</li>
+								)}
 							</ul>
 						</div>
 					</CardContent>
@@ -127,7 +136,6 @@ const PaymentSuccessPage = () => {
 			)}
 		</div>
 	);
-}
-
+};
 
 export default PaymentSuccessPage;

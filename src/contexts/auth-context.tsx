@@ -7,20 +7,7 @@ import * as authService from '@services/authService';
 import { api } from '@config/axiosConfig';
 import { toast } from 'react-toastify';
 
-interface User {
-	_id: string;        // MongoDB ObjectId as string
-	email: string;
-	name: string;
-	isActive: boolean;
-	role: 'user' | 'admin' | string;  // You might want to add other possible role values
-	credits: number;
-	googleId: string;
-	isEmailVerified: boolean;
-	lastLogin: string;  // ISO 8601 date string
-	createdAt: string;  // ISO 8601 date string
-	updatedAt: string;  // ISO 8601 date string
-	__v: number;        // MongoDB version key
-}
+import { User } from '@services/types';
 
 interface AuthContextType {
 	user: User | null;

@@ -8,9 +8,20 @@ import { Button } from '@components/ui/button';
 
 import { X, Menu, MoveRight } from 'lucide-react';
 
+interface NavigationSubItem {
+  title: string;
+  href: string;
+}
+
+interface NavigationItem {
+  title: string;
+  href?: string;
+  items?: NavigationSubItem[];
+}
+
 const Header = () => {
 
-  const navigationItems = [
+  const navigationItems: NavigationItem[] = [
 		{
 			title: 'Login',
 			href: '/login',
@@ -185,7 +196,7 @@ const Header = () => {
 											</p>
 										)}
 										{item.items &&
-											item.items.map((subItem) => (
+											item.items.map((subItem: NavigationSubItem) => (
 												<Link
 													key={subItem.title}
 													href={subItem.href}

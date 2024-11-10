@@ -14,7 +14,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
+import { Avatar, AvatarFallback } from '@components/ui/avatar';
 
 import Spinner from '@components/Spinner';
 import Invoices from './Invoices';
@@ -37,20 +37,16 @@ export default function AccountPage() {
 							<CardContent className="space-y-4">
 								<div className="flex items-center space-x-4">
 									<Avatar>
-										<AvatarImage
-											src={user.avatarUrl}
-											alt={user.name}
-										/>
 										<AvatarFallback>
-											{user.name.charAt(0)}
+											{user?.name && user?.name.charAt(0)}
 										</AvatarFallback>
 									</Avatar>
 									<div>
 										<p className="text-lg font-medium">
-											{user.name}
+											{user?.name}
 										</p>
 										<p className="text-sm text-muted-foreground">
-											{user.email}
+											{user?.email}
 										</p>
 									</div>
 								</div>
@@ -59,14 +55,14 @@ export default function AccountPage() {
 									<span className="text-sm text-muted-foreground">
 										Name:
 									</span>
-									<span>{user.name}</span>
+									<span>{user?.name}</span>
 								</div>
 								<div className="flex items-center space-x-2">
 									<Mail className="h-4 w-4 text-muted-foreground" />
 									<span className="text-sm text-muted-foreground">
 										Email:
 									</span>
-									<span>{user.email}</span>
+									<span>{user?.email}</span>
 								</div>
 							</CardContent>
 						</Card>
@@ -80,7 +76,7 @@ export default function AccountPage() {
 									<div className="flex items-center space-x-2">
 										<Coins className="h-6 w-6 text-yellow-500" />
 										<span className="text-2xl font-bold">
-											{user.credits}
+											{user?.credits}
 										</span>
 									</div>
 									<Link href="products">

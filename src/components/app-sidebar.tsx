@@ -94,7 +94,6 @@ export function AppSidebar() {
 				) : (
 					<div className="grid grid-cols-[auto_1fr_auto] items-center">
 						<Avatar className="size-9">
-							<AvatarImage src={''} alt={user?.name ?? ''} />
 							<AvatarFallback>
 								{user?.name?.charAt(0) ?? ''}
 							</AvatarFallback>

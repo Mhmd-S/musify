@@ -1,24 +1,19 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import useFFmpeg from '@hooks/useFFmpeg';
-
-import { MusicIcon, TrashIcon } from 'lucide-react';
-
-import { Badge } from '@components/ui/badge';
-import FileUploadField from '@components/FileUploadField';
-import GeneratedVideo from '@components/GeneratedVideo';
+import { toast } from 'react-toastify';
 
 import { generateMusic } from '@services/promptService';
 
-import { toast } from 'react-toastify';
-import { Button } from '@components/ui/button';
+import VideoInput from '@components/lab/VideoInput';
+import Controls from '@components/lab/Controls';
+import Preview from '@components/lab/Preview';
+import Context from '@components/lab/Context';
 
 import NoSSRWrapper from '@components/NoSSRWrapper';
 
-import InputSelect from '@components/ui/InputSelect';
-
-const Trial = () => {
+function VideoMusicGenerator() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
 
 	const [style, setStyle] = useState('');
@@ -26,32 +21,11 @@ const Trial = () => {
 	const [newVideo, setNewVideo] = useState<string | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [videoSrc, setVideoSrc] = useState<string | null>(null);
+	const [contextExtracted, setContextExtracted] = useState<string | null>(
+		null
+	);
 
 	const { ffmpeg, fetchFile, loadFFmpeg, closeFFmpeg } = useFFmpeg();
-
-	const styleOptions = [
-		{ value: 'orchestral', label: 'Orchestral' },
-		{ value: 'chamber', label: 'Chamber Music' },
-		{ value: 'ambient', label: 'Ambient' },
-		{ value: 'house', label: 'House' },
-		{ value: 'techno', label: 'Techno' },
-		{ value: 'synthwave', label: 'Synthwave' },
-		{ value: 'pop', label: 'Modern Pop' },
-		{ value: 'indie', label: 'Indie Pop' },
-		{ value: 'hip-hop', label: 'Hip Hop' },
-		{ value: 'cinematic', label: 'Cinematic/Soundtrack' },
-	];
-
-	const videoTypeOptions = [
-		{ value: 'promotional', label: 'Promotional' },
-		{ value: 'tutorial', label: 'Tutorial' },
-		{ value: 'vlog', label: 'Vlog' },
-		{ value: 'product-showcase', label: 'Product Showcase' },
-		{ value: 'testimonial', label: 'Testimonial' },
-		{ value: 'teaser', label: 'Teaser/Preview' },
-		{ value: 'announcement', label: 'Announcement' },
-		{ value: 'event-highlight', label: 'Event Highlight' },
-	];
 
 	const validateInputs = () => {
 		if (!videoSrc) {
@@ -86,6 +60,7 @@ const Trial = () => {
 
 	const createMusic = async () => {
 		setNewVideo(null);
+		setContextExtracted(null);
 		setLoading(true);
 
 		if (!validateInputs()) {
@@ -95,7 +70,7 @@ const Trial = () => {
 
 		setNewVideo(null);
 
-		if (!videoRef || !videoRef.current) {
+		if (!videoRef || !videoRef.current || !videoSrc) {
 			setLoading(false);
 			return;
 		}
@@ -103,16 +78,18 @@ const Trial = () => {
 		const snapshots = await generateSnapshots(videoRef?.current);
 
 		try {
-			const musicUrl = await generateMusic({
+			const musicGenerated = await generateMusic({
+				video: videoSrc,
 				snapshots,
 				duration: `${Math.floor(videoRef.current.duration)}`,
 				type: videoType,
 				style,
 			});
 
-			if (!musicUrl) return;
+			if (!musicGenerated) return;
 
-			await replaceAudio(musicUrl);
+			setContextExtracted(musicGenerated.combinedContext);
+			await replaceAudio(musicGenerated.generatedMusic.url);
 		} catch (err) {
 			toast.error('Please try again.');
 		} finally {
@@ -216,103 +193,42 @@ const Trial = () => {
 	};
 
 	return (
-		<NoSSRWrapper>
-			<div className="relative px-4 bg-white isolate flex flex-col items-center py-32 gap-14">
-				<div className="flex flex-col items-center gap-12">
-					<h2 className="text-xl md:text-4xl text-center w-4/5">
-						Elevate Your Video with Curated AI-Generated Music!
-					</h2>
+		<div className="container p-6 space-y-8">
+			<h1 className="text-3xl font-bold">Lab</h1>
 
-					<Badge className="w-fit mx-5 py-2 text-center font-normal">
-						Please be patient. Duraton for music processing is based
-						on the length of the video.
-					</Badge>
-				</div>
-				<div className="w-full px-8 grid grid-cols-1 md:grid-cols-2 gap-14 md:gap-14 place-items-start">
-					<div className="h-fit w-full flex flex-col gap-8">
-						<label
-							htmlFor="video"
-							className="block text-lg font-bold leading-6 text-gray-900"
-						>
-							Upload a video
-						</label>
-						<FileUploadField
-							accept="video/*"
-							ref={videoRef}
-							name="video"
-							handleFileChange={handleVideoUpload}
-							file={videoSrc}
-							handleRemoveFile={handleRemoveVideo}
-						/>
-						<div className="grid grid-cols-1 gap-4">
-							<InputSelect
-								id="style"
-								label="Style"
-								value={style}
-								onValueChange={setStyle}
-								options={styleOptions}
-								placeholder="Select a style"
-							/>
-							<InputSelect
-								id="videoType"
-								label="Video Type"
-								value={videoType}
-								onValueChange={setVideoType}
-								options={videoTypeOptions}
-								placeholder="Select video type"
-							/>
-						</div>
-						<div className="w-full grid grid-cols-2 gap-4 place-items-center">
-							<Button
-								variant="destructive"
-								className="w-full flex items-center justify-center"
-								onClick={handleRemoveVideo}
-								disabled={loading}
-							>
-								<TrashIcon className="size-18 cursor-pointer" />
-								Remove Video
-							</Button>
-							<Button
-								className="w-full flex items-center justify-center"
-								variant="default"
-								onClick={createMusic}
-								disabled={loading}
-							>
-								<MusicIcon className="size-18" />
-								{newVideo
-									? 'Regenerate Music'
-									: 'Generate Music'}
-							</Button>
-						</div>
-					</div>
-					<div className="h-full w-full flex flex-col items-center gap-8">
-						<h3 className="text-lg font-bold leading-6 text-primary">
-							Your New Video
-						</h3>
+			<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4">
+				<VideoInput
+					videoRef={videoRef}
+					videoSrc={videoSrc}
+					handleRemoveVideo={handleRemoveVideo}
+					handleVideoUpload={handleVideoUpload}
+				/>
 
-						<GeneratedVideo newVideo={newVideo} loading={loading} />
+				<Controls
+					style={style}
+					videoType={videoType}
+					loading={loading}
+					createMusic={createMusic}
+					setStyle={setStyle}
+					setVideoType={setVideoType}
+				/>
 
-						<Button
-							disabled={loading || !newVideo}
-							variant="outline"
-							className="w-full mt-8"
-							onClick={handleDownload}
-						>
-							Download Video
-						</Button>
-					</div>
-				</div>
+				<Preview
+					newVideo={newVideo}
+					loading={loading}
+					handleDownload={handleDownload}
+				/>
+
+				<Context context={contextExtracted} />
 			</div>
-		</NoSSRWrapper>
+		</div>
 	);
-};
+}
 
-const TrialPage = () => {
+export default function LabPage() {
 	return (
 		<NoSSRWrapper>
-			<Trial />
+			<VideoMusicGenerator />
 		</NoSSRWrapper>
 	);
-};
-
-export default TrialPage;
+}
