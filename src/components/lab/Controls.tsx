@@ -11,9 +11,6 @@ import {
 	CardFooter,
 } from '@components/ui/card';
 import InputSelect from '@components/ui/InputSelect';
-import { Label } from '@components/ui/label';
-import { Switch } from '@components/ui/switch';
-import { Slider } from '@components/ui/slider';
 import { Button } from '@components/ui/button';
 
 const styleOptions = [

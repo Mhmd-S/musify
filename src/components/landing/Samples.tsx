@@ -42,7 +42,7 @@ const Samples = () => {
         initial="hidden"
         animate={isInView ? 'visible' : 'hidden'}
         variants={containerVariants}
-        className="w-full px-20 py-14"
+        className="w-full px-20 py-40"
       >
         <div className="container mx-auto">
           <div className="grid grid-cols-1 gap-8 place-items-center md:items-center md:grid-cols-2">
@@ -54,10 +54,10 @@ const Samples = () => {
                 className="text-5xl md:text-7xl tracking-tighter text-center md:text-left font-regular"
                 itemProp="headline"
               >
-                Our AI can accommodate any style!
+                Our AI can <strong>accommodate</strong> any <strong>style!</strong>
               </h2>
               <p 
-                className="text-xl leading-relaxed tracking-tight text-muted-foreground max-w-md text-center md:text-left"
+                className="text-xl leading-relaxed tracking-tight text-foreground max-w-md text-center md:text-left"
                 itemProp="description"
               >
                 From pop to rock, from classical to hip-hop, our AI can accommodate any style of video
