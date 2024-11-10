@@ -4,8 +4,9 @@ import { useAuth } from '@contexts/auth-context';
 
 import Image from 'next/image';
 
+import Spinner from '@components/Spinner';
 
-import { Home, TestTube2,FolderArchive, LogOut, User } from 'lucide-react';
+import { Home, TestTube2, FolderArchive, LogOut, User } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar';
 import {
@@ -46,7 +47,7 @@ const items = [
 ];
 
 export function AppSidebar() {
-	const { user, logout } = useAuth();
+	const { user, isLoading, logout } = useAuth();
 
 	return (
 		<Sidebar>
@@ -88,19 +89,27 @@ export function AppSidebar() {
 				</SidebarGroup>
 			</SidebarContent>
 			<SidebarFooter className="border-t p-4">
-				<div className="grid grid-cols-[auto_1fr_auto] items-center">
-					<Avatar className="size-9">
-						<AvatarImage src={''} alt={user?.name ?? ''} />
-						<AvatarFallback>{user?.name?.charAt(0) ?? ''}</AvatarFallback>
-					</Avatar>
-					<div className="pl-4">
-						<p className="text-sm font-medium">{user?.name ?? ''}</p>
+				{isLoading ? (
+					<Spinner />
+				) : (
+					<div className="grid grid-cols-[auto_1fr_auto] items-center">
+						<Avatar className="size-9">
+							<AvatarImage src={''} alt={user?.name ?? ''} />
+							<AvatarFallback>
+								{user?.name?.charAt(0) ?? ''}
+							</AvatarFallback>
+						</Avatar>
+						<div className="pl-4">
+							<p className="text-sm font-medium">
+								{user?.name ?? ''}
+							</p>
+						</div>
+						<LogOut
+							className="h-fit p-1 cursor-pointer text-muted-foreground rounded-md hover:bg-red-500 hover:text-white "
+							onClick={logout}
+						/>
 					</div>
-					<LogOut
-						className="h-fit p-1 cursor-pointer text-muted-foreground rounded-md hover:bg-red-500 hover:text-white "
-						onClick={logout}
-					/>
-				</div>
+				)}
 			</SidebarFooter>
 		</Sidebar>
 	);

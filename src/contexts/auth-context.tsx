@@ -66,8 +66,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const login = async (email: string, password: string) => {
 		try {
 			setIsLoading(true);
-			const response = await authService.signin({ email, password });
+			const response = await authService.login({ email, password });
 			setUser(response.user);
+			router.push('/dashboard');
 			setIsLoading(false);
 		} catch (error) {
 			throw error;

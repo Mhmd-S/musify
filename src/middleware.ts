@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const protectedRoutes = ['dashboard', 'lab', 'projects', 'settings', 'payment'];
+const protectedRoutes = ['dashboard', 'lab', 'projects', 'settings', 'checkout'];
 const publicRoutes = ['/', '/login', '/signup', '/trial'];
 
 export default async function middleware(request: NextRequest) {
@@ -13,6 +13,7 @@ export default async function middleware(request: NextRequest) {
 
 	const cookie = (await cookies()).get('connect.sid')?.value;
 
+	console.log({ cookie, path, isProtectedRoute, isPublicRoute });
 	if (!cookie && isProtectedRoute) {
 		return NextResponse.redirect(new URL('/login', request.url));
 	}

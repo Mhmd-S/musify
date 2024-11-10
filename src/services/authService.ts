@@ -55,7 +55,7 @@ export const signup = async (signupFields: SignupFields) => {
 	}
 };
 
-export const signin = async (signinFields: SigninFields) => {
+export const login = async (signinFields: SigninFields) => {
 	try {
 		const response = await api.request({
 			method: 'POST',

@@ -25,7 +25,6 @@ import { Separator } from '@components/ui/separator';
 import FormError from '@components/FormError';
 
 const loginSchema = z.object({
-	name: z.string().min(1, 'Name is required'),
 	email: z.string().email('Invalid email address'),
 	password: z
 		.string()
@@ -95,7 +94,7 @@ export default function Login() {
 						</div>
 						<Button
 							className="w-full mt-6"
-							type="submit"
+							type="submit" // Changed from "button" to "submit"
 							disabled={isSubmitting || isLoading}
 						>
 							{isSubmitting || isLoading
