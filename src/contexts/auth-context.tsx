@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		try {
 			setIsLoading(true);
 			const response = await authService.login({ email, password });
-			setUser(response.user);
+			setUser(response);
 			router.push('/dashboard');
 			setIsLoading(false);
 		} catch (error) {
@@ -115,7 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				password,
 				name,
 			});
-			setUser(response.user);
+			setUser(response);
 			router.push('/dashboard');
 			setIsLoading(false);
 		} catch (error) {

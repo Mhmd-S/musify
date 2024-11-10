@@ -49,7 +49,7 @@ export const signup = async (signupFields: SignupFields) => {
 			}
 		);
 
-		return data;
+		return data.data.user;
 	} catch (error) {
 		return errorHandler(error as ErrorResponse);
 	}
@@ -73,7 +73,7 @@ export const login = async (signinFields: SigninFields) => {
 			}
 		);
 
-		return data;
+		return data.data.user;
 	} catch (error) {
 		return errorHandler(error as ErrorResponse);
 	}
