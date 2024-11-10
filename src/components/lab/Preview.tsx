@@ -31,7 +31,7 @@ const Preview = ({ newVideo, loading, handleDownload }: PreviewProps) => {
 			<CardContent className="space-y-4">
 				<GeneratedVideo newVideo={newVideo} loading={loading} />
 			</CardContent>
-			<CardFooter className="flex justify-between">
+			<CardFooter className="w-full flex justify-center">
 				<Button onClick={handleDownload}>
 					<Download className="mr-2 h-4 w-4" />
 					Download

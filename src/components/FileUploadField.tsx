@@ -21,11 +21,13 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 			setError(null);
 
 			const file = event.target.files?.[0];
-			const maxDuration = 190; // 190 seconds
+			const maxDuration = 180; // 190 seconds
 
 			if (file) {
-				if (file.type !== 'video/mp4') {
-					setError('Only MP4 files are allowed.');
+				const allowedTypes = ['video/mp4', 'video/mov', 'video/avi'];
+				// Allow avi, mov and mp4 files
+				if (!allowedTypes.includes(file.type)) {
+					setError('Only MP4, MOV and AVI files are allowed.');
 					event.target.value = ''; // Clear the input
 				} else {
 					const video = document.createElement('video');
@@ -35,8 +37,21 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 						window.URL.revokeObjectURL(video.src);
 						if (video.duration > maxDuration) {
 							setError(
-								'Video duration exceeds 190 seconds limit.'
+								'Video duration exceeds 180 seconds limit.'
 							);
+							event.target.value = ''; // Clear the input
+						}
+
+						if (video.duration < 3) {
+							setError(
+								'Video duration must be at least 3 seconds.'
+							);
+							event.target.value = ''; // Clear the input
+						}
+
+						// File size isnt larger than 200 mb
+						else if (file.size > 200000000) {
+							setError('File size exceeds 200 MB limit.');
 							event.target.value = ''; // Clear the input
 						} else {
 							handleFileChange(event);
@@ -49,7 +64,11 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 		};
 
 		return (
-			<div className={`h-full flex items-center justify-center rounded-md  ${file && "bg-black"}`}>
+			<div
+				className={`h-full flex items-center justify-center rounded-md  ${
+					file && 'bg-black'
+				}`}
+			>
 				{error && <Badge variant="destructive">{error}</Badge>}
 
 				{file ? (
@@ -79,7 +98,8 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 								or drag and drop
 							</p>
 							<p className="px-3 text-center text-xs text-muted-foreground">
-								Only MP4 files are allowed, and maximum 190 seconds.
+								Only MP4 files are allowed, and maximum 190
+								seconds.
 							</p>
 						</div>
 						<Input

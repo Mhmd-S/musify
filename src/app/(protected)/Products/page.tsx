@@ -14,22 +14,22 @@ import Link from 'next/link';
 const plans = [
 	{
 		name: 'Basic',
-		price: 10,
-		credits: 100,
+		price: 4.99,
+		credits: 25,
 		icon: <Sparkles />,
 	},
 	{
 		name: 'Pro',
-		price: 20,
-		credits: 250,
+		price: 9.99,
+		credits: 55,
 		icon: <Rocket />,
+		isBestValue: true,
 	},
 	{
 		name: 'Enterprise',
-		price: 50,
-		credits: 500,
+		price: 15.99,
+		credits: 95,
 		icon: <Zap />,
-		isBestValue: true,
 	},
 ];
 
@@ -57,7 +57,11 @@ const CreditPackage: React.FC<CreditPackageProps> = ({
 			isBestValue ? 'border-primary border-2' : ''
 		}`}
 	>
-		<Badge className={`${!isBestValue && 'hidden'} px-2 absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground p-2 rounded-full`}>
+		<Badge
+			className={`${
+				!isBestValue && 'hidden'
+			} px-2 absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground p-2 rounded-full`}
+		>
 			Best Value
 		</Badge>
 		<CardHeader className="text-center">
@@ -81,7 +85,7 @@ const CreditPackage: React.FC<CreditPackageProps> = ({
 			<div className="text-center mb-4">
 				<span className="text-4xl font-bold">${price}</span>
 				<span className="text-sm text-muted-foreground ml-2">
-					(${perCreditPrice.toFixed(4)}/credit)
+					(${perCreditPrice.toFixed(2)}/credit)
 				</span>
 			</div>
 		</CardContent>
@@ -114,7 +118,8 @@ const CreditPackages = () => {
 					*All prices are in USD and exclusive of applicable taxes.
 				</p>
 				<p className="text-sm text-muted-foreground max-w-2xl mx-auto px-4">
-					* All credits are valid for 1 year from the date of purchase.
+					* All credits are valid for 1 year from the date of
+					purchase.
 				</p>
 			</div>
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto place-items-center">

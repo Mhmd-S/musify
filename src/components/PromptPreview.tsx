@@ -106,7 +106,7 @@ const PromptPreview = ({ id } : { id: string }) => {
 
 	return (
 		<div className="container p-6 space-y-8">
-			<h1 className="text-3xl font-bold">Prompt Lab</h1>
+			<h1 className="text-3xl font-bold">Preview</h1>
 
 			<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4">
 				{initialLoading ? (

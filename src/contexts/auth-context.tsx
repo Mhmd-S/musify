@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import * as authService from '@services/authService';
 import { api } from '@config/axiosConfig';
+import { toast } from 'react-toastify';
 
 interface User {
 	_id: string;        // MongoDB ObjectId as string
@@ -94,8 +95,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 					if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {
 						popup.close();
 						router.push('/dashboard');
-						window.removeEventListener('message', handleMessage);
+					} else {
+						popup.close();
+						toast.error('Google authentication failed');
 					}
+
+					window.removeEventListener('message', handleMessage);
 				}
 			);
 		}
@@ -110,6 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				name,
 			});
 			setUser(response.user);
+			router.push('/dashboard');
 			setIsLoading(false);
 		} catch (error) {
 			throw error;

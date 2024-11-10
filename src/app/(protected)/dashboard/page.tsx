@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 import Link from 'next/link';
 
-import { Music, SkipForward, Loader2, Plus, Coins, Book } from 'lucide-react';
+import { Music, User, Loader2, Plus, Coins, Book } from 'lucide-react';
 
 import { Button } from '@components/ui/button';
 import { Card, CardContent, CardTitle, CardHeader } from '@components/ui/card';
@@ -22,7 +22,13 @@ const ClientMusicGenerationDashboard = () => {
 
 	useEffect(() => {
 		(async () => {
+			if (!user) return;
 			const response = await getUserPrompts(1);
+			const amount = response.prompts.length;
+			if (amount === 0) {
+				setLoading(false);
+				return;
+			} 
 			setId(response.prompts[0]._id);
 			setLoading(false);
 		})();
@@ -37,14 +43,14 @@ const ClientMusicGenerationDashboard = () => {
 							<Card>
 								<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 									<CardTitle className="text-sm font-medium">
-										Total Projects
+										Total Prompts
 									</CardTitle>
 									<Music className="h-4 w-4 text-muted-foreground" />
 								</CardHeader>
 								<CardContent>
 									<div className="text-2xl font-bold">12</div>
 									<p className="text-xs text-muted-foreground">
-										4 active, 8 completed
+										This month
 									</p>
 								</CardContent>
 							</Card>
@@ -73,7 +79,7 @@ const ClientMusicGenerationDashboard = () => {
 										<div className="flex items-center space-x-2">
 											<Coins className="h-6 w-6 text-yellow-500" />
 											<span className="text-2xl font-bold">
-												{user.credits}
+												{user?.credits}
 											</span>
 										</div>
 										<Link href="products">
@@ -106,7 +112,7 @@ const ClientMusicGenerationDashboard = () => {
 										variant="outline"
 										className="w-full"
 									>
-										<SkipForward className="mr-2 h-4 w-4" />{' '}
+										<User className="mr-2 h-4 w-4" />{' '}
 										View Account Details
 									</Button>
 								</Link>

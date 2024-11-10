@@ -60,6 +60,7 @@ function VideoMusicGenerator() {
 
 	const createMusic = async () => {
 		setNewVideo(null);
+		setContextExtracted(null);
 		setLoading(true);
 
 		if (!validateInputs()) {

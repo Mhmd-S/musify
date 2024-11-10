@@ -102,13 +102,6 @@ const Controls = ({
 						<span>200</span>
 					</div>
 				</div> */}
-
-				<div className="flex items-center space-x-2">
-					<Switch id="sync-video" />
-					<Label htmlFor="sync-video">
-						Sync music to video tempo
-					</Label>
-				</div>
 			</CardContent>
 
 			<CardFooter>

@@ -64,7 +64,7 @@ export default function ProjectsTab() {
 				<CardFooter className="w-full">
 					<PageNavigation
 						onPreviousPage={() => {
-							page !== 0 && setPage(page - 1);
+							page > 1 && setPage(page - 1);
 						}}
 						onNextPage={() => {
 							page < maxPage && setPage(page + 1);
