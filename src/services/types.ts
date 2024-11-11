@@ -1,25 +1,25 @@
-import { Url } from "url";
+import { Url } from 'url';
 
 export interface User {
-	_id: string;        // MongoDB ObjectId as string
+	_id: string; // MongoDB ObjectId as string
 	email: string;
 	name: string;
 	isActive: boolean;
-	role: 'user' | 'admin' | string;  // You might want to add other possible role values
+	role: 'user' | 'admin' | string; // You might want to add other possible role values
 	credits: number;
 	googleId: string;
 	isEmailVerified: boolean;
-	lastLogin: string;  // ISO 8601 date string
-	createdAt: string;  // ISO 8601 date string
-	updatedAt: string;  // ISO 8601 date string
-	__v: number;        // MongoDB version key
+	lastLogin: string; // ISO 8601 date string
+	createdAt: string; // ISO 8601 date string
+	updatedAt: string; // ISO 8601 date string
+	__v: number; // MongoDB version key
 }
 
 export interface Plan {
-  id: number;
-  name: string;
-  price: Float32Array
-  credits: number;
+	id: number;
+	name: string;
+	price: Float32Array;
+	credits: number;
 }
 
 export interface Receipt {
@@ -42,92 +42,97 @@ export interface Receipt {
 }
 
 export interface SigninFields {
-  email: string;
-  password: string;
+	email: string;
+	password: string;
 }
 
 export interface VideoResponse {
-	data: Blob;
+		data: Blob;
 }
 
 export interface SignupResponse {
-  message: string;
+	message: string;
 }
 
 export interface SignupFields {
-  email: string;
-  name: string;
-  password: string;
+	email: string;
+	name: string;
+	password: string;
 }
 
 export interface SigninResponse {
-  message: string;
+	message: string;
 }
 
 export interface GoogleSignupResponse {
-  message: string;
+	message: string;
 }
 
 export interface GoogleSigninResponse {
-  message: string;
+	message: string;
 }
 
 // PROMPT SERVICE
 export interface MusicGenerationResponse {
-  success: boolean;
-  message: string;
-  data: MusicGenerationData;
+	success: boolean;
+	message: string;
+	data: MusicGenerationData;
 }
 
 export interface SnapshotPrompt {
-  originalImage: string;
-  generatedDescription: string;
-  _id: string;
-  timestamp: string;
+	originalImage: string;
+	generatedDescription: string;
+	_id: string;
+	timestamp: string;
 }
 
 export interface GeneratedMusic {
-  generatedAt: string;
-  url: string;
+	generatedAt: string;
+	url: string;
 }
 
 export interface MusicGenerationBody {
 	video: string;
-  snapshots: string[];
-  duration: string;
-  type: string;
-  style: string;
+	snapshots: string[];
+	duration: string;
+	type: string;
+	style: string;
 }
 
 export interface MusicGenerationData {
-  generatedMusic: GeneratedMusic;
+	generatedMusic: GeneratedMusic;
 	video: string;
-  _id: string;
-  user: string;
-  style: string;
-  type: string;
-  duration: number;
-  status: string;
-  snapshotPrompts: SnapshotPrompt[];
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-  combinedContext: string;
-  musicBrief: string;
-  processingTime: number;
+	_id: string;
+	user: string;
+	style: string;
+	type: string;
+	duration: number;
+	status: string;
+	snapshotPrompts: SnapshotPrompt[];
+	createdAt: string;
+	updatedAt: string;
+	__v: number;
+	combinedContext: string;
+	musicBrief: string;
+	processingTime: number;
 }
 
 export interface MusicGeneratedResponse {
-  success: boolean;
-  message: string;
-  data: MusicGenerationData;
+	success: boolean;
+	message: string;
+	data: MusicGenerationData;
 }
 
 export interface UserPrompts {
 	prompts: MusicGenerationData[];
-	total: number;
-	page: number;
-	pages: number;
+	filters: Object;
+	sortBy: string;
+	pagination: {
+		totalItems: number;
+		page: number;
+		limit: number;
+		pages: number;
+	};
 }
 
 export interface UserPromptsResponse {
@@ -146,4 +151,41 @@ export interface PaymentFields {
 	token: string;
 	planId: number;
 	email: string;
+}
+
+
+export interface PaginationParams {
+  page?: number;
+  limit?: number;
+}
+
+export interface SortingParams {
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface FilterParams {
+  [key: string]: any;
+}
+
+export interface PromptQueryOptions extends PaginationParams, SortingParams {
+  filters?: FilterParams;
+}
+
+export interface UserPrompt {
+  id: string;
+  content: string;
+  createdAt: string;
+  // Add other prompt properties as needed
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+  };
 }

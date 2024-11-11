@@ -4,16 +4,46 @@ import {
 	MusicGenerationBody,
 	MusicGenerationResponse,
 	MusicGenerationData,
-	UserPrompts,
 	UserPromptsResponse,
-	VideoResponse,
+	PromptQueryOptions,
+	PaginatedResponse,
+	UserPrompts,
 } from './types';
 
-export const getUserPrompts = async (page: number): Promise<UserPrompts> => {
+const buildQueryString = (options: PromptQueryOptions): string => {
+	const params = new URLSearchParams();
+
+	// Add pagination parameters
+	if (options.page) params.append('page', options.page.toString());
+	if (options.limit) params.append('limit', options.limit.toString());
+
+	// Add sorting parameters
+	if (options.sortBy) params.append('sortBy', options.sortBy);
+	if (options.sortOrder) params.append('sortOrder', options.sortOrder);
+
+	// Add filter parameters
+	if (options.filters) {
+		Object.entries(options.filters).forEach(([key, value]) => {
+			if (value !== undefined && value !== null) {
+				params.append(key, value.toString());
+			}
+		});
+	}
+
+	return params.toString();
+};
+
+export const getUserPrompts = async (
+	options: PromptQueryOptions = {}
+): Promise<UserPrompts> => {
+	const queryString = buildQueryString(options);
+	const url = `prompts/${queryString ? `?${queryString}` : ''}`;
+
 	const response = await api.request<UserPromptsResponse>({
 		method: 'GET',
-		url: `prompts/?page=${page}`,
+		url,
 	});
+
 	return response.data.data;
 };
 
@@ -28,21 +58,21 @@ export const getPrompt = async (
 };
 
 export const getPromptVideo = async (id: string | string[]): Promise<Blob> => {
-	const response = await api.request<VideoResponse>({
-			method: 'GET',
-			url: `prompts/video/${id}`,
-			responseType: 'blob',  // Essential for binary data
-			headers: {
-					Accept: 'video/mp4',  // Specify accepted content type
-			},
+	const response = await api.request<Blob>({
+		method: 'GET',
+		url: `prompts/video/${id}`,
+		responseType: 'blob', // Essential for binary data
+		headers: {
+			Accept: 'video/mp4', // Specify accepted content type
+		},
 	});
-	
+
 	if (!response) {
-			throw new Error('No video data received');
+		throw new Error('No video data received');
 	}
 
-	return response.data.data;
-}
+	return response.data;
+};
 
 export const generateMusic = async ({
 	video,

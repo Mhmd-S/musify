@@ -58,8 +58,8 @@ const CheckoutForm = ({ planId }: CheckoutFormProps) => {
 
 			const result = await submitPayment(data);
 
-			if (result?.data?._id) {
-				router.push(`success/${result.data._id}`);
+			if (result?.data?.receipt?.status === 'COMPLETED') {
+				router.push(`success/${result?.data?.receipt._id}`);
 			}
 		} catch (error) {
 			toast.error('Payment failed. Please try again or contact support.');

@@ -120,17 +120,31 @@ const PaymentSuccessPage = () => {
 					</CardContent>
 					<Separator className="my-4" />
 					<CardFooter className="flex flex-col sm:flex-row gap-4 justify-between items-center">
-						<Button variant="outline" className="w-full sm:w-auto">
-							<Download className="mr-2 h-4 w-4" /> Download
-							Receipt
-						</Button>
-						<Button variant="outline" className="w-full sm:w-auto">
-							<Mail className="mr-2 h-4 w-4" /> Email Support
-						</Button>
-						<Button className="w-full sm:w-auto">
-							Go to Dashboard{' '}
-							<ArrowRight className="ml-2 h-4 w-4" />
-						</Button>
+						{receipt?.receiptUrl && (
+							<Link target='_blank' href={receipt?.receiptUrl}>
+								<Button
+									variant="outline"
+									className="w-full sm:w-auto"
+								>
+									<Download className="mr-2 h-4 w-4" />{' '}
+									Download Receipt
+								</Button>
+							</Link>
+						)}
+						<a href="mailto:mhmdslmn20@gmail.com">
+							<Button
+								variant="outline"
+								className="w-full sm:w-auto"
+							>
+								<Mail className="mr-2 h-4 w-4" /> Email Support
+							</Button>
+						</a>
+						<Link href="/dashboard">
+							<Button className="w-full sm:w-auto">
+								Go to Dashboard{' '}
+								<ArrowRight className="ml-2 h-4 w-4" />
+							</Button>
+						</Link>
 					</CardFooter>
 				</Card>
 			)}

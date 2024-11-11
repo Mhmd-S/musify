@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 import Link from 'next/link';
 
@@ -14,25 +14,84 @@ import { getUserPrompts } from '@services/promptService';
 
 import { useAuth } from '@contexts/auth-context';
 
+import { MusicGenerationData, UserPrompts } from '@services/types';
+
+interface PromptMetrics {
+	totalMinutes: number;
+	monthlyPrompts: number;
+}
+
 const ClientMusicGenerationDashboard = () => {
 	const { isLoading, user } = useAuth();
 
-	const [id, setId] = useState<string>('');
 	const [loading, setLoading] = useState(true);
+	const [id, setId] = useState<string>('');
+	const [metrics, setMetrics] = useState<PromptMetrics>({
+		totalMinutes: 0,
+		monthlyPrompts: 0,
+	});
 
 	useEffect(() => {
-		(async () => {
-			if (!user) return;
-			const response = await getUserPrompts(1);
-			const amount = response.prompts.length;
-			if (amount === 0) {
+		const fetchMonthlyPrompts = async () => {
+			if (!user) {
 				setLoading(false);
 				return;
-			} 
-			setId(response.prompts[0]._id);
-			setLoading(false);
-		})();
-	}, []);
+			}
+
+			try {
+				const now = new Date();
+				const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+				const lastDay = new Date(
+					now.getFullYear(),
+					now.getMonth() + 1,
+					0
+				);
+
+				const response = await getUserPrompts({
+					filters: {
+						createdAt: {
+							$gte: firstDay.toISOString(),
+							$lte: lastDay.toISOString(),
+						},
+					},
+					sortBy: 'createdAt',
+					sortOrder: 'desc',
+					limit: 100, // Adjust based on your needs
+				});
+
+				if (!response || response.prompts.length === 0) {
+					setLoading(false);
+					return;
+				}
+
+				const prompts = response.prompts;
+
+				// Calculate metrics
+				const totalSec = prompts.reduce(
+					(sum, prompt) => sum + (prompt.duration || 0),
+					0
+				);
+
+				const totalMinutes = Math.floor(totalSec / 60);
+
+				setMetrics({
+					totalMinutes,
+					monthlyPrompts: prompts.length,
+				});
+
+				if (prompts.length > 0) {
+					setId(prompts[0]._id);
+				}
+			} catch (error) {
+				console.error('Error fetching prompts:', error);
+				// Handle error appropriately
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchMonthlyPrompts();
+	}, [user]);
 
 	return (
 		<div className="flex flex-col min-h-screen bg-background">
@@ -48,7 +107,9 @@ const ClientMusicGenerationDashboard = () => {
 									<Music className="h-4 w-4 text-muted-foreground" />
 								</CardHeader>
 								<CardContent>
-									<div className="text-2xl font-bold">12</div>
+									<div className="text-2xl font-bold">
+										{metrics.monthlyPrompts}
+									</div>
 									<p className="text-xs text-muted-foreground">
 										This month
 									</p>
@@ -63,7 +124,7 @@ const ClientMusicGenerationDashboard = () => {
 								</CardHeader>
 								<CardContent>
 									<div className="text-2xl font-bold">
-										37 mins
+										{metrics.totalMinutes} mins
 									</div>
 									<p className="text-xs text-muted-foreground">
 										This month
@@ -102,7 +163,10 @@ const ClientMusicGenerationDashboard = () => {
 									</Button>
 								</Link>
 								<Link href="/projects">
-									<Button variant="outline" className="w-full">
+									<Button
+										variant="outline"
+										className="w-full"
+									>
 										<Book className="mr-2 h-4 w-4" /> View
 										Projects
 									</Button>
@@ -112,8 +176,8 @@ const ClientMusicGenerationDashboard = () => {
 										variant="outline"
 										className="w-full"
 									>
-										<User className="mr-2 h-4 w-4" />{' '}
-										View Account Details
+										<User className="mr-2 h-4 w-4" /> View
+										Account Details
 									</Button>
 								</Link>
 							</CardContent>
