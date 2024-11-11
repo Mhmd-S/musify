@@ -14,8 +14,6 @@ export default function useFFmpeg() {
           coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
           wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
         })
-
-        console.log("FFmpeg loaded")
       }
 
       const closeFFmpeg = () => {

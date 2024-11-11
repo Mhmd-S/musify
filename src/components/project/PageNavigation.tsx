@@ -1,20 +1,40 @@
-import { Button } from '@components/ui/button';
+import { Button } from "@components/ui/button";
 
-type PageNavigationProps = {
+
+interface PageNavigationProps {
+  currentPage: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
   onPreviousPage: () => void;
   onNextPage: () => void;
-};
+}
 
 const PageNavigation: React.FC<PageNavigationProps> = ({
+  currentPage,
+  totalPages,
   onPreviousPage,
   onNextPage,
 }) => {
   return (
-    <div className="w-full flex justify-between">
-      <Button variant="outline" onClick={onPreviousPage}>
+    <div className="flex items-center justify-between w-full">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={onPreviousPage}
+        disabled={!hasPrevPage}
+      >
         Previous
       </Button>
-      <Button variant="outline" onClick={onNextPage}>
+      <span className="text-sm text-muted-foreground">
+        Page {currentPage} of {totalPages}
+      </span>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={onNextPage}
+        disabled={!hasNextPage}
+      >
         Next
       </Button>
     </div>

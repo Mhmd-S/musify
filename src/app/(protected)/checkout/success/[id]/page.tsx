@@ -37,7 +37,6 @@ const PaymentSuccessPage = () => {
 
 			const response = await getReciept(id as string);
 			setReceipt(response);
-			console.log(response);
 			setLoading(false);
 		};
 

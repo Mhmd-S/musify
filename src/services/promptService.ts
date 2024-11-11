@@ -118,7 +118,6 @@ export const generateMusic = async ({
 
 		return response.data.data;
 	} catch (error) {
-		console.log(error);
 		return errorHandler(error as ErrorResponse);
 	}
 };

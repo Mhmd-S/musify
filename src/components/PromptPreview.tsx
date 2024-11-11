@@ -42,7 +42,7 @@ const PromptPreviewComp = ({ id }: { id: string }) => {
 	const replaceAudio = async (music: string, video: Blob) => {
 		try {
 			await loadFFmpeg();
-			console.log(music, video);
+
 			if (!video || !music) {
 				throw new Error('No video or music source provided');
 			}
@@ -82,7 +82,6 @@ const PromptPreviewComp = ({ id }: { id: string }) => {
 			setNewVideo(videoUrl);
 			closeFFmpeg();
 		} catch (error) {
-			console.log(error);
 			console.error('Error in replaceAudio:', error);
 		}
 	};
