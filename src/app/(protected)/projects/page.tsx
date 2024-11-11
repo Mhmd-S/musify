@@ -14,7 +14,6 @@ import {
 
 import ProjectTable from '@components/project/PromptsTable';
 import PageNavigation from '@components/project/PageNavigation';
-import ProjectFilters from '@components/project/PromptFilters';
 import { MusicGenerationData } from '@services/types';
 import { getUserPrompts } from '@services/promptService';
 

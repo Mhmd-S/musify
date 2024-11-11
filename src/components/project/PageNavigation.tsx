@@ -13,6 +13,8 @@ interface PageNavigationProps {
 const PageNavigation: React.FC<PageNavigationProps> = ({
   currentPage,
   totalPages,
+  hasNextPage,
+  hasPrevPage,
   onPreviousPage,
   onNextPage,
 }) => {
