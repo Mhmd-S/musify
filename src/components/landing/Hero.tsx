@@ -66,7 +66,7 @@ const Hero = () => {
 					</motion.p>
 				</motion.div>
 				<motion.div variants={itemVariants}>
-					<Link href="/lab">
+					<Link href="/trial">
 						<Button size="lg" className="gap-4" variant="default">
 							Try for free now!
 							<Wand2 className="w-4 h-4" />

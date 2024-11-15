@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import useFFmpeg from '@hooks/useFFmpeg';
 import { toast } from 'react-toastify';
 
-import { generateMusic } from '@services/promptService';
+import { generateFreeMusic } from '@services/promptService';
 
 import VideoInput from '@components/lab/VideoInput';
 import Controls from '@components/lab/Controls';
@@ -78,7 +78,7 @@ function VideoMusicGenerator() {
 		const snapshots = await generateSnapshots(videoRef?.current);
 
 		try {
-			const musicGenerated = await generateMusic({
+			const musicGenerated = await generateFreeMusic({
 				video: videoSrc,
 				snapshots,
 				duration: `${Math.floor(videoRef.current.duration)}`,
@@ -90,9 +90,9 @@ function VideoMusicGenerator() {
 
 			setContextExtracted(musicGenerated.combinedContext);
 			await replaceAudio(musicGenerated.generatedMusic.url);
-		} catch (err) {
-			toast.error('Please try again.');
-		} finally {
+		} catch(err) {
+			console.log(err)
+		}finally {
 			setLoading(false);
 		}
 	};
@@ -193,8 +193,8 @@ function VideoMusicGenerator() {
 	};
 
 	return (
-		<div className="container p-6 space-y-8">
-			<h1 className="text-3xl font-bold">Lab</h1>
+		<div className="container p-6 space-y-8 pt-40">
+			<h1 className="w-full text-center text-3xl font-bold">Free Trial</h1>
 
 			<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-4">
 				<VideoInput
