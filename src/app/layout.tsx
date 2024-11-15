@@ -1,32 +1,58 @@
+import './globals.css';
+import 'react-toastify/dist/ReactToastify.css';
+
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
-
-import Header from '@components/Header';
-import Footer from '@components/Footer';
+import { ToastContainer } from 'react-toastify';
 
 import { Analytics } from '@vercel/analytics/react';
+import { AuthProvider } from '@contexts/auth-context';
+
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-	title: 'Muzica',
-	description: 'Create music for your video that is perfect for you.',
+	title: 'Muzica - AI Music Creation for Videos',
+	description:
+		'Create perfect AI-generated music for your videos with Muzica. Professional quality, customizable music creation tool.',
+	metadataBase: new URL('https://www.muzica.live'),
 	openGraph: {
-		title: 'Muzica',
-		description: 'Create AI music for your video that is perfect for you.',
+		title: 'Muzica - AI Music Creation for Videos',
+		description:
+			'Create perfect AI-generated music for your videos with Muzica. Professional quality, customizable music creation tool.',
 		url: 'https://www.muzica.live',
 		siteName: 'Muzica',
 		images: [
 			{
-				url: 'https://www.muzica.live/logo1.jpg', // URL to an image for your site
+				url: '/logo1.jpg',
 				width: 800,
 				height: 600,
-				alt: 'Muzica',
+				alt: 'Muzica - AI Music Creation Platform',
 			},
 		],
 		locale: 'en_US',
 		type: 'website',
+	},
+	twitter: {
+		card: 'summary_large_image',
+		title: 'Muzica - AI Music Creation for Videos',
+		description:
+			'Create perfect AI-generated music for your videos with Muzica',
+		images: ['/logo1.jpg'],
+	},
+	robots: {
+		index: true,
+		follow: true,
+		googleBot: {
+			index: true,
+			follow: true,
+			'max-video-preview': -1,
+			'max-image-preview': 'large',
+			'max-snippet': -1,
+		},
+	},
+	verification: {
+		google: 'your-google-verification-code',
 	},
 };
 
@@ -38,9 +64,12 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={inter.className}>
-				<Header />
-				<main>{children}</main>
-				<Footer />
+					<AuthProvider>
+						<div className="relative">
+						{children}
+							<ToastContainer />
+						</div>
+					</AuthProvider>
 				<Analytics />
 			</body>
 		</html>

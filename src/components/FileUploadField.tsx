@@ -1,13 +1,16 @@
 import { useState, forwardRef } from 'react';
 
-import { Badge } from './ui/badge';
+import { Upload } from 'lucide-react';
+
+import { Label } from '@components/ui/label';
+import { Input } from '@components/ui/input';
+import { Badge } from '@components/ui/badge';
 
 type FileUploadFieldProps = {
 	name: string;
 	file: File | string | null;
 	accept: string;
 	handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	handleRemoveFile: () => void;
 };
 
 const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
@@ -18,11 +21,13 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 			setError(null);
 
 			const file = event.target.files?.[0];
-			const maxDuration = 190; // 190 seconds
+			const maxDuration = 180; // 190 seconds
 
 			if (file) {
-				if (file.type !== 'video/mp4') {
-					setError('Only MP4 files are allowed.');
+				const allowedTypes = ['video/mp4', 'video/mov', 'video/avi'];
+				// Allow avi, mov and mp4 files
+				if (!allowedTypes.includes(file.type)) {
+					setError('Only MP4, MOV and AVI files are allowed.');
 					event.target.value = ''; // Clear the input
 				} else {
 					const video = document.createElement('video');
@@ -32,8 +37,21 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 						window.URL.revokeObjectURL(video.src);
 						if (video.duration > maxDuration) {
 							setError(
-								'Video duration exceeds 190 seconds limit.'
+								'Video duration exceeds 180 seconds limit.'
 							);
+							event.target.value = ''; // Clear the input
+						}
+
+						if (video.duration < 3) {
+							setError(
+								'Video duration must be at least 3 seconds.'
+							);
+							event.target.value = ''; // Clear the input
+						}
+
+						// File size isnt larger than 200 mb
+						else if (file.size > 200000000) {
+							setError('File size exceeds 200 MB limit.');
 							event.target.value = ''; // Clear the input
 						} else {
 							handleFileChange(event);
@@ -47,46 +65,51 @@ const FileUploadField = forwardRef<HTMLVideoElement, FileUploadFieldProps>(
 
 		return (
 			<div
-				className={`relative min-h-60 w-full md:w-full px-4 grid grid-col-1 place-items-center border rounded-md border-gray-900/25 ${
-					file ? 'border-solid bg-primary' : 'border-dashed bg-muted'
+				className={`h-full flex items-center justify-center rounded-md  ${
+					file && 'bg-black'
 				}`}
 			>
 				{error && <Badge variant="destructive">{error}</Badge>}
 
 				{file ? (
-					<>
-						<video
-							ref={ref}
-							className="w-48 aspect-square object-center rounded-3xl"
-							autoPlay
-							loop
-							muted
-							src={
-								typeof file === 'string'
-									? file
-									: URL.createObjectURL(file)
-							}
-						/>
-					</>
+					<video
+						ref={ref}
+						className="w-48 aspect-square object-center rounded-3xl"
+						autoPlay
+						loop
+						muted
+						src={
+							typeof file === 'string'
+								? file
+								: URL.createObjectURL(file)
+						}
+					/>
 				) : (
-					<>
-						<div className="grid grid-rows-2 grid-cols-1 gap-2 place-items-center text-gray-600 text-center">
-							<span className="text-sm">
-								Click to <strong>upload a video </strong>
+					<Label
+						htmlFor={name}
+						className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50"
+					>
+						<div className="flex flex-col items-center justify-center pt-5 pb-6">
+							<Upload className="w-8 h-8 mb-4 text-muted-foreground" />
+							<p className="mb-2 text-sm text-muted-foreground">
+								<span className="font-semibold">
+									Click to upload
+								</span>{' '}
 								or drag and drop
-							</span>
-							<span className="text-xs text-gray-400">
-								Only MP4 files are allowed, and maximum 190 seconds.
-							</span>
+							</p>
+							<p className="px-3 text-center text-xs text-muted-foreground">
+								Only MP4 files are allowed, and maximum 190
+								seconds.
+							</p>
 						</div>
-						<input
+						<Input
+							id={name}
 							type="file"
 							accept={accept}
-							name={name}
-							onInput={handleInput}
-							className="opacity-0 absolute top-0 left-0 w-full h-full cursor-pointer"
+							className="hidden"
+							onChange={handleInput}
 						/>
-					</>
+					</Label>
 				)}
 			</div>
 		);

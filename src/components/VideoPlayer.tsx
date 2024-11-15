@@ -22,7 +22,7 @@ const VideoPlayer = ({ src, badgeText, background = true }: VideoPlayerProps) =>
 
   return (
     <div 
-      className={`min-h-40 md:min-h-60 relative ${background && "bg-muted"} rounded-md overflow-hidden`}
+      className={`min-h-32 md:min-h-56 relative ${background && "bg-muted"} rounded-md overflow-hidden`}
     >
       <div className="absolute top-0 md:top-6 md:left-6 z-20">
         <Badge className="text-white text-center p-2 rounded-md">

@@ -42,8 +42,8 @@
       "@hooks/*": [
         "hooks/*"
       ],
-      "@context/*": [
-        "context/*"
+      "@contexts/*": [
+        "contexts/*"
       ],
       "@pages/*": [
         "pages/*"
