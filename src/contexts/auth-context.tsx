@@ -69,11 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		const top = window.screen.height / 2 - height / 2;
 
 		const popup = window.open(
-			`${
-				process.env.NODE_ENV === 'development'
-					? process.env.NEXT_PUBLIC_BACKEND_SERVER
-					: process.env.NEXT_PUBLIC_DEV_BACKEND_SERVER
-			}/api/v1/auth/google`,
+			'/auth/google',
 			'Google Login',
 			`width=${width},height=${height},top=${top},left=${left}`
 		);
