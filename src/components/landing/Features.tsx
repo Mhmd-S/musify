@@ -1,6 +1,6 @@
 'use client';
 
-import { Check } from 'lucide-react';
+import { Check, Brain, CopyrightIcon, HourglassIcon } from 'lucide-react';
 import { Badge } from '@components/ui/badge';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
@@ -10,19 +10,19 @@ const features = [
 		title: 'Context-Aware Composition',
 		description:
 			'Muzica reads your video to generate music that matches the vibe and story of each scene.',
-		icon: Check,
+		icon: Brain,
 	},
 	{
 		title: 'Copyright-Free Music',
 		description:
 			'Muzica’s music is royalty-free, so you can use it in your videos without worrying about copyright issues.',
-		icon: Check,
+		icon: CopyrightIcon,
 	},
 	{
 		title: 'Time-Saving and Unique',
 		description:
 			'No need to search for hours for the right track—Muzica creates custom music instantly, giving each video a unique sound.',
-		icon: Check,
+		icon: HourglassIcon,
 	},
 ];
 
@@ -64,10 +64,10 @@ const Feature = () => {
 				initial="hidden"
 				animate={isInView ? 'visible' : 'hidden'}
 				variants={containerVariants}
-				className="w-full px-20"
+				className="w-full"
 			>
 				<div className="container mx-auto">
-					<div className="flex gap-4 py-30 flex-col items-start">
+					<div className="flex gap-4 py-30 px-14 flex-col items-start">
 						<motion.div variants={itemVariants}>
 							<Badge>Our Features</Badge>
 						</motion.div>
@@ -105,7 +105,7 @@ const Feature = () => {
 										itemScope
 										itemType="https://schema.org/ListItem"
 									>
-										<feature.icon className="w-8 h-8 text-lg text-primary" />
+										<feature.icon className="w-12 h-12 text-lg text-primary" />
 										<div>
 											<meta
 												itemProp="position"
@@ -114,13 +114,13 @@ const Feature = () => {
 											<div itemProp="item">
 												<p
 													itemProp="name"
-													className="font-medium"
+													className="font-bold text-lg"
 												>
 													{feature.title}
 												</p>
 												<p
 													itemProp="description"
-													className="hidden md:block text-foreground text-sm"
+													className="text-foreground text-sm"
 												>
 													{feature.description}
 												</p>
