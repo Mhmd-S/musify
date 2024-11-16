@@ -83,7 +83,7 @@ const Feature = () => {
 								Transform Your Videos with Music!
 							</h2>
 							<p
-								className="text-lg max-w-xl lg:max-w-xl leading-relaxed tracking-tight text-foreground"
+								className="hidden md:block text-lg max-w-xl lg:max-w-xl leading-relaxed tracking-tight text-foreground"
 								itemProp="description"
 							>
 								Enhancing your video content has never been
@@ -120,7 +120,7 @@ const Feature = () => {
 												</p>
 												<p
 													itemProp="description"
-													className="text-foreground text-sm"
+													className="hidden md:block text-foreground text-sm"
 												>
 													{feature.description}
 												</p>

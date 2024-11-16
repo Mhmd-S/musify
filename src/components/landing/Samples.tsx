@@ -48,7 +48,7 @@ const Samples = () => {
           <div className="grid grid-cols-1 gap-8 place-items-center md:items-center md:grid-cols-2">
             <motion.div 
               variants={itemVariants} 
-              className="flex gap-4 flex-col"
+              className="flex gap-4 flex-col px-4"
             >
               <h2 
                 className="text-5xl md:text-7xl tracking-tighter text-center md:text-left font-regular"
