@@ -35,6 +35,10 @@ const Header = () => {
 			href: '/login',
 		},
 		{
+			title: 'Try for free',
+			href: '/trial',
+		},
+		{
 			title: 'Sign up',
 			href: '/signup',
 		},
@@ -63,19 +67,30 @@ const Header = () => {
 						</h2>
 					</Link>
 				</div>
-				<div className="justify-start items-center gap-4 lg:flex hidden flex-row">
-				<div className="hidden md:flex items-center gap-6">
-				<Button variant='ghost'>
-						<Link href="/pricing">Pricing</Link>
-					</Button>
-					<Button variant="default">
-						<Link href="/login">Login</Link>
-					</Button>
-					<Button variant="outline">
-						<Link href="/signup">Sign up</Link>
-					</Button>
-				</div>
-				</div>
+				<nav className="hidden lg:block" aria-label="Main navigation">
+					<ul className="flex items-center gap-4">
+						<li>
+							<Button variant="ghost" asChild>
+								<Link href="/pricing">Pricing</Link>
+							</Button>
+						</li>
+						<li>
+							<Button variant="ghost" asChild>
+								<Link href="/signup">Sign up</Link>
+							</Button>
+						</li>
+						<li>
+							<Button variant="ghost" asChild>
+								<Link href="/login">Login</Link>
+							</Button>
+						</li>
+						<li>
+							<Button variant="default" asChild>
+								<Link href="/pricing">Give it a try!</Link>
+							</Button>
+						</li>
+					</ul>
+				</nav>
 				<div className="flex w-12 shrink lg:hidden items-end justify-end">
 					<Button variant="ghost" onClick={() => setOpen(!isOpen)}>
 						{isOpen ? (
