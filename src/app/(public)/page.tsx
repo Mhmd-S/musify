@@ -18,7 +18,7 @@ export default async function Home() {
 				</h3>
 				<Link href="/trial">
 					<Button size="lg" className="gap-4" variant="default">
-						Try for free! No Acount needed!
+						Generate Music
 						<Wand2 className="w-4 h-4" />
 					</Button>
 				</Link>
