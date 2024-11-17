@@ -85,12 +85,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 					if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {
 						popup.close();
 						router.push('/dashboard');
-					} else {
-						popup.close();
-						toast.error('Google authentication failed');
+						window.removeEventListener('message', handleMessage);
 					}
 
-					window.removeEventListener('message', handleMessage);
+					if (event.data?.type === 'GOOGLE_AUTH_FAILED') {
+						popup.close();
+						toast.error('Google authentication failed');
+						window.removeEventListener('message', handleMessage);
+					}
 				}
 			);
 		}
