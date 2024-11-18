@@ -6,20 +6,30 @@ import { useRouter } from 'next/navigation';
 import Spinner from '@components/Spinner';
 
 export default function GoogleAuthSuccess() {
+    const { checkAuth, user } = useAuth();
+    const router = useRouter();
 
-	const { checkAuth, user } = useAuth();
-	
-	const router = useRouter();
-	useEffect(() => {
-		if (user) {
-			window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS' }, '*');
-		}
-		checkAuth();
-	}, [user, router]);
+    useEffect(() => {
+        const runAuthSuccess = async () => {
+            await checkAuth();
 
-	return (
-		<div className="flex h-screen items-center justify-center">
-			<Spinner />
-		</div>
-	);
+            if (user) {
+                // Use global callback if available
+                if ((window as any).authSuccessCallback) {
+                    (window as any).authSuccessCallback(user);
+                    
+                    // Optional: Clean up the callback
+                    delete (window as any).authSuccessCallback;
+                }
+            }
+        };
+
+        runAuthSuccess();
+    }, [user]);
+
+    return (
+        <div className="flex h-screen items-center justify-center">
+            <Spinner />
+        </div>
+    );
 }
