@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		const popup = window.open(
 			(process.env.NODE_ENV === 'production'
 				? process.env.NEXT_PUBLIC_BACKEND_SERVER
-				: process.env.NEXT_PUBLIC_DEV_BACKEND_SERVER) + '/auth/google/callback',
+				: process.env.NEXT_PUBLIC_DEV_BACKEND_SERVER) + '/auth/google',
 			'Google Login',
 			`width=${width},height=${height},top=${top},left=${left}`
 		);
