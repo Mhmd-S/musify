@@ -36,29 +36,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const checkAuth = async () => {
         try {
             const response = await authService.me();
-
-            if (!response) {
-                setUser(null);
-                return;
-            }
-
-            setUser(response);
+            setUser(response || null);
         } catch (error) {
             setUser(null);
         } finally {
             setIsLoading(false);
-        }
-    };
-
-    const login = async (email: string, password: string) => {
-        try {
-            setIsLoading(true);
-            const response = await authService.login({ email, password });
-            setUser(response);
-            router.push('/dashboard');
-            setIsLoading(false);
-        } catch (error) {
-            throw error;
         }
     };
 
@@ -68,48 +50,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const left = window.screen.width / 2 - width / 2;
         const top = window.screen.height / 2 - height / 2;
 
-        // Define global callback to handle auth success
-        (window as any).authSuccessCallback = async (userData: User) => {
-            try {
-                setUser(userData);
-                router.push('/dashboard');
-                toast.success('Google authentication successful');
-            } catch (error) {
-                toast.error('Error processing Google authentication');
-            }
-        };
+        const authUrl = (process.env.NODE_ENV === 'production'
+            ? process.env.NEXT_PUBLIC_BACKEND_SERVER
+            : process.env.NEXT_PUBLIC_DEV_BACKEND_SERVER) + '/auth/google';
 
-        const authPopup = window.open(
-            (process.env.NODE_ENV === 'production'
-                ? process.env.NEXT_PUBLIC_BACKEND_SERVER
-                : process.env.NEXT_PUBLIC_DEV_BACKEND_SERVER) + '/auth/google',
+        const popup = window.open(
+            authUrl,
             'Google Login',
             `width=${width},height=${height},top=${top},left=${left}`
         );
 
-        // Optional: Add a timeout mechanism
-        const timeoutId = setTimeout(() => {
-            if (authPopup && !authPopup.closed) {
-                authPopup.close();
-                toast.error('Google authentication timed out');
-                delete (window as any).authSuccessCallback;
+        const checkPopupClosed = setInterval(() => {
+            if (popup?.closed) {
+                clearInterval(checkPopupClosed);
+                checkAuth().then(() => {
+                    if (user) {
+                        router.push('/dashboard');
+                    } else {
+                        toast.error('Authentication failed');
+                        router.push('/login');
+                    }
+                });
             }
-        }, 60000); // 1 minute timeout
+        }, 500);
+    };
+
+    const login = async (email: string, password: string) => {
+        try {
+            setIsLoading(true);
+            const response = await authService.login({ email, password });
+            setUser(response);
+            router.push('/dashboard');
+        } catch (error) {
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const signup = async (email: string, password: string, name: string) => {
         try {
             setIsLoading(true);
-            const response = await authService.signup({
-                email,
-                password,
-                name,
-            });
+            const response = await authService.signup({ email, password, name });
             setUser(response);
             router.push('/dashboard');
-            setIsLoading(false);
         } catch (error) {
             throw error;
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -118,11 +106,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setIsLoading(true);
             await api.post('/auth/logout');
             setUser(null);
-
             router.push('/login');
-            setIsLoading(false);
         } catch (error) {
             console.error('Logout error:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
