@@ -13,6 +13,8 @@ export default async function middleware(request: NextRequest) {
 
 	const cookie = (await cookies()).get('connect.sid')?.value;
 
+	console.log(cookie)
+
 	if (!cookie && isProtectedRoute) {
 		return NextResponse.redirect(new URL('/login', request.url));
 	}
