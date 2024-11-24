@@ -77,25 +77,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		);
 
 		if (popup) {
-			window.addEventListener(
-				'message',
-				async function handleMessage(event) {
-					console.log(event)
-					if (event.origin !== window.location.origin) return;
-
-					if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {
-						popup.close();
-						router.push('/dashboard');
-						window.removeEventListener('message', handleMessage);
-					}
-
-					if (event.data?.type === 'GOOGLE_AUTH_FAILED') {
-						popup.close();
-						toast.error('Google authentication failed');
-						window.removeEventListener('message', handleMessage);
-					}
+			const timer = setInterval(async() => {
+				if (popup.closed) {
+					clearInterval(timer);
+					await checkAuth();
+					router.push('/dashboard');
 				}
-			);
+			}, 3000);
 		}
 	};
 
