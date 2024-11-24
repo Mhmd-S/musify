@@ -12,9 +12,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 	const pathname = usePathname();
 
-	const { isLoading, isAuthenticated } = useAuth();
+	const { isLoading, user } = useAuth();
 
-	if (!isAuthenticated) {
+	if (!user) {
 		router.push('/login');
 		return null;
 	}

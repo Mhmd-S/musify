@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 		siteName: 'Muzica',
 		images: [
 			{
-				url: '/logo1.jpg',
+				url: '/logo.jpg',
 				width: 800,
 				height: 600,
 				alt: 'Muzica - AI Music Creation Platform',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
 		title: 'Muzica - AI Music Creation for Videos',
 		description:
 			'Create perfect AI-generated music for your videos with Muzica',
-		images: ['/logo1.jpg'],
+		images: ['/logo.jpg'],
 	},
 	robots: {
 		index: true,

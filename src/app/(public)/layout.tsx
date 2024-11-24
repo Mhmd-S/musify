@@ -14,9 +14,9 @@ export default function RootLayout({
 }>) {
 	const router = useRouter();
 
-	const { isAuthenticated } = useAuth();
+	const { user } = useAuth();
 
-	if (isAuthenticated) {
+	if (user) {
 		router.push('/dashboard');
 		return null;
 	}

@@ -108,7 +108,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			setIsLoading(true);
 			await api.post('/auth/logout');
 			setUser(null);
-
 			router.push('/login');
 			setIsLoading(false);
 		} catch (error) {
