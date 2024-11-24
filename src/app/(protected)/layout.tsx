@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
 
 import { useAuth } from '@contexts/auth-context';
 import { SidebarProvider, SidebarTrigger } from '@components/ui/sidebar';
@@ -11,15 +10,14 @@ import Spinner from '@components/Spinner';
 export default function Layout({ children }: { children: React.ReactNode }) {
 	const router = useRouter();
 
+	const pathname = usePathname();
+
 	const { isLoading, isAuthenticated } = useAuth();
 
-	useEffect(() => {
-		if (!isAuthenticated && !isLoading) {
-			router.push('/login');
-		}
-	}, [isAuthenticated, isLoading]);
-
-	const pathname = usePathname();
+	if (!isAuthenticated) {
+		router.push('/login');
+		return null;
+	}
 
 	const getHeaderTitle = (path: string) => {
 		const segments = path.split('/').filter(Boolean);
