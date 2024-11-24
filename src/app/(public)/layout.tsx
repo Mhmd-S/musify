@@ -1,3 +1,9 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+
+import { useAuth } from '@contexts/auth-context';
+
 import Header from '@components/Header';
 import Footer from '@components/Footer';
 
@@ -6,6 +12,15 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const router = useRouter();
+
+	const { isAuthenticated } = useAuth();
+
+	if (isAuthenticated) {
+		router.push('/dashboard');
+		return null;
+	}
+
 	return (
 		<>
 			<Header />
