@@ -9,14 +9,14 @@ export default function GoogleAuthSuccess() {
 
 	const { checkAuth, user } = useAuth();
 	
-	const router = useRouter();
 	useEffect(() => {
-		console.log(user)
+		
+		checkAuth();
 		if (user) {
-			window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS' }, '*');
+			console.log('User is authenticated:', user);
+			console.log('User is authenticated:', window);
 			window.close()
 		}
-		checkAuth();
 	}, [user]);
 
 	return (
