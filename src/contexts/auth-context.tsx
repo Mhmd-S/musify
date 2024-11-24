@@ -63,47 +63,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	};
 
 	const handleGoogleAuth = async () => {
-    const width = 500;
-    const height = 600;
-    const left = window.screen.width / 2 - width / 2;
-    const top = window.screen.height / 2 - height / 2;
+		const width = 500;
+		const height = 600;
+		const left = window.screen.width / 2 - width / 2;
+		const top = window.screen.height / 2 - height / 2;
 
-    const popup = window.open(
-        `${process.env.NEXT_PUBLIC_BACKEND_SERVER}/auth/google`,
-        'Google Login',
-        `width=${width},height=${height},top=${top},left=${left}`
-    );
+		const popup = window.open(
+			(process.env.NODE_ENV === 'production'
+				? process.env.NEXT_PUBLIC_BACKEND_SERVER
+				: process.env.NEXT_PUBLIC_DEV_BACKEND_SERVER) + '/auth/google',
+			'Google Login',
+			`width=${width},height=${height},top=${top},left=${left}`
+		);
 
-    if (!popup) {
-        toast.error('Failed to open authentication popup. Please try again.');
-        return;
-    }
+		if (popup) {
+			window.addEventListener(
+				'message',
+				async function handleMessage(event) {
+					console.log(event)
+					if (event.origin !== window.location.origin) return;
 
-    const handleMessage = async (event) => {
-        if (event.origin !== window.location.origin) return;
+					if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {
+						popup.close();
+						router.push('/dashboard');
+						window.removeEventListener('message', handleMessage);
+					}
 
-        if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {
-            popup.close();
-            await checkAuth();
-            router.push('/dashboard');
-            toast.success('Logged in successfully!');
-        } else if (event.data?.type === 'GOOGLE_AUTH_FAILED') {
-            popup.close();
-            toast.error('Google authentication failed. Please try again.');
-        }
-
-        window.removeEventListener('message', handleMessage);
-    };
-
-    window.addEventListener('message', handleMessage);
-
-    const pollTimer = setInterval(() => {
-        if (popup.closed) {
-            clearInterval(pollTimer);
-            window.removeEventListener('message', handleMessage);
-        }
-    }, 500);
-};
+					if (event.data?.type === 'GOOGLE_AUTH_FAILED') {
+						popup.close();
+						toast.error('Google authentication failed');
+						window.removeEventListener('message', handleMessage);
+					}
+				}
+			);
+		}
+	};
 
 	const signup = async (email: string, password: string, name: string) => {
 		try {
