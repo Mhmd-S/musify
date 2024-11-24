@@ -37,8 +37,16 @@ interface SubmitPaymentData extends CheckoutFormData {
 
 const CheckoutForm = ({ planId }: CheckoutFormProps) => {
 	const router = useRouter();
-	const APP_ID = process.env.NEXT_PUBLIC_SQUARE_SANDBOX_APP_ID;
-	const LOCATION_ID = 'asdasdasd';
+
+	const APP_ID =
+		process.env.NODE_ENV == 'production'
+			? process.env.NEXT_PUBLIC_SQUARE_APP_ID
+			: process.env.NEXT_PUBLIC_SQUARE_SANDBOX_APP_ID;
+
+	const LOCATION_ID =
+		process.env.NODE_ENV == 'production'
+			? process.env.NEXT_PUBLIC_SQUARE_LOCATION_ID
+			: process.env.NEXT_PUBLIC_SQUARE_APP_ID;
 
 	const {
 		register,
@@ -167,7 +175,7 @@ const CheckoutForm = ({ planId }: CheckoutFormProps) => {
 
 					<PaymentForm
 						applicationId={APP_ID!}
-						locationId={LOCATION_ID}
+						locationId={LOCATION_ID!}
 						cardTokenizeResponseReceived={handleTokenize}
 					>
 						<CreditCard />

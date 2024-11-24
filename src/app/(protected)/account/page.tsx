@@ -77,7 +77,7 @@ export default function AccountPage() {
 											{user?.credits}
 										</span>
 									</div>
-									<Link href="products">
+									<Link href="pricing">
 										<Button>Buy More Credits</Button>
 									</Link>
 								</div>
