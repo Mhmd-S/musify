@@ -133,6 +133,7 @@ export interface PaginationParams {
 export interface PaginationDetails {
 	totalItems: number;
 	page: number;
+	pages: number;
 	limit: number;
 	totalPages: number;
 	hasNextPage: boolean;

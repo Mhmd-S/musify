@@ -34,8 +34,6 @@ export default function ProjectsTab() {
 					limit: 10, // You can adjust this or make it configurable
 				});
 
-				console.log(response);
-
 				setPrompts(response.prompts);
 				setPagination({
 					currentPage: response.pagination.page,
