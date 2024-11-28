@@ -36,12 +36,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const checkAuth = async () => {
 		try {
 			const response = await authService.me();
-
-			if (!response) {
+			console.log('response', response)
+			if (!response || response.success == false) {
 				setUser(null);
 				return;
 			}
 
+			console.log('response', response)
 			setUser(response);
 		} catch (error) {
 			setUser(null);

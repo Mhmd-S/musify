@@ -11,6 +11,7 @@ export default function PublicRoute({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (!isLoading && user) {
+      console.log(user)
       router.push('/dashboard') // or whatever your main protected route is
       router.refresh()
     }

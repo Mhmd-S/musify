@@ -10,17 +10,7 @@ export const getReciept = async (receiptId: string) => {
 		},
 	});
 
-	const { status, data } = response;
-
-	successHandler(
-		{ data, status },
-		{
-			notifyOnSuccess: false,
-			notifyOnFailed: true,
-		}
-	);
-
-	return data.data;
+	return response.data.data;
 };
 
 export const getReciepts = async () => {
@@ -32,15 +22,5 @@ export const getReciepts = async () => {
 		},
 	});
 
-	const { status, data } = response;
-
-	successHandler(
-		{ data, status },
-		{
-			notifyOnSuccess: false,
-			notifyOnFailed: true,
-		}
-	);
-
-	return data.data;
+	return response.data.data;
 };

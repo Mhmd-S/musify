@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useAuth } from '@contexts/auth-context';
@@ -13,11 +14,17 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const router = useRouter();
+	const { user, isLoading } = useAuth();
 
-	const { user } = useAuth();
+	// Use useEffect to handle navigation
+	useEffect(() => {
+		if (user && !isLoading) {
+			router.push('/dashboard');
+		}
+	}, [user, isLoading, router]);
 
-	if (user) {
-		router.push('/dashboard');
+	if (user && !isLoading) {
+		// While redirecting, prevent rendering the layout
 		return null;
 	}
 

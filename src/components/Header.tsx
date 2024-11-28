@@ -86,7 +86,7 @@ const Header = () => {
 						</li>
 						<li>
 							<Button variant="default" asChild>
-								<Link href="/trail">Give it a try!</Link>
+								<Link href="/trial">Give it a try!</Link>
 							</Button>
 						</li>
 					</ul>

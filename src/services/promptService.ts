@@ -8,6 +8,7 @@ import {
 	PromptQueryOptions,
 	PaginatedResponse,
 	UserPrompts,
+	ApiResponse,
 } from './types';
 
 const buildQueryString = (options: PromptQueryOptions): string => {

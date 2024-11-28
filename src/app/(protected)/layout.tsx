@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { useRouter, usePathname } from 'next/navigation';
 
 import { useAuth } from '@contexts/auth-context';
@@ -14,10 +16,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 	const { isLoading, user } = useAuth();
 
-	if (!user) {
-		router.push('/login');
+	// Use useEffect to handle navigation
+	useEffect(() => {
+		if (!user && !isLoading) {
+			router.push('/login');
+		}
+	}, [user, isLoading, router]);
+
+	if (!user && !isLoading) {
+		// While redirecting, prevent rendering the layout
 		return null;
 	}
+
 
 	const getHeaderTitle = (path: string) => {
 		const segments = path.split('/').filter(Boolean);

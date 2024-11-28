@@ -16,17 +16,7 @@ export const submitPayment = async (paymentDetails: PaymentFields) => {
 		},
 	});
 
-	const { status, data } = response;
-
-	successHandler(
-		{ data, status },
-		{
-			notifyOnSuccess: false,
-			notifyOnFailed: true,
-		}
-	);
-
-	return data;
+	return response.data.data;
 };
 
 
