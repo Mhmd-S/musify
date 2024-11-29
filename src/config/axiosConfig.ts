@@ -49,9 +49,6 @@ const errorHandler = (error: any) => {
 api.interceptors.response.use(
 	(response) => {
 		// Automatically extract `data.data` if it exists
-		if (response.data && response.data.data) {
-			return response.data.data;
-		}
 		return response.data; // Fallback if `data.data` is not present
 	},
 	(error) => errorHandler(error) // Use the centralized error handler

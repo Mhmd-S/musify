@@ -16,7 +16,7 @@ export interface User {
 	isActive: boolean;
 	role: 'user' | 'admin' | string; // Extendable role options
 	credits: number;
-	googleId: string;
+	googleId?: string;
 	isEmailVerified: boolean;
 	lastLogin: string; // ISO 8601 date string
 	createdAt: string; // ISO 8601 date string

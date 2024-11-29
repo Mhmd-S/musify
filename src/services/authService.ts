@@ -14,7 +14,7 @@ export const me = async () => {
 			url: `/auth/me`,
 		});
 
-		return response.data.data;
+		return response.data;
 	} catch (error) {
 		return errorHandler(error as ErrorResponse);
 	}
@@ -42,7 +42,7 @@ export const login = async (signinFields: SigninFields) => {
 			data: signinFields,
 		});
 
-		return response.data.data;
+		return response.data;
 	} catch (error) {
 		return errorHandler(error as ErrorResponse);
 	}
@@ -62,7 +62,7 @@ export const googleAuth = async (): Promise<SigninResponse> => {
 	}
 };
 
-export const signout = async (): Promise<void> => {
+export const logout = async (): Promise<void> => {
 	try {
 		const response = await api.request({
 			method: 'POST',

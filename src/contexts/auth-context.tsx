@@ -35,15 +35,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 	const checkAuth = async () => {
 		try {
-			const response = await authService.me();
-			console.log('response', response)
-			if (!response || response.success == false) {
-				setUser(null);
-				return;
-			}
-
-			console.log('response', response)
-			setUser(response);
+			const user = await authService.me();
+			setUser(user);
 		} catch (error) {
 			setUser(null);
 		} finally {
@@ -54,8 +47,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const login = async (email: string, password: string) => {
 		try {
 			setIsLoading(true);
-			const response = await authService.login({ email, password });
-			setUser(response);
+			const user = await authService.login({ email, password });
+			console.log(user)
+			setUser(user);
 			router.push('/dashboard');
 			setIsLoading(false);
 		} catch (error) {
