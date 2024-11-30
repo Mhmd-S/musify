@@ -1,5 +1,4 @@
 import { api } from '@config/axiosConfig';
-import successHandler from '@request/successHandler';
 
 export const getReciept = async (receiptId: string) => {
 	const response = await api.request({
@@ -10,7 +9,7 @@ export const getReciept = async (receiptId: string) => {
 		},
 	});
 
-	return response.data.data;
+	return response.data;
 };
 
 export const getReciepts = async () => {
@@ -22,5 +21,5 @@ export const getReciepts = async () => {
 		},
 	});
 
-	return response.data.data;
+	return response.data;
 };

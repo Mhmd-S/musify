@@ -68,7 +68,7 @@ const Invoices = () => {
 				{isLoading ? (
 					<Spinner />
 				) : (
-					invoices.map((invoice) => (
+					invoices.length > 0 && invoices.map((invoice) => (
 						<TableRow key={invoice._id}>
 							<TableCell>{invoice.receiptNumber}</TableCell>
 							<TableCell>

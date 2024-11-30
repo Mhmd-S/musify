@@ -42,14 +42,15 @@ const errorHandler = (error: any) => {
 
 	console.error('API Error:', error);
 
-	return Promise.reject(error);
+	return Promise.reject();
 };
 
-// Transform response to avoid accessing `.data.data`
 api.interceptors.response.use(
 	(response) => {
-		// Automatically extract `data.data` if it exists
-		return response.data; // Fallback if `data.data` is not present
+		if (response.data) {
+			return response.data
+		}
+		return response;
 	},
 	(error) => errorHandler(error) // Use the centralized error handler
 );

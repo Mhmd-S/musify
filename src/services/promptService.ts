@@ -36,26 +36,26 @@ const buildQueryString = (options: PromptQueryOptions): string => {
 
 export const getUserPrompts = async (
 	options: PromptQueryOptions = {}
-): Promise<UserPrompts> => {
+) => {
 	const queryString = buildQueryString(options);
 	const url = `prompts/${queryString ? `?${queryString}` : ''}`;
 
-	const response = await api.request<UserPromptsResponse>({
+	const response = await api.request({
 		method: 'GET',
 		url,
 	});
 
-	return response.data.data;
+	return response.data;
 };
 
 export const getPrompt = async (
 	id: string | string[]
-): Promise<MusicGenerationData> => {
-	const response = await api.request<MusicGenerationResponse>({
+) => {
+	const response = await api.request({
 		method: 'GET',
 		url: `prompts/${id}`,
 	});
-	return response.data.data;
+	return response.data;
 };
 
 export const getPromptVideo = async (id: string | string[]): Promise<Blob> => {
@@ -68,11 +68,11 @@ export const getPromptVideo = async (id: string | string[]): Promise<Blob> => {
 		},
 	});
 
-	if (!response) {
+	if (!response || typeof response !== typeof Blob) {
 		throw new Error('No video data received');
 	}
 
-	return response.data;
+	return response.data || response;
 };
 
 export const generateMusic = async ({
@@ -81,7 +81,7 @@ export const generateMusic = async ({
 	duration,
 	type,
 	style,
-}: MusicGenerationBody): Promise<MusicGenerationData> => {
+}: MusicGenerationBody) => {
 	try {
 		const formData = new FormData();
 
@@ -117,7 +117,7 @@ export const generateMusic = async ({
 			},
 		});
 
-		return response.data.data;
+		return response.data;
 	} catch (error) {
 		return errorHandler(error as ErrorResponse);
 	}
