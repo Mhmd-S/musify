@@ -68,7 +68,7 @@ const ClientMusicGenerationDashboard = () => {
 
 				// Calculate metrics
 				const totalSec = prompts.reduce(
-					(sum, prompt) => sum + (prompt.duration || 0),
+					(sum: number, prompt: { duration?: number }) => sum + (prompt.duration || 0),
 					0
 				);
 
