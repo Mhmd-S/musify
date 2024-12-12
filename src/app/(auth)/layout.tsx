@@ -1,12 +1,31 @@
+'use client'
+
+import { useEffect } from 'react';
+
+import { useAuth } from '@contexts/auth-context';
+import { useRouter, usePathname } from 'next/navigation';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import Footer from '@components/Footer';
+
 
 export default function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+
+	const router = useRouter();
+
+	const { isLoading, user } = useAuth();
+
+	useEffect(() => {
+		if (user && !isLoading) {
+			router.push('/dashboard');
+		}
+	}, [user, isLoading, router]);
+
 	return (
 		<>
       <header className="bg-white shadow-sm">

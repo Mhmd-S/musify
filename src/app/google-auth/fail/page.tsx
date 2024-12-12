@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useAuth } from '@contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import Spinner from '@components/Spinner';
 
 export default function GoogleAuthFail() {	
+
+	const router = useRouter();
+
 	useEffect(() => {
-			window.opener.postMessage({ type: 'GOOGLE_AUTH_FAIL' }, '*');
+			router.push('/login');
 	}, []);
 
 	return (

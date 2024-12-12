@@ -58,28 +58,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	};
 
 	const handleGoogleAuth = async () => {
-		const width = 500;
-		const height = 600;
-		const left = window.screen.width / 2 - width / 2;
-		const top = window.screen.height / 2 - height / 2;
-
-		const popup = window.open(
-			(process.env.NODE_ENV === 'production'
-				? process.env.NEXT_PUBLIC_BACKEND_SERVER
-				: process.env.NEXT_PUBLIC_DEV_BACKEND_SERVER) + '/auth/google',
-			'Google Login',
-			`width=${width},height=${height},top=${top},left=${left}`
-		);
-
-		if (popup) {
-			const timer = setInterval(async() => {
-				if (popup.closed) {
-					clearInterval(timer);
-					await checkAuth();
-					router.push('/dashboard');
-				}
-			}, 3000);
-		}
+		const authUrl = (process.env.NODE_ENV === 'production'
+			? process.env.NEXT_PUBLIC_BACKEND_SERVER
+			: process.env.NEXT_PUBLIC_DEV_BACKEND_SERVER) + '/auth/google';
+			
+		window.location.href = authUrl;
 	};
 
 	const signup = async (email: string, password: string, name: string) => {
